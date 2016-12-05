@@ -1,0 +1,752 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+#include "verrsrc.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体，中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "#include ""verrsrc.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#include ""res\\3DCode.rc2""  // Microsoft Visual C++ \r\n"
+    "#include ""l.CHS\\afxres.rc""      //\r\n"
+    "#include ""l.CHS\\afxprint.rc""    //\r\n"
+    "#if !defined(_AFXDLL)\r\n"
+    "#include ""l.CHS\\afxribbon.rc""   //\r\n"
+    "#endif\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\3DCode.ico"
+
+IDR_3DCodeTYPE          ICON                    "res\\3DCodeDoc.ico"
+
+IDI_ICON_FLIP_H         ICON                    "res\\FlipH.ico"
+
+IDI_ICON_FLIP_V         ICON                    "res\\FlipV.ico"
+
+IDI_ICON_TRANSPOSE      ICON                    "res\\Transpose.ico"
+
+IDI_ICON_ZOOM_DEFAULT   ICON                    "res\\ZoomDefault.ico"
+
+IDI_ICON_ZOOM_IN        ICON                    "res\\ZoomIn.ico"
+
+IDI_ICON_ZOOM_OUT       ICON                    "res\\ZoomOut.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+
+IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    BUTTON      ID_APP_ABOUT
+    BUTTON      ID_TOOLBAR_ENCODE
+END
+
+IDR_MAINFRAME_256 TOOLBAR 16, 16
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_VIEW_ZOOM_IN
+    BUTTON      ID_VIEW_ZOOM_OUT
+    BUTTON      ID_VIEW_ZOOM_DEFAULT
+    BUTTON      ID_VIEW_FLIP_V
+    BUTTON      ID_VIEW_FLIP_H
+    BUTTON      ID_VIEW_TRANSPOSE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    BUTTON      ID_APP_ABOUT
+    BUTTON      ID_EDIT_BPP
+    BUTTON      ID_EDIT_ROTATE
+END
+
+IDR_SORT TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_SORT_MENU
+    BUTTON      ID_NEW_FOLDER
+END
+
+IDR_EXPLORER TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_PROPERTIES
+END
+
+IDR_MENU_IMAGES TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_WINDOW_MANAGER
+    SEPARATOR
+    BUTTON      ID_WINDOW_CASCADE
+    BUTTON      ID_WINDOW_TILE_HORZ
+    BUTTON      ID_TOOLS_MACRO
+    BUTTON      ID_SORTING_SORTALPHABETIC
+    BUTTON      ID_SORTING_SORTBYTYPE
+    BUTTON      ID_SORTING_SORTBYACCESS
+    BUTTON      ID_SORTING_GROUPBYTYPE
+END
+
+IDR_PROPERTIES TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_EXPAND_ALL
+    BUTTON      ID_SORTPROPERTIES
+    BUTTON      ID_PROPERTIES1
+    BUTTON      ID_PROPERTIES2
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU
+BEGIN
+    POPUP "文件(&F)"
+    BEGIN
+        MENUITEM "新建(&N)\tCtrl+N",              ID_FILE_NEW
+        MENUITEM "打开(&O)...\tCtrl+O",           ID_FILE_OPEN
+        MENUITEM "关闭(&C)",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "打印设置(&R)...",                 ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "最近的文件",                       ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "退出(&X)",                      ID_APP_EXIT
+    END
+    POPUP "视图(&V)"
+    BEGIN
+        POPUP "工具栏和停靠窗口(&T)"
+        BEGIN
+            MENUITEM "<占位符>",                       ID_VIEW_TOOLBAR
+        END
+        MENUITEM "状态栏(&S)",                     ID_VIEW_STATUS_BAR
+    END
+    POPUP "帮助(&H)"
+    BEGIN
+        MENUITEM "关于 3DCode(&A)...",            ID_APP_ABOUT
+    END
+END
+
+IDR_3DCodeTYPE MENU
+BEGIN
+    POPUP "文件(&F)"
+    BEGIN
+        MENUITEM "新建(&N)\tCtrl+N",              ID_FILE_NEW
+        MENUITEM "打开(&O)...\tCtrl+O",           ID_FILE_OPEN
+        MENUITEM "关闭(&C)",                      ID_FILE_CLOSE
+        MENUITEM "保存(&S)\tCtrl+S",              ID_FILE_SAVE
+        MENUITEM "另存为(&A)...",                  ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "打印(&P)...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM "打印预览(&V)",                    ID_FILE_PRINT_PREVIEW
+        MENUITEM "打印设置(&R)...",                 ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "最近的文件",                       ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "退出(&X)",                      ID_APP_EXIT
+    END
+    POPUP "编辑(&E)"
+    BEGIN
+        MENUITEM "撤消(&U)\tCtrl+Z",              ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "剪切(&T)\tCtrl+X",              ID_EDIT_CUT
+        MENUITEM "复制(&C)\tCtrl+C",              ID_EDIT_COPY
+        MENUITEM "粘贴(&P)\tCtrl+V",              ID_EDIT_PASTE
+    END
+    POPUP "视图(&V)"
+    BEGIN
+        POPUP "工具栏和停靠窗口(&T)"
+        BEGIN
+            MENUITEM "<占位符>",                       ID_VIEW_TOOLBAR
+        END
+        MENUITEM "状态栏(&S)",                     ID_VIEW_STATUS_BAR
+    END
+    POPUP "窗口(&W)"
+    BEGIN
+        MENUITEM "新建窗口(&N)",                    ID_WINDOW_NEW
+    END
+    POPUP "帮助(&H)"
+    BEGIN
+        MENUITEM "关于 3DCode(&A)...",            ID_APP_ABOUT
+    END
+END
+
+IDR_POPUP_EDIT MENU
+BEGIN
+    POPUP "编辑"
+    BEGIN
+        MENUITEM "剪切(&T)\tCtrl+X",              ID_EDIT_CUT
+        MENUITEM "复制(&C)\tCtrl+C",              ID_EDIT_COPY
+        MENUITEM "粘贴(&P)\tCtrl+V",              ID_EDIT_PASTE
+    END
+END
+
+IDR_POPUP_SORT MENU
+BEGIN
+    POPUP "排序"
+    BEGIN
+        MENUITEM "按字母顺序排序(&S)",                 ID_SORTING_SORTALPHABETIC
+        MENUITEM "按类型排序(&T)",                   ID_SORTING_SORTBYTYPE
+        MENUITEM "按访问排序(&E)",                   ID_SORTING_SORTBYACCESS
+        MENUITEM "按类型分组(&Y)",                   ID_SORTING_GROUPBYTYPE
+    END
+END
+
+IDR_POPUP_EXPLORER MENU
+BEGIN
+    POPUP "资源管理器"
+    BEGIN
+        MENUITEM "打开(&O)",                      ID_OPEN
+        MENUITEM "打开方式(&W)....",                ID_OPEN_WITH
+        MENUITEM SEPARATOR
+        MENUITEM "编译(&C)",                      ID_DUMMY_COMPILE
+        MENUITEM SEPARATOR
+        MENUITEM "剪切(&T)\tCtrl+X",              ID_EDIT_CUT
+        MENUITEM "复制(&C)\tCtrl+C",              ID_EDIT_COPY
+        MENUITEM "移除(&R)",                      ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "属性(&P)...",                   ID_PROPERTIES
+    END
+END
+
+IDR_OUTPUT_POPUP MENU
+BEGIN
+    POPUP "弹出项"
+    BEGIN
+        MENUITEM "复制(&C)",                      ID_EDIT_COPY
+        MENUITEM "清除(&C)",                      ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "隐藏(&H)",                      ID_VIEW_QR_ENCODE
+    END
+END
+
+IDR_HELP_MENU MENU
+BEGIN
+    MENUITEM "关于 3DCode(&A)...",            ID_APP_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于 3DCode"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
+    LTEXT           "3DCode，1.0 版",IDC_STATIC,42,14,114,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2015",IDC_STATIC,42,26,114,8
+    DEFPUSHBUTTON   "确定",IDOK,113,41,50,14,WS_GROUP
+END
+
+IDD_QRENCODE_DIALOG DIALOGEX 0, 0, 250, 300
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDITSOURCEDATA_PUBLIC,15,237,105,55,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_VSCROLL
+    EDITTEXT        IDC_EDITSOURCEDATA_PRIVATE,141,237,105,55,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_VSCROLL
+    COMBOBOX        IDC_COMBOLEVEL,12,16,48,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBOVERSION,80,16,36,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "扩展",IDC_CHECKAUTOEXTENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,143,16,30,12
+    COMBOBOX        IDC_COMBOMASKINGNO,190,16,36,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDITMODULESIZE,12,51,41,12,ES_CENTER | ES_MULTILINE | ES_AUTOHSCROLL | ES_NOHIDESEL | ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_SPINMODULESIZE,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,52,50,11,14
+    EDITTEXT        IDC_FOREGROUND_R,139,50,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_FOREGROUND_G,177,50,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_FOREGROUND_B,215,50,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_BACKGROUND_R,139,70,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_BACKGROUND_G,177,70,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_BACKGROUND_B,215,70,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_QRCOLOR1_R,139,90,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_QRCOLOR1_G,177,90,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_QRCOLOR1_B,215,90,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_QRCOLOR2_R,139,110,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_QRCOLOR2_G,177,110,20,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_QRCOLOR2_B,215,110,20,14,ES_CENTER | ES_AUTOHSCROLL
+    PUSHBUTTON      "前景色",IDC_BN_FOREGROUND,84,50,37,14
+    PUSHBUTTON      "背景色",IDC_BN_BACKGROUND,84,70,37,14
+    PUSHBUTTON      "彩色一",IDC_BN_ENCODE_COLOR1,84,90,37,14
+    PUSHBUTTON      "彩色二",IDC_BN_ENCODE_COLOR2,84,110,37,14
+    CONTROL         "",IDC_SLIDER_LOGO_WIDTH,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,83,144,155,12
+    CONTROL         "",IDC_SLIDER_LOGO_HEIGHT,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,83,160,155,12
+    CONTROL         "开启混合",IDC_ENABLE_MIXED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,185,172,48,10
+    GROUPBOX        "纠错等级",IDC_STATIC,5,5,61,31
+    GROUPBOX        "编码版本",IDC_STATIC,73,5,106,31
+    LTEXT           "(1)",IDC_STATICVERSION,124,18,14,8
+    GROUPBOX        "掩码模式",IDC_STATIC,184,5,59,31
+    LTEXT           "(0)",IDC_STATICMASKINGNO,230,18,10,8
+    GROUPBOX        "模块尺寸",IDC_STATIC,5,39,61,92
+    CTEXT           "图像大小:",IDC_STATIC,7,101,55,8
+    CTEXT           "1024 X 1024",IDC_STATICBMPSIZE,7,117,55,8
+    GROUPBOX        "操作",IDC_STATIC,5,134,61,98
+    PUSHBUTTON      "导入标识",IDC_IMPORT_LOGO,14,145,44,14
+    PUSHBUTTON      "重置标识",IDC_RESET_LOGO_SIZE,14,167,44,14
+    PUSHBUTTON      "清除标识",IDC_CLEAR_LOGO,14,189,44,14
+    GROUPBOX        "编码颜色",IDC_STATIC,74,39,169,92
+    GROUPBOX        "标识大小",IDC_STATIC,74,134,169,53
+    PUSHBUTTON      "编码",IDC_BUTTON_ENCODE,202,214,40,14
+    LTEXT           "公开数据",IDC_STATIC,4,241,11,37
+    LTEXT           "加密数据",IDC_STATIC,126,241,11,37
+    GROUPBOX        "密文纠错等级",IDC_STATIC,73,193,58,36
+    CTEXT           "编码大小:",IDC_STATIC,7,69,55,8
+    CTEXT           "21 X 21",IDC_STATICQRCODESIZE,7,85,55,8
+    PUSHBUTTON      "保存图像",IDC_BUTTON_SAVE,14,211,44,14
+    COMBOBOX        IDC_COMBOLEVEL2,83,208,40,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBOMASKINGNO2,146,208,40,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "密文掩码",IDC_STATIC,137,193,58,36
+    CONTROL         "压缩",IDC_CHECK_COMPRESS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,202,195,40,14
+END
+
+IDD_QRDECODE_DIALOG DIALOGEX 0, 0, 200, 300
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "混合二值化",IDC_CHECK_USE_HYBRID,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,11,63,10
+    CONTROL         "强力搜索",IDC_CHECK_TRY_HARDER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,115,11,63,10
+    EDITTEXT        IDC_EDITSOURCEDATA_PUBLIC,5,187,187,47,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | ES_WANTRETURN | WS_VSCROLL
+    EDITTEXT        IDC_EDITSOURCEDATA_PRIVATE,5,247,187,47,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | ES_WANTRETURN | WS_VSCROLL
+    EDITTEXT        IDC_EDIT_EC_LEVEL,58,38,36,12,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_MODULESIZE,58,56,36,12,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_QR_VERSION,147,37,36,12,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_MASK_VERSION,147,55,36,12,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    GROUPBOX        "设置",IDC_STATIC,5,2,187,26
+    GROUPBOX        "QR码",IDC_STATIC,5,29,187,45
+    LTEXT           "纠错等级:",IDC_STATIC,12,40,40,12
+    LTEXT           "模块大小:",IDC_STATIC,12,58,40,12
+    LTEXT           "编码版本:",IDC_STATIC,102,40,40,12
+    LTEXT           "掩码版本:",IDC_STATIC,102,58,40,12
+    PUSHBUTTON      "解码",IDC_BUTTON_DECODE,16,148,50,14
+    LTEXT           "公开数据",IDC_STATIC,9,175,33,8
+    LTEXT           "加密数据",IDC_STATIC,9,235,33,8
+    PUSHBUTTON      "保存",IDC_BUTTON_SAVE_IMAGE,75,148,50,14
+    GROUPBOX        "密文",IDC_STATIC,5,76,187,27
+    EDITTEXT        IDC_EDIT_INNER_ECLEVEL,58,86,36,12,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "纠错等级:",IDC_STATIC,12,88,40,12
+    PUSHBUTTON      "前景色",IDC_BN_FOREGROUND,12,116,37,14
+    PUSHBUTTON      "背景色",IDC_BN_BACKGROUND,57,116,37,14
+    PUSHBUTTON      "彩色一",IDC_BN_ENCODE_COLOR1,102,116,37,14
+    PUSHBUTTON      "彩色二",IDC_BN_ENCODE_COLOR2,147,116,37,14
+    GROUPBOX        "解码颜色",IDC_STATIC,5,105,187,30
+    LTEXT           "掩码版本:",IDC_STATIC,102,86,40,12
+    EDITTEXT        IDC_EDIT_INNER_MASK,147,85,36,12,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    GROUPBOX        "操作",IDC_STATIC,7,138,187,31
+    PUSHBUTTON      "清除",IDC_BUTTON_CLEAR,134,148,50,14
+END
+
+IDD_MESSAGE_DIALOG DIALOGEX 0, 0, 189, 103
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "请输入"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_INPUT,102,25,50,14,ES_CENTER | ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "确定",IDOK,31,63,50,14
+    PUSHBUTTON      "取消",IDCANCEL,102,63,50,14
+    LTEXT           "Name:",IDC_INPUT_NAME,31,25,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "CompanyName", "首都师范大学"
+            VALUE "FileDescription", "3DCode"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "3DCode.exe"
+            VALUE "LegalCopyright", "(C) 袁沅祥。  保留所有权利。"
+            VALUE "OriginalFilename", "3DCode.exe"
+            VALUE "ProductName", "3DCode"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 163
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_QRENCODE_DIALOG, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 299
+    END
+
+    IDD_QRDECODE_DIALOG, DIALOG
+    BEGIN
+    END
+
+    IDD_MESSAGE_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 182
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 96
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_QRDECODE_DIALOG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDP_OLE_INIT_FAILED     "OLE 初始化失败。  请确保 OLE 库是正确的版本。"
+END
+
+STRINGTABLE
+BEGIN
+    IDR_MAINFRAME           "3DCode"
+    IDR_3DCodeTYPE          "\n3DCode\n3DCode\n常见格式\n.bmp;.jpg;.png;.tif;.gif;.ico;\n3DCode.Document\n3DCode.Document"
+    ID_WINDOW_MANAGER       "窗口(&W)..."
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_APP_TITLE       "3DCode"
+    AFX_IDS_IDLEMESSAGE     "就绪"
+END
+
+STRINGTABLE
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_NEW             "创建新文档\n新建"
+    ID_FILE_OPEN            "打开现有文档\n打开"
+    ID_FILE_CLOSE           "关闭活动文档\n关闭"
+    ID_FILE_SAVE            "保存活动文档\n保存"
+    ID_FILE_SAVE_AS         "用新名称保存活动文档\n另存为"
+    ID_FILE_PAGE_SETUP      "更改打印选项\n页面设置"
+    ID_FILE_PRINT_SETUP     "更改打印机选项和打印选项\n打印设置"
+    ID_FILE_PRINT           "打印活动文档\n打印"
+    ID_FILE_PRINT_DIRECT    "使用当前选项打印活动文档\n快速打印"
+    ID_FILE_PRINT_PREVIEW   "显示整页\n打印预览"
+END
+
+STRINGTABLE
+BEGIN
+    ID_APP_ABOUT            "显示程序信息、版本号和版权信息\n关于"
+    ID_APP_EXIT             "退出应用程序；提示保存文档\n退出"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_MRU_FILE1       "打开此文档"
+    ID_FILE_MRU_FILE2       "打开此文档"
+    ID_FILE_MRU_FILE3       "打开此文档"
+    ID_FILE_MRU_FILE4       "打开此文档"
+    ID_FILE_MRU_FILE5       "打开此文档"
+    ID_FILE_MRU_FILE6       "打开此文档"
+    ID_FILE_MRU_FILE7       "打开此文档"
+    ID_FILE_MRU_FILE8       "打开此文档"
+    ID_FILE_MRU_FILE9       "打开此文档"
+    ID_FILE_MRU_FILE10      "打开此文档"
+    ID_FILE_MRU_FILE11      "打开此文档"
+    ID_FILE_MRU_FILE12      "打开此文档"
+    ID_FILE_MRU_FILE13      "打开此文档"
+    ID_FILE_MRU_FILE14      "打开此文档"
+    ID_FILE_MRU_FILE15      "打开此文档"
+    ID_FILE_MRU_FILE16      "打开此文档"
+END
+
+STRINGTABLE
+BEGIN
+    ID_NEXT_PANE            "切换到下一个窗格\n下一窗格"
+    ID_PREV_PANE            "切换回上一个窗格\n上一窗格"
+END
+
+STRINGTABLE
+BEGIN
+    ID_WINDOW_NEW           "为活动文档打开另一个窗口\n新建窗口"
+    ID_WINDOW_ARRANGE       "在窗口底部排列图标\n排列图标"
+    ID_WINDOW_CASCADE       "以重叠方式排列窗口\n层叠窗口"
+    ID_WINDOW_TILE_HORZ     "以不重叠的平铺方式排列窗口\n平铺窗口"
+    ID_WINDOW_TILE_VERT     "以不重叠的平铺方式排列窗口\n平铺窗口"
+    ID_WINDOW_SPLIT         "将活动窗口拆分为多个窗格\n拆分"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_CLEAR           "清除所选内容\n清除"
+    ID_EDIT_CLEAR_ALL       "清除全部内容\n全部清除"
+    ID_EDIT_COPY            "复制所选内容，将其放入剪贴板\n复制"
+    ID_EDIT_CUT             "剪切所选内容，将其放入剪贴板\n剪切"
+    ID_EDIT_FIND            "查找指定的文本\n查找"
+    ID_EDIT_PASTE           "插入剪贴板内容\n粘贴"
+    ID_EDIT_REPEAT          "重复上一操作\n重复"
+    ID_EDIT_REPLACE         "用其他文本替换特定的文本\n替换"
+    ID_EDIT_SELECT_ALL      "选定整个文档\n全选"
+    ID_EDIT_UNDO            "撤消上一操作\n撤消"
+    ID_EDIT_REDO            "重做上次撤消的操作\n重做"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_STATUS_BAR      "显示或隐藏状态栏\n切换状态栏"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCSIZE          "更改窗口大小"
+    AFX_IDS_SCMOVE          "更改窗口位置"
+    AFX_IDS_SCMINIMIZE      "将窗口缩小成图标"
+    AFX_IDS_SCMAXIMIZE      "将窗口放大到最大尺寸"
+    AFX_IDS_SCNEXTWINDOW    "切换到下一个文档窗口"
+    AFX_IDS_SCPREVWINDOW    "切换到上一个文档窗口"
+    AFX_IDS_SCCLOSE         "关闭活动窗口并提示保存文档"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCRESTORE       "将窗口恢复到正常大小"
+    AFX_IDS_SCTASKLIST      "激活任务列表"
+    AFX_IDS_MDICHILD        "激活此窗口"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "关闭打印预览模式\n取消预览"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STATUS_PANE1        "窗格 1"
+    IDS_STATUS_PANE2        "窗格 2"
+    IDS_TOOLBAR_STANDARD    "标准"
+    IDS_TOOLBAR_CUSTOMIZE   "自定义..."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_FILE_VIEW           "文件视图"
+    IDS_CLASS_VIEW          "类视图"
+    IDS_OUTPUT_WND          "输出"
+    IDS_PROPERTIES_WND      "属性"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_EXPLORER            "资源管理器"
+    IDS_EDIT_MENU           "编辑"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_BUILD_TAB           "生成"
+    IDS_DEBUG_TAB           "调试"
+    IDS_FIND_TAB            "查找"
+END
+
+STRINGTABLE
+BEGIN
+    ID_TOOLBAR_ENCODE       "对给定数据进行编码操作\n编码"
+    IDC_ENABLE_MIXED        "\n开启混合"
+    ID_VIEW_ZOOM_IN         "放大图像进行显示\n放大"
+    ID_VIEW_ZOOM_OUT        "缩小图像进行显示\n缩小"
+    ID_VIEW_ZOOM_DEFAULT    "按原比例查看图像\n1:1"
+    ID_VIEW_FLIP_V          "垂直翻转图像\n上下翻转"
+    ID_VIEW_FLIP_H          "水平翻转图像\n左右翻转"
+    ID_VIEW_TRANSPOSE       "转置图像\n转置"
+END
+
+STRINGTABLE
+BEGIN
+    IDC_IMPORT_LOGO         "\n导入标识"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_BPP             "修改图像位深度\n位深"
+    ID_EDIT_ROTATE          "旋转图像\n旋转"
+END
+
+#endif    // 中文(简体，中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE 4, 2
+#include "res\3DCode.rc2"  // Microsoft Visual C++ 
+#include "l.CHS\afxres.rc"      //
+#include "l.CHS\afxprint.rc"    //
+#if !defined(_AFXDLL)
+#include "l.CHS\afxribbon.rc"   //
+#endif
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

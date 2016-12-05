@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MTD|Win32">
+      <Configuration>MTD</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MT|Win32">
+      <Configuration>MT</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{32D39245-E617-4872-A172-FB92D983F002}</ProjectGuid>
+    <RootNamespace>qrdecode</RootNamespace>
+    <ProjectName>libqrdecode</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='MT|Win32'">
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='MTD|Win32'">
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(ProjectDir)zlib;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)zlib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MT|Win32'">
+    <IncludePath>$(ProjectDir)zlib;$(IncludePath)</IncludePath>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MTD|Win32'">
+    <IncludePath>$(ProjectDir)zlib;$(IncludePath)</IncludePath>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProjectDir)zlib;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)zlib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>NO_ICONV;ANDROID_CPP;NO_STDAFX_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>$(TargetDir)zlib.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NO_ICONV;ANDROID_CPP;NO_STDAFX_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(TargetDir)zlib.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MT|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>NO_ICONV;ANDROID_CPP;NO_STDAFX_H;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(TargetDir)zlib.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MTD|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>NO_ICONV;ANDROID_CPP;NO_STDAFX_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(TargetDir)zlib.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ColorsBase.cpp" />
+    <ClCompile Include="ColorsDecode.cpp" />
+    <ClCompile Include="ColorsEncode.cpp" />
+    <ClCompile Include="DataTypes.cpp" />
+    <ClCompile Include="FileIO.cpp" />
+    <ClCompile Include="ImageReader.cpp" />
+    <ClCompile Include="PerspectTransform.cpp" />
+    <ClCompile Include="PixelsOperation.cpp" />
+    <ClCompile Include="Decodefuncs.cpp" />
+    <ClCompile Include="QrDecoder.cpp" />
+    <ClCompile Include="QR_Encode.cpp" />
+    <ClCompile Include="reedSolomon.cpp" />
+    <ClCompile Include="RS_ecc.cpp" />
+    <ClCompile Include="zlibmgr.cpp" />
+    <ClCompile Include="ZXingDeCoder.cpp" />
+    <ClCompile Include="ZXingTest.cpp" />
+    <ClCompile Include="zxing\BarcodeFormat.cpp" />
+    <ClCompile Include="zxing\Binarizer.cpp" />
+    <ClCompile Include="zxing\BinaryBitmap.cpp" />
+    <ClCompile Include="zxing\ChecksumException.cpp" />
+    <ClCompile Include="zxing\common\BitArray.cpp" />
+    <ClCompile Include="zxing\common\BitMatrix.cpp" />
+    <ClCompile Include="zxing\common\BitSource.cpp" />
+    <ClCompile Include="zxing\common\CharacterSetECI.cpp" />
+    <ClCompile Include="zxing\common\DecoderResult.cpp" />
+    <ClCompile Include="zxing\common\DetectorResult.cpp" />
+    <ClCompile Include="zxing\common\GlobalHistogramBinarizer.cpp" />
+    <ClCompile Include="zxing\common\GridSampler.cpp" />
+    <ClCompile Include="zxing\common\HybridBinarizer.cpp" />
+    <ClCompile Include="zxing\common\IllegalArgumentException.cpp" />
+    <ClCompile Include="zxing\common\PerspectiveTransform.cpp" />
+    <ClCompile Include="zxing\common\reedsolomon\GenericGF.cpp" />
+    <ClCompile Include="zxing\common\reedsolomon\GenericGFPoly.cpp" />
+    <ClCompile Include="zxing\common\reedsolomon\ReedSolomonDecoder.cpp" />
+    <ClCompile Include="zxing\common\reedsolomon\ReedSolomonException.cpp" />
+    <ClCompile Include="zxing\common\Str.cpp" />
+    <ClCompile Include="zxing\common\StringUtils.cpp" />
+    <ClCompile Include="zxing\DecodeHints.cpp" />
+    <ClCompile Include="zxing\FormatException.cpp" />
+    <ClCompile Include="zxing\InvertedLuminanceSource.cpp" />
+    <ClCompile Include="zxing\LuminanceSource.cpp" />
+    <ClCompile Include="zxing\qrcode\decoder\BitMatrixParser.cpp" />
+    <ClCompile Include="zxing\qrcode\decoder\DataBlock.cpp" />
+    <ClCompile Include="zxing\qrcode\decoder\DataMask.cpp" />
+    <ClCompile Include="zxing\qrcode\decoder\DecodedBitStreamParser.cpp" />
+    <ClCompile Include="zxing\qrcode\decoder\Decoder.cpp" />
+    <ClCompile Include="zxing\qrcode\decoder\Mode.cpp" />
+    <ClCompile Include="zxing\qrcode\detector\AlignmentPattern.cpp" />
+    <ClCompile Include="zxing\qrcode\detector\AlignmentPatternFinder.cpp" />
+    <ClCompile Include="zxing\qrcode\detector\Detector.cpp" />
+    <ClCompile Include="zxing\qrcode\detector\FinderPattern.cpp" />
+    <ClCompile Include="zxing\qrcode\detector\FinderPatternFinder.cpp" />
+    <ClCompile Include="zxing\qrcode\detector\FinderPatternInfo.cpp" />
+    <ClCompile Include="zxing\qrcode\ErrorCorrectionLevel.cpp" />
+    <ClCompile Include="zxing\qrcode\FormatInformation.cpp" />
+    <ClCompile Include="zxing\qrcode\QRCodeReader.cpp" />
+    <ClCompile Include="zxing\qrcode\Version.cpp" />
+    <ClCompile Include="zxing\Reader.cpp" />
+    <ClCompile Include="zxing\Result.cpp" />
+    <ClCompile Include="zxing\ResultPoint.cpp" />
+    <ClCompile Include="zxing\ResultPointCallback.cpp" />
+    <ClCompile Include="zxing\ZXingException.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ColorsBase.h" />
+    <ClInclude Include="ColorsDecode.h" />
+    <ClInclude Include="ColorsEncode.h" />
+    <ClInclude Include="ColorsMask.h" />
+    <ClInclude Include="DataTypes.h" />
+    <ClInclude Include="FileIO.h" />
+    <ClInclude Include="ImageReader.h" />
+    <ClInclude Include="medianBlur.h" />
+    <ClInclude Include="PerspectTransform.h" />
+    <ClInclude Include="PixelsOperation.h" />
+    <ClInclude Include="primitives.h" />
+    <ClInclude Include="DecodeFuncs.h" />
+    <ClInclude Include="QrDecoder.h" />
+    <ClInclude Include="QR_Encode.h" />
+    <ClInclude Include="reedSolomon.h" />
+    <ClInclude Include="RS_ecc.h" />
+    <ClInclude Include="templateFuncs.h" />
+    <ClInclude Include="zlibmgr.h" />
+    <ClInclude Include="ZXingDeCoder.h" />
+    <ClInclude Include="zxing\BarcodeFormat.h" />
+    <ClInclude Include="zxing\Binarizer.h" />
+    <ClInclude Include="zxing\BinaryBitmap.h" />
+    <ClInclude Include="zxing\ChecksumException.h" />
+    <ClInclude Include="zxing\common\Array.h" />
+    <ClInclude Include="zxing\common\BitArray.h" />
+    <ClInclude Include="zxing\common\BitMatrix.h" />
+    <ClInclude Include="zxing\common\BitSource.h" />
+    <ClInclude Include="zxing\common\CharacterSetECI.h" />
+    <ClInclude Include="zxing\common\Counted.h" />
+    <ClInclude Include="zxing\common\DecoderResult.h" />
+    <ClInclude Include="zxing\common\DetectorResult.h" />
+    <ClInclude Include="zxing\common\detector\MathUtils.h" />
+    <ClInclude Include="zxing\common\GlobalHistogramBinarizer.h" />
+    <ClInclude Include="zxing\common\GridSampler.h" />
+    <ClInclude Include="zxing\common\HybridBinarizer.h" />
+    <ClInclude Include="zxing\common\IllegalArgumentException.h" />
+    <ClInclude Include="zxing\common\PerspectiveTransform.h" />
+    <ClInclude Include="zxing\common\reedsolomon\GenericGF.h" />
+    <ClInclude Include="zxing\common\reedsolomon\GenericGFPoly.h" />
+    <ClInclude Include="zxing\common\reedsolomon\ReedSolomonDecoder.h" />
+    <ClInclude Include="zxing\common\reedsolomon\ReedSolomonException.h" />
+    <ClInclude Include="zxing\common\Str.h" />
+    <ClInclude Include="zxing\common\StringUtils.h" />
+    <ClInclude Include="zxing\DecodeHints.h" />
+    <ClInclude Include="zxing\FormatException.h" />
+    <ClInclude Include="zxing\IllegalStateException.h" />
+    <ClInclude Include="zxing\InvertedLuminanceSource.h" />
+    <ClInclude Include="zxing\LuminanceSource.h" />
+    <ClInclude Include="zxing\NotFoundException.h" />
+    <ClInclude Include="zxing\qrcode\decoder\BitMatrixParser.h" />
+    <ClInclude Include="zxing\qrcode\decoder\DataBlock.h" />
+    <ClInclude Include="zxing\qrcode\decoder\DataMask.h" />
+    <ClInclude Include="zxing\qrcode\decoder\DecodedBitStreamParser.h" />
+    <ClInclude Include="zxing\qrcode\decoder\Decoder.h" />
+    <ClInclude Include="zxing\qrcode\decoder\Mode.h" />
+    <ClInclude Include="zxing\qrcode\detector\AlignmentPattern.h" />
+    <ClInclude Include="zxing\qrcode\detector\AlignmentPatternFinder.h" />
+    <ClInclude Include="zxing\qrcode\detector\Detector.h" />
+    <ClInclude Include="zxing\qrcode\detector\FinderPattern.h" />
+    <ClInclude Include="zxing\qrcode\detector\FinderPatternFinder.h" />
+    <ClInclude Include="zxing\qrcode\detector\FinderPatternInfo.h" />
+    <ClInclude Include="zxing\qrcode\ErrorCorrectionLevel.h" />
+    <ClInclude Include="zxing\qrcode\FormatInformation.h" />
+    <ClInclude Include="zxing\qrcode\QRCodeReader.h" />
+    <ClInclude Include="zxing\qrcode\Version.h" />
+    <ClInclude Include="zxing\Reader.h" />
+    <ClInclude Include="zxing\ReaderException.h" />
+    <ClInclude Include="zxing\Result.h" />
+    <ClInclude Include="zxing\ResultPoint.h" />
+    <ClInclude Include="zxing\ResultPointCallback.h" />
+    <ClInclude Include="zxing\ZXing.h" />
+    <ClInclude Include="zxing\ZXingException.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
