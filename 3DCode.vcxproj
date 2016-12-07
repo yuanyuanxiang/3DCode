@@ -69,6 +69,7 @@
     <ReferencePath>$(ProjectDir);$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib</ReferencePath>
     <IncludePath>$(ProjectDir)zlib;$(IncludePath)</IncludePath>
     <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
+    <LibraryPath>lib;$(TargetDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -99,7 +100,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(TargetDir)libqrdecode.lib;$(TargetDir)zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>libqrdecode.lib;zlib.lib</AdditionalDependencies>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
     </Link>
@@ -160,9 +161,6 @@
       <AdditionalDependencies>$(TargetDir)libqrdecode.lib;$(TargetDir)zlib.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DCode.h" />
     <ClInclude Include="3DCodeDoc.h" />
