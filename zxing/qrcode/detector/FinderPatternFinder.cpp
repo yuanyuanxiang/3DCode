@@ -20,9 +20,9 @@
  */
 
 #include <algorithm>
-#include "zxing/qrcode/detector/FinderPatternFinder.h"
-#include "zxing/ReaderException.h"
-#include "zxing/DecodeHints.h"
+#include <zxing/qrcode/detector/FinderPatternFinder.h>
+#include <zxing/ReaderException.h>
+#include <zxing/DecodeHints.h>
 
 using std::sort;
 using std::max;
@@ -40,9 +40,7 @@ using zxing::ResultPointCallback;
 using zxing::ResultPoint;
 using zxing::DecodeHints;
 
-// classes in rule will be used by sort
-
-namespace rule{
+namespace {
 
 class FurthestFromAverageComparator {
 private:
@@ -77,8 +75,6 @@ public:
 };
 
 }
-
-using namespace rule;
 
 int FinderPatternFinder::CENTER_QUORUM = 2;
 int FinderPatternFinder::MIN_SKIP = 3;

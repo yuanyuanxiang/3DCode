@@ -21,7 +21,7 @@
 
 #include <string>
 #include <map>
-#include "zxing/DecodeHints.h"
+#include <zxing/DecodeHints.h>
 
 namespace zxing {
 namespace common {

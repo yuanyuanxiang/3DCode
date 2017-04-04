@@ -18,9 +18,9 @@
  * limitations under the License.
  */
 
-#include "zxing/common/GreyscaleLuminanceSource.h"
-#include "zxing/common/GreyscaleRotatedLuminanceSource.h"
-#include "zxing/common/IllegalArgumentException.h"
+#include <zxing/common/GreyscaleLuminanceSource.h>
+#include <zxing/common/GreyscaleRotatedLuminanceSource.h>
+#include <zxing/common/IllegalArgumentException.h>
 
 using zxing::Ref;
 using zxing::ArrayRef;
@@ -67,6 +67,10 @@ ArrayRef<char> GreyscaleLuminanceSource::getMatrix() const {
     }
   }
   return result;
+}
+
+Ref<LuminanceSource> GreyscaleLuminanceSource::crop(int left, int top, int width, int height) const {
+  return Ref<LuminanceSource>(new GreyscaleLuminanceSource(greyData_, dataWidth_, dataHeight_, left, top, width, height));
 }
 
 Ref<LuminanceSource> GreyscaleLuminanceSource::rotateCounterClockwise() const {

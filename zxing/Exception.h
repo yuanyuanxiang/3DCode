@@ -3,7 +3,7 @@
 #define __EXCEPTION_H__
 
 /*
- *  ZXingException.h
+ *  Exception.h
  *  ZXing
  *
  *  Copyright 2010 ZXing authors All rights reserved.
@@ -26,15 +26,15 @@
 
 namespace zxing {
 
-class ZXingException : public std::exception {
+class Exception : public std::exception {
 private:
   char const* const message;
 
 public:
-  ZXingException() throw() : message(0) {}
-  ZXingException(const char* msg) throw() : message(copy(msg)) {}
-  ZXingException(ZXingException const& that) throw() : std::exception(that), message(copy(that.message)) {}
-  ~ZXingException() throw() {
+  Exception() throw() : message(0) {}
+  Exception(const char* msg) throw() : message(copy(msg)) {}
+  Exception(Exception const& that) throw() : std::exception(that), message(copy(that.message)) {}
+  ~Exception() throw() {
     if(message) {
       deleteMessage();
     }

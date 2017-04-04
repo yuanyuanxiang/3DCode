@@ -31,8 +31,7 @@ BEGIN_MESSAGE_MAP(C3DCodeApp, CWinAppEx)
 END_MESSAGE_MAP()
 
 
-// C3DCodeApp 构造
-
+/// C3DCodeApp 构造
 C3DCodeApp::C3DCodeApp()
 {
 	m_bHiColorIcons = TRUE;
@@ -54,13 +53,11 @@ C3DCodeApp::C3DCodeApp()
 	// 将所有重要的初始化放置在 InitInstance 中
 }
 
-// 唯一的一个 C3DCodeApp 对象
-
+/// 唯一的一个 C3DCodeApp 对象
 C3DCodeApp theApp;
 
 
-// C3DCodeApp 初始化
-
+/// C3DCodeApp 初始化
 BOOL C3DCodeApp::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -152,6 +149,7 @@ BOOL C3DCodeApp::InitInstance()
 	return TRUE;
 }
 
+/// 退出
 int C3DCodeApp::ExitInstance()
 {
 	//TODO:  处理可能已添加的附加资源
@@ -163,14 +161,15 @@ int C3DCodeApp::ExitInstance()
 // C3DCodeApp 消息处理程序
 
 
-// 用于应用程序“关于”菜单项的 CAboutDlg 对话框
-
+/** @class CAboutDlg
+* @brief 用于应用程序“关于”菜单项的 CAboutDlg 对话框
+*/
 class CAboutDlg : public CDialogEx
 {
 public:
 	CAboutDlg();
 
-// 对话框数据
+	/// 对话框数据
 	enum { IDD = IDD_ABOUTBOX };
 
 protected:
@@ -181,10 +180,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
+/// 标准构造函数
 CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
 {
 }
 
+/// 对话框数据交互
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -193,15 +194,14 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
-// 用于运行对话框的应用程序命令
+/// 用于运行对话框的应用程序命令
 void C3DCodeApp::OnAppAbout()
 {
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
 }
 
-// C3DCodeApp 自定义加载/保存方法
-
+/// C3DCodeApp 自定义加载/保存方法
 void C3DCodeApp::PreLoadState()
 {
 	BOOL bNameValid;
@@ -214,14 +214,22 @@ void C3DCodeApp::PreLoadState()
 	GetContextMenuManager()->AddMenu(strName, IDR_POPUP_EXPLORER);
 }
 
+/// 加载自定义状态
 void C3DCodeApp::LoadCustomState()
 {
 }
 
+/// 保存自定义状态
 void C3DCodeApp::SaveCustomState()
 {
 }
 
+/**
+* @brief 打开文档
+* @param[in] lpszPathName 文档名称
+* @param[in] bMakeVisible 是否可见
+* @return 文档指针
+*/
 C3DCodeDoc* C3DCodeApp::OpenDocument(LPCTSTR lpszPathName, BOOL bMakeVisible)
 {
 	CDocument* pDoc = m_pDocTemplate->OpenDocumentFile(lpszPathName, bMakeVisible);
@@ -230,23 +238,29 @@ C3DCodeDoc* C3DCodeApp::OpenDocument(LPCTSTR lpszPathName, BOOL bMakeVisible)
 
 // C3DCodeApp 消息处理程序
 
+/// 新建文件时的响应函数
 void C3DCodeApp::OnFileNew()
 {
 	OpenDocument(NULL, TRUE);
 }
 
+/// 打开文件时的响应函数
 void C3DCodeApp::OnFileOpen()
 {
 	CWinAppEx::OnFileOpen();
 }
 
-
+/**
+* @brief 打开文档
+* @param[in] lpszFileName 文档名称
+* @return 文档指针
+*/
 CDocument* C3DCodeApp::OpenDocumentFile(LPCTSTR lpszFileName)
 {
 	C3DCodeDoc *pDoc = (C3DCodeDoc*)AfxGetActiveDoc();
 	CyImage *pImage = AfxGetImage();
 	// 已经存在一个空白文档，则加载图像
-	if (pDoc != NULL && pImage->IsNull())
+	if (pDoc && pImage->IsNull())
 	{
 		if (pDoc->OnOpenDocument(lpszFileName))
 		{
@@ -261,15 +275,21 @@ CDocument* C3DCodeApp::OpenDocumentFile(LPCTSTR lpszFileName)
 }
 
 
-// 获取活动文档的图像指针
+/// 获取活动文档的图像指针
 CyImage* AfxGetImage()
 {
 	C3DCodeDoc* pDoc = (C3DCodeDoc*)AfxGetActiveDoc();
 
-	return pDoc != NULL ? pDoc->GetImage() : NULL;
+	return pDoc ? pDoc->GetImage() : NULL;
 }
 
-// 打开新的文档
+/**
+* @brief 打开新的文档
+* @param[in] lpszPathName 文档名称
+* @param[in] bMakeVisible 是否可见
+* @return 文档指针
+* @remark 该函数是全局的
+*/
 extern C3DCodeDoc* AfxOpenDocument(LPCTSTR lpszPathName, BOOL bMakeVisible)
 {
 	C3DCodeApp* pApp = (C3DCodeApp*)AfxGetApp();

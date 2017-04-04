@@ -21,14 +21,14 @@
  * limitations under the License.
  */
 
-#include "zxing/ZXingException.h"
+#include <zxing/Exception.h>
 
 namespace zxing {
 
-class ReaderException : public ZXingException {
+class ReaderException : public Exception {
  public:
   ReaderException() throw() {}
-  ReaderException(char const* msg) throw() : ZXingException(msg) {}
+  ReaderException(char const* msg) throw() : Exception(msg) {}
   ~ReaderException() throw() {}
 };
 

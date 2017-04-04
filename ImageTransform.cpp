@@ -2,6 +2,7 @@
 #include "DataTypes.h"
 #include "ImageTransform.h"
 #include "templateFuncs.h"
+#include <cmath>
 
 
 #ifdef _DEBUG
@@ -11,16 +12,26 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-/* - 旋转图像 - 
-图像信息：float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel
-旋转角度：float angle
-旋转中心：float x0, float y0
-旋转后顶点：int &Xmin, int &Ymin, int &Xmax, int &Ymax
-新宽度：int &NewWidth
-新高度：int &NewHeight
-新每行字节数：int &NewRowlen
+/** - 旋转图像 - 
+* @param[in] * pSrc 图像指针
+* @param[in] nWidth 图像宽度
+* @param[in] nHeight 图像高度
+* @param[in] nRowlen 图像每行字节数
+* @param[in] nChannel 图像通道
+* @param[in] angle 旋转角度
+* @param[in] x0 旋转中心
+* @param[in] y0 旋转中心
+* @param[out] &Xmin 旋转后顶点
+* @param[out] &Ymin 旋转后顶点
+* @param[out] &Xmax 旋转后顶点
+* @param[out] &Ymax 旋转后顶点
+* @param[out] &NewWidth 新宽度
+* @param[out] &NewHeight 新高度
+* @param[out] &NewRowlen 新每行字节数
 */
-float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, float angle, float x0, float y0, int &Xmin, int &Ymin, int &Xmax, int &Ymax, int &NewWidth, int &NewHeight, int &NewRowlen)
+float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, 
+				   float angle, float x0, float y0, int &Xmin, int &Ymin, int &Xmax, int &Ymax, 
+				   int &NewWidth, int &NewHeight, int &NewRowlen)
 {
 	// 原始图像四个顶点的坐标
 	float x1, x2, x3, x4, y1, y2, y3, y4;
@@ -50,6 +61,7 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 #pragma omp parallel for
 	for (int i = 0; i < NewWidth; ++i)
 	{
+		int w = i * nChannel;
 		for (int j = 0; j < NewHeight; ++j)
 		{
 			float x = float(i + Xmin);
@@ -57,7 +69,8 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 			PositionTransform(x, y, cos_theta, -sin_theta, x0, y0);
 			for (int nCurChannel = 0; nCurChannel < nChannel; ++nCurChannel)
 			{
-				pDst[nCurChannel + i * nChannel + j * NewRowlen] = biLinearInterp(pSrc, nWidth, nHeight, nRowlen, nChannel, nCurChannel, x, y);
+				pDst[nCurChannel + w + j * NewRowlen] = 
+					biLinearInterp(pSrc, nWidth, nHeight, nRowlen, nChannel, nCurChannel, x, y);
 			}
 		}
 	}
@@ -66,14 +79,14 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 }
 
 
-/* - 按照rect裁剪图像 -
-float* pSrc				图像数据
-int &nWidth				图像宽度
-int &nHeight			图像高度
-int &nRowlen			每行字节数
-int nChannel			图像通道
-CLogoRect rect			裁剪区域
-备注：返回裁剪所得图像数据，并且更新宽度、高度和每行字节数
+/** - 按照rect裁剪图像 -
+* @param[in] * pSrc				图像数据
+* @param[out] &nWidth			图像宽度
+* @param[out] &nHeight			图像高度
+* @param[out] &nRowlen			每行字节数
+* @param[in] nChannel			图像通道
+* @param[in] rect				裁剪区域
+* @note 返回裁剪所得图像数据，并且更新宽度、高度和每行字节数
 */
 float* ImageCut(float* pSrc, int &nWidth, int &nHeight, int &nRowlen, int nChannel, CLogoRect rect)
 {
@@ -94,10 +107,11 @@ float* ImageCut(float* pSrc, int &nWidth, int &nHeight, int &nRowlen, int nChann
 	int nNewRowlen = nNewWidth * nChannel;
 	float* pDst = new float[nNewHeight * nNewRowlen];
 
+	int x = cutRect.left * nChannel;
 #pragma omp parallel for
 	for (int i = 0; i < nNewHeight; ++i)
 	{
-		memcpy(pDst + i * nNewRowlen, pSrc + cutRect.left * nChannel + (i + cutRect.top) * nRowlen, nNewRowlen * sizeof(float));
+		memcpy(pDst + i * nNewRowlen, pSrc + x + (i + cutRect.top) * nRowlen, nNewRowlen * sizeof(float));
 	}
 	// 更新图像信息
 	nWidth = nNewWidth;
@@ -107,7 +121,7 @@ float* ImageCut(float* pSrc, int &nWidth, int &nHeight, int &nRowlen, int nChann
 }
 
 
-// 坐标旋转变换，输入旋转角度
+/// 坐标旋转变换，输入旋转角度
 void PositionTransform(float &x, float &y, float theta, float x0, float y0)
 {
 	float delta_x = x - x0;
@@ -118,7 +132,7 @@ void PositionTransform(float &x, float &y, float theta, float x0, float y0)
 }
 
 
-// 坐标旋转变换，输入选族角度
+/// 坐标旋转变换，输入选族角度
 void PositionTransform(float &x, float &y, float theta)
 {
 	float cos_theta = cos(theta);
@@ -129,7 +143,7 @@ void PositionTransform(float &x, float &y, float theta)
 }
 
 
-// 坐标旋转，输入参数为旋转角度的余弦、正弦值
+/// 坐标旋转，输入参数为旋转角度的余弦、正弦值
 void PositionTransform(float &x, float &y, float cos_sin[2], float x0, float y0)
 {
 	float delta_x = x - x0;
@@ -140,7 +154,7 @@ void PositionTransform(float &x, float &y, float cos_sin[2], float x0, float y0)
 }
 
 
-// 坐标旋转，输入参数为旋转角度的余弦、正弦值
+/// 坐标旋转，输入参数为旋转角度的余弦、正弦值
 void PositionTransform(float &x, float &y, float cos_sin[2])
 {
 	float x_temp = x * cos_sin[0] - y * cos_sin[1];
@@ -149,7 +163,7 @@ void PositionTransform(float &x, float &y, float cos_sin[2])
 }
 
 
-// 坐标旋转，输入参数为旋转角度的余弦、正弦值
+/// 坐标旋转，输入参数为旋转角度的余弦、正弦值
 void PositionTransform(float &x, float &y, float cos_theta, float sin_theta, float x0, float y0)
 {
 	float delta_x = x - x0;
@@ -160,7 +174,7 @@ void PositionTransform(float &x, float &y, float cos_theta, float sin_theta, flo
 }
 
 
-// 坐标旋转，输入参数为旋转角度的余弦、正弦值
+/// 坐标旋转，输入参数为旋转角度的余弦、正弦值
 void PositionTransform(float &x, float &y, float cos_theta, float sin_theta)
 {
 	float x_temp = x * cos_theta - y * sin_theta;
@@ -169,7 +183,7 @@ void PositionTransform(float &x, float &y, float cos_theta, float sin_theta)
 }
 
 
-// 寻找四个数中最大者
+/// 寻找四个数中最大者
 float FindMaxBetween4Numbers(float x, float y, float z, float w)
 {
 	float Max1, Max2;
@@ -179,7 +193,7 @@ float FindMaxBetween4Numbers(float x, float y, float z, float w)
 }
 
 
-// 寻找四个数中最小者
+/// 寻找四个数中最小者
 float FindMinBetween4Numbers(float x, float y, float z, float w)
 {
 	float Min1, Min2;
@@ -189,12 +203,19 @@ float FindMinBetween4Numbers(float x, float y, float z, float w)
 }
 
 
-/* - 旋转图像 -
-输入图像信息：float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel
-旋转角度：float angle
-输出图像信息：int &NewWidth, int &NewHeight, int &NewRowlen
+/** - 旋转图像 -
+* @param[in] * pSrc 图像指针
+* @param[in] nWidth 图像宽度
+* @param[in] nHeight 图像高度
+* @param[in] nRowlen 图像每行字节数
+* @param[in] nChannel 图像通道
+* @param[in] angle 旋转角度
+* @param[out] &NewWidth 新的宽度
+* @param[out] &NewHeight 新的高度
+* @param[out] &NewRowlen 新的每行字节数
 */
-float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, float angle, int &NewWidth, int &NewHeight, int &NewRowlen)
+float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, 
+				   float angle, int &NewWidth, int &NewHeight, int &NewRowlen)
 {
 	// 原始图像四个顶点的坐标
 	float x1, x2, x3, x4, y1, y2, y3, y4;
@@ -225,13 +246,15 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 #pragma omp parallel for
 	for (int i = 0; i < NewWidth; ++i)
 	{
+		int w = i * nChannel;
 		for (int j = 0; j < NewHeight; ++j)
 		{
 			float x = float(i + Xmin);
 			float y = float(j + Ymin);
 			PositionTransform(x, y, cos_theta, -sin_theta);
 			for (int nCurChannel = 0; nCurChannel < nChannel; ++nCurChannel)
-				pDst[nCurChannel + i * nChannel + j * NewRowlen] = biLinearInterp(pSrc, nWidth, nHeight, nRowlen, nChannel, nCurChannel, x, y);
+				pDst[nCurChannel + w + j * NewRowlen] = 
+				biLinearInterp(pSrc, nWidth, nHeight, nRowlen, nChannel, nCurChannel, x, y);
 		}
 	}
 
@@ -239,13 +262,21 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 }
 
 
-/* - 旋转图像 -
-输入图像信息：float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel
-旋转角度：float angle
-旋转中心：float x0, float y0
-输出图像信息：int &NewWidth, int &NewHeight, int &NewRowlen
+/** - 旋转图像 -
+* @param[in] * pSrc 图像指针
+* @param[in] nWidth 图像宽度
+* @param[in] nHeight 图像高度
+* @param[in] nRowlen 图像每行字节数
+* @param[in] nChannel 图像通道
+* @param[in] x0 旋转中心
+* @param[in] y0 旋转中心
+* @param[in] angle 旋转角度
+* @param[out] &NewWidth 新的宽度
+* @param[out] &NewHeight 新的高度
+* @param[out] &NewRowlen 新的每行字节数
 */
-float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, float angle, float x0, float y0, int &NewWidth, int &NewHeight, int &NewRowlen)
+float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, 
+				   float angle, float x0, float y0, int &NewWidth, int &NewHeight, int &NewRowlen)
 {
 	// 原始图像四个顶点的坐标
 	float x1, x2, x3, x4, y1, y2, y3, y4;
@@ -276,13 +307,15 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 #pragma omp parallel for
 	for (int i = 0; i < NewWidth; ++i)
 	{
+		int w = i * nChannel;
 		for (int j = 0; j < NewHeight; ++j)
 		{
 			float x = float(i + Xmin);
 			float y = float(j + Ymin);
 			PositionTransform(x, y, cos_theta, -sin_theta, x0, y0);
 			for (int nCurChannel = 0; nCurChannel < nChannel; ++nCurChannel)
-				pDst[nCurChannel + i * nChannel + j * NewRowlen] = biLinearInterp(pSrc, nWidth, nHeight, nRowlen, nChannel, nCurChannel, x, y);
+				pDst[nCurChannel + w + j * NewRowlen] = 
+				biLinearInterp(pSrc, nWidth, nHeight, nRowlen, nChannel, nCurChannel, x, y);
 		}
 	}
 
@@ -290,9 +323,14 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 }
 
 
-/* - 放大图像 -
-原始图像信息：float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel
-目标图像尺寸：int NewWidth, int NewHeight
+/** - 放大图像 -
+* @param[in] * pSrc 图像指针
+* @param[in] nWidth 图像宽度
+* @param[in] nHeight 图像高度
+* @param[in] nRowlen 图像每行字节数
+* @param[in] nChannel 图像通道
+* @param[in] NewWidth 新的宽度
+* @param[in] NewHeight 新的高度
 */
 float* ImageZoom(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, int NewWidth, int NewHeight)
 {
@@ -304,10 +342,12 @@ float* ImageZoom(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel
 #pragma omp parallel for
 	for (int i = 0; i < NewWidth; ++i)
 	{
+		int w = i * nChannel;
 		for (int j = 0; j < NewHeight; ++j)
 		{
 			for (int nCurChannel = 0; nCurChannel < nChannel; ++nCurChannel)
-				pDst[nCurChannel + i * nChannel + j * NewRowlen] = biLinearInterp(pSrc, nWidth, nHeight, nRowlen, nChannel, nCurChannel, i * wRatio, j * hRatio);
+				pDst[nCurChannel + w + j * NewRowlen] = 
+				biLinearInterp(pSrc, nWidth, nHeight, nRowlen, nChannel, nCurChannel, i * wRatio, j * hRatio);
 		}
 	}
 

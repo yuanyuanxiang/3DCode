@@ -21,9 +21,9 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Counted.h"
-#include "zxing/common/BitArray.h"
-#include "zxing/common/Array.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/BitArray.h>
+#include <zxing/common/Array.h>
 #include <limits>
 
 namespace zxing {

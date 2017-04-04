@@ -21,9 +21,9 @@
  */
 
 #include "AlignmentPattern.h"
-#include "zxing/common/Counted.h"
-#include "zxing/common/BitMatrix.h"
-#include "zxing/ResultPointCallback.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/BitMatrix.h>
+#include <zxing/ResultPointCallback.h>
 #include <vector>
 
 namespace zxing {

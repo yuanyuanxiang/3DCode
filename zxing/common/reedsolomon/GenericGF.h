@@ -23,7 +23,7 @@
 #define GENERICGF_H
 
 #include <vector>
-#include "zxing/common/Counted.h"
+#include <zxing/common/Counted.h>
 
 namespace zxing {
   class GenericGFPoly;

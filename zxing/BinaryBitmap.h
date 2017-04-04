@@ -20,10 +20,10 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Counted.h"
-#include "zxing/common/BitMatrix.h"
-#include "zxing/common/BitArray.h"
-#include "zxing/Binarizer.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/BitMatrix.h>
+#include <zxing/common/BitArray.h>
+#include <zxing/Binarizer.h>
 
 namespace zxing {
 	

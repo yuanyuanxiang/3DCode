@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 
-#include "zxing/oned/OneDReader.h"
+#include <zxing/oned/OneDReader.h>
 
 namespace zxing {
 namespace oned {

@@ -20,9 +20,9 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Array.h"
-#include "zxing/common/Counted.h"
-#include "zxing/common/BitMatrix.h"
+#include <zxing/common/Array.h>
+#include <zxing/common/Counted.h>
+#include <zxing/common/BitMatrix.h>
 
 #include <vector>
 

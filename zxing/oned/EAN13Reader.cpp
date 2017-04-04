@@ -16,7 +16,7 @@
  */
 
 #include "EAN13Reader.h"
-#include "zxing/NotFoundException.h"
+#include <zxing/NotFoundException.h>
 
 using std::vector;
 using zxing::Ref;

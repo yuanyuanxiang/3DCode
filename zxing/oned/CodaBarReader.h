@@ -17,17 +17,17 @@
  * limitations under the License.
  */
 
-#include "zxing/oned/OneDReader.h"
-#include "zxing/common/BitArray.h"
-#include "zxing/Result.h"
+#include <zxing/oned/OneDReader.h>
+#include <zxing/common/BitArray.h>
+#include <zxing/Result.h>
 
 namespace zxing {
 namespace oned {
 
 class CodaBarReader : public OneDReader {
 private:
-  static const int MAX_ACCEPTABLE;
-  static const int PADDING;
+  static const float MAX_ACCEPTABLE;
+  static const float PADDING;
 
   // Keep some instance variables to avoid reallocations
   std::string decodeRowResult;

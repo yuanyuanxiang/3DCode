@@ -21,11 +21,11 @@
  * limitations under the License.
  */
 
-#include "zxing/ReaderException.h"
-#include "zxing/common/BitMatrix.h"
-#include "zxing/common/Counted.h"
-#include "zxing/common/Array.h"
-#include "zxing/datamatrix/Version.h"
+#include <zxing/ReaderException.h>
+#include <zxing/common/BitMatrix.h>
+#include <zxing/common/Counted.h>
+#include <zxing/common/Array.h>
+#include <zxing/datamatrix/Version.h>
 
 namespace zxing {
 namespace datamatrix {

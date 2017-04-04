@@ -19,9 +19,9 @@
  * limitations under the License.
  */
 
-#include "zxing/Reader.h"
-#include "zxing/aztec/decoder/Decoder.h"
-#include "zxing/DecodeHints.h"
+#include <zxing/Reader.h>
+#include <zxing/aztec/decoder/Decoder.h>
+#include <zxing/DecodeHints.h>
 
 #ifndef ZXingWidget_AztecReader_h
 #define ZXingWidget_AztecReader_h

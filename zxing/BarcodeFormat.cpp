@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-#include "zxing/BarcodeFormat.h"
+#include <zxing/BarcodeFormat.h>
 
 const char* zxing::BarcodeFormat::barcodeFormatNames[] = {
   0,

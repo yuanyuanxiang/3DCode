@@ -21,9 +21,9 @@
  * limitations under the License.
  */
 
-#include "zxing/Reader.h"
-#include "zxing/DecodeHints.h"
-#include "zxing/datamatrix/decoder/Decoder.h"
+#include <zxing/Reader.h>
+#include <zxing/DecodeHints.h>
+#include <zxing/datamatrix/decoder/Decoder.h>
 
 namespace zxing {
 namespace datamatrix {

@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-#include "zxing/ResultPoint.h"
-#include "zxing/common/detector/MathUtils.h"
+#include <zxing/ResultPoint.h>
+#include <zxing/common/detector/MathUtils.h>
 
 using zxing::common::detector::MathUtils;
 

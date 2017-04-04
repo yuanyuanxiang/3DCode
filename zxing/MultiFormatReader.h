@@ -21,10 +21,10 @@
  */
 
  
-#include "zxing/Reader.h"
-#include "zxing/common/BitArray.h"
-#include "zxing/Result.h"
-#include "zxing/DecodeHints.h"
+#include <zxing/Reader.h>
+#include <zxing/common/BitArray.h>
+#include <zxing/Result.h>
+#include <zxing/DecodeHints.h>
 
 namespace zxing {
   class MultiFormatReader : public Reader {

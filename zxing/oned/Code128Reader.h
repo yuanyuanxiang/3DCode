@@ -17,17 +17,17 @@
  * limitations under the License.
  */
 
-#include "zxing/oned/OneDReader.h"
-#include "zxing/common/BitArray.h"
-#include "zxing/Result.h"
+#include <zxing/oned/OneDReader.h>
+#include <zxing/common/BitArray.h>
+#include <zxing/Result.h>
 
 namespace zxing {
 namespace oned {
 
 class Code128Reader : public OneDReader {
 private:
-  static const int MAX_AVG_VARIANCE;
-  static const int MAX_INDIVIDUAL_VARIANCE;
+  static const float MAX_AVG_VARIANCE;
+  static const float MAX_INDIVIDUAL_VARIANCE;
 
   static std::vector<int> findStartPattern(Ref<BitArray> row);
   static int decodeCode(Ref<BitArray> row,

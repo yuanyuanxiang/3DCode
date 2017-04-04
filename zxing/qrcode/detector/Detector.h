@@ -21,13 +21,13 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Counted.h"
-#include "zxing/common/DetectorResult.h"
-#include "zxing/common/BitMatrix.h"
-#include "zxing/qrcode/detector/AlignmentPattern.h"
-#include "zxing/common/PerspectiveTransform.h"
-#include "zxing/ResultPointCallback.h"
-#include "zxing/qrcode/detector/FinderPatternInfo.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/DetectorResult.h>
+#include <zxing/common/BitMatrix.h>
+#include <zxing/qrcode/detector/AlignmentPattern.h>
+#include <zxing/common/PerspectiveTransform.h>
+#include <zxing/ResultPointCallback.h>
+#include <zxing/qrcode/detector/FinderPatternInfo.h>
 
 namespace zxing {
 
@@ -40,9 +40,9 @@ private:
   Ref<BitMatrix> image_;
   Ref<ResultPointCallback> callback_;
 
-  // 二维码每模块大小
+  // Module size, added by yuanyuanxiang
   float m_fModuleSize;
-  // 透视投影变换矩阵
+  // Transform matrix, added by yuanyuanxiang
   Ref<PerspectiveTransform> m_Transform;
 
 protected:
@@ -66,9 +66,9 @@ public:
   Detector(Ref<BitMatrix> image);
   Ref<DetectorResult> detect(DecodeHints const& hints);
 
-  // 获取模块大小
+  // Get module size, added by yuanyuanxiang
   float GetModuleSize() const;
-  // 获取透视变换
+  // Get transform matrix, added by yuanyuanxiang
   Ref<PerspectiveTransform> GetTransform() const;
 };
 }

@@ -17,8 +17,8 @@
  * 2012-09-19 HFN translation from Java into C++
  */
 
-#include "zxing/pdf417/decoder/ec/ModulusGF.h"
-#include "zxing/pdf417/decoder/ec/ModulusPoly.h"
+#include <zxing/pdf417/decoder/ec/ModulusGF.h>
+#include <zxing/pdf417/decoder/ec/ModulusPoly.h>
 
 using zxing::Ref;
 using zxing::pdf417::decoder::ec::ModulusGF;

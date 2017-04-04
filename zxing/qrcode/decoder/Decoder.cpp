@@ -19,15 +19,15 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/decoder/Decoder.h"
-#include "zxing/qrcode/decoder/BitMatrixParser.h"
-#include "zxing/qrcode/ErrorCorrectionLevel.h"
-#include "zxing/qrcode/Version.h"
-#include "zxing/qrcode/decoder/DataBlock.h"
-#include "zxing/qrcode/decoder/DecodedBitStreamParser.h"
-#include "zxing/ReaderException.h"
-#include "zxing/ChecksumException.h"
-#include "zxing/common/reedsolomon/ReedSolomonException.h"
+#include <zxing/qrcode/decoder/Decoder.h>
+#include <zxing/qrcode/decoder/BitMatrixParser.h>
+#include <zxing/qrcode/ErrorCorrectionLevel.h>
+#include <zxing/qrcode/Version.h>
+#include <zxing/qrcode/decoder/DataBlock.h>
+#include <zxing/qrcode/decoder/DecodedBitStreamParser.h>
+#include <zxing/ReaderException.h>
+#include <zxing/ChecksumException.h>
+#include <zxing/common/reedsolomon/ReedSolomonException.h>
 
 using zxing::qrcode::Decoder;
 using zxing::DecoderResult;
@@ -39,6 +39,7 @@ using zxing::BitMatrix;
 
 Decoder::Decoder() : rsDecoder_(GenericGF::QR_CODE_FIELD_256)
 {
+	// added by yuanyuanxiang
 	m_nLevel = 0;
 	m_nVersion = 1;
 	m_nMaskingNo = 0;
@@ -88,7 +89,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   Version *version = parser.readVersion();
   ErrorCorrectionLevel &ecLevel = parser.readFormatInformation()->getErrorCorrectionLevel();
 
-  // 获取版本和纠错等级
+  // Get version, added by yuanyuanxiang
   m_nVersion = version->getVersionNumber();
   std::string ecLevelName = ecLevel.name();
   if      (ecLevelName == "L")  { m_nLevel = 0; }
@@ -96,7 +97,7 @@ Ref<DecoderResult> Decoder::decode(Ref<BitMatrix> bits) {
   else if (ecLevelName == "Q")  { m_nLevel = 2; }
   else if (ecLevelName == "H")  { m_nLevel = 3; }
 
-  // 获取掩码信息
+  // Get maskingNo, added by yuanyuanxiang
   Ref<FormatInformation> formatInfo = parser.readFormatInformation();
   m_nMaskingNo = formatInfo->getDataMask();
 

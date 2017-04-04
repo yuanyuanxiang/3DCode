@@ -20,10 +20,10 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Counted.h"
-#include "zxing/common/Array.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/Array.h>
 #include <string>
-#include "zxing/common/Str.h"
+#include <zxing/common/Str.h>
 
 namespace zxing {
 

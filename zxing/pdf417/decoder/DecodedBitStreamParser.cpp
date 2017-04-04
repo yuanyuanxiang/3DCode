@@ -17,9 +17,9 @@
 
 #include <stdint.h>
 #include <bigint/BigIntegerUtils.hh>
-#include "zxing/FormatException.h"
-#include "zxing/pdf417/decoder/DecodedBitStreamParser.h"
-#include "zxing/common/DecoderResult.h"
+#include <zxing/FormatException.h>
+#include <zxing/pdf417/decoder/DecodedBitStreamParser.h>
+#include <zxing/common/DecoderResult.h>
 
 using std::string;
 using zxing::pdf417::DecodedBitStreamParser;

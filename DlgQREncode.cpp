@@ -15,6 +15,7 @@ static char THIS_FILE[] = __FILE__;
 
 // CDlgQREncode 对话框
 
+/// 获取当前活动文档的图像指针，用于生成二维码
 BOOL CDlgQREncode::SetImage()
 {
 	m_pImage = AfxGetImage();
@@ -22,10 +23,10 @@ BOOL CDlgQREncode::SetImage()
 }
 
 
-// 刷新视图
+/// 重新刷新视图
 void CDlgQREncode::Repaint()
 {
-	// 2016/9/15 将Repaint设为虚函数，以实现子类的多态特性
+	/// @remark 2016/9/15 将Repaint设为虚函数，以实现子类的多态特性
 	C3DCodeView* pView = (C3DCodeView*)AfxGetActiveView();
 	pView->Invalidate(TRUE);
 }

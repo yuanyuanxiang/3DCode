@@ -18,9 +18,9 @@
  * limitations under the License.
  */
 
-#include "zxing/common/HybridBinarizer.h"
+#include <zxing/common/HybridBinarizer.h>
 
-#include "zxing/common/IllegalArgumentException.h"
+#include <zxing/common/IllegalArgumentException.h>
 
 using namespace std;
 using namespace zxing;

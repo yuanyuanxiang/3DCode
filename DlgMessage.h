@@ -1,9 +1,15 @@
+/**
+* @file DlgMessage.h
+* @brief CDlgMessage 类的接口
+*/
+
 #pragma once
 #include "afxwin.h"
 
-
-// CDlgMessage 对话框
-
+/**
+* @class CDlgMessage
+* @brief CDlgMessage 对话框
+*/
 class CDlgMessage : public CDialogEx
 {
 	DECLARE_DYNAMIC(CDlgMessage)

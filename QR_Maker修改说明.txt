@@ -1,0 +1,14 @@
+QR_Encode修改说明：
+
+头文件：
+
+	1、EncodeData修改为EncodeDataUtf8；
+	2、LPCSTR修改为char*.
+
+cpp文件：
+
+	1、EncodeSourceData第824行——836行删除；
+	2、1216行注释掉。
+
+袁沅祥
+2016年12月20日

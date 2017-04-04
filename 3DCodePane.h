@@ -1,23 +1,31 @@
 #pragma once
 
 
-// C3DCodePane
-// 这是一个包含对话框控件的CDockablePane，对话框上面有滚动视图
-// 修改此文件将会影响3dcode和InvisibleCode两个项目
-// 2015年12月11日特此说明
-// 
+/** 
+* @file C3DCodePane.h
+* @brief 面板基类
+* @details 这是一个包含对话框控件的CDockablePane，对话框上面有滚动视图。
+* 修改此文件将会影响3dcode和InvisibleCode两个项目。
+* 2015年12月11日特此说明。
+*/ 
 
 class CViewParent;
 class CPaneScrollView;
 
-// 滚动视图的ID
+/// 滚动视图的ID
 #define ID_ENCODE_VIEW 9999
 
+/**
+* @class C3DCodePane
+* @brief 面板基类
+*/
 class C3DCodePane : public CDockablePane
 {
 	DECLARE_DYNAMIC(C3DCodePane)
 public:
+	/// 视图的父框架
 	CViewParent*		m_pViewParent;
+	/// 编码视图面板
 	CPaneScrollView*	m_pEncodeView;
 
 public:
@@ -33,11 +41,10 @@ public:
 };
 
 
-/************************************************************************/
-/*                          CViewParent 框架                            */
-/************************************************************************/
-
-
+/**
+* @class CViewParent
+* @brief 视图的父框架
+*/
 class CViewParent : public CFrameWnd
 {
 	DECLARE_DYNCREATE(CViewParent)
@@ -52,13 +59,10 @@ public:
 };
 
 
-/************************************************************************/
-/*                     CPaneScrollView 视图                             */
-/************************************************************************/
-
-
-//class CDlgQREncode;
-
+/**
+* @class CPaneScrollView
+* @brief 面板的滚动视图
+*/
 class CPaneScrollView : public CScrollView
 {
 	DECLARE_DYNCREATE(CPaneScrollView)

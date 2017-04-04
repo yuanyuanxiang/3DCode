@@ -19,9 +19,9 @@
  * limitations under the License.
  */
 
-#include "zxing/NotFoundException.h"
-#include "zxing/common/detector/WhiteRectangleDetector.h"
-#include "zxing/common/detector/MathUtils.h"
+#include <zxing/NotFoundException.h>
+#include <zxing/common/detector/WhiteRectangleDetector.h>
+#include <zxing/common/detector/MathUtils.h>
 #include <sstream>
 
 using std::vector;

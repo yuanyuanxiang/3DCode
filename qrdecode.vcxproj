@@ -28,24 +28,24 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfAtl>false</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='MT|Win32'">
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='MTD|Win32'">
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
@@ -83,7 +83,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>NO_ICONV;ANDROID_CPP;NO_STDAFX_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_ICONV;ANDROID_CPP;NO_STDAFX_H;NEW_VERSION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -136,7 +136,11 @@
     <ClCompile Include="ColorsEncode.cpp" />
     <ClCompile Include="DataTypes.cpp" />
     <ClCompile Include="FileIO.cpp" />
-    <ClCompile Include="ImageReader.cpp" />
+    <ClCompile Include="ImageReaderSource.cpp" />
+    <ClInclude Include="K_Means.h" />
+    <ClInclude Include="Transform.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClCompile Include="PerspectTransform.cpp" />
     <ClCompile Include="PixelsOperation.cpp" />
     <ClCompile Include="Decodefuncs.cpp" />
@@ -145,7 +149,6 @@
     <ClCompile Include="reedSolomon.cpp" />
     <ClCompile Include="RS_ecc.cpp" />
     <ClCompile Include="zlibmgr.cpp" />
-    <ClCompile Include="ZXingDeCoder.cpp" />
     <ClCompile Include="ZXingTest.cpp" />
     <ClCompile Include="zxing\BarcodeFormat.cpp" />
     <ClCompile Include="zxing\Binarizer.cpp" />
@@ -169,6 +172,7 @@
     <ClCompile Include="zxing\common\Str.cpp" />
     <ClCompile Include="zxing\common\StringUtils.cpp" />
     <ClCompile Include="zxing\DecodeHints.cpp" />
+    <ClCompile Include="zxing\Exception.cpp" />
     <ClCompile Include="zxing\FormatException.cpp" />
     <ClCompile Include="zxing\InvertedLuminanceSource.cpp" />
     <ClCompile Include="zxing\LuminanceSource.cpp" />
@@ -192,7 +196,6 @@
     <ClCompile Include="zxing\Result.cpp" />
     <ClCompile Include="zxing\ResultPoint.cpp" />
     <ClCompile Include="zxing\ResultPointCallback.cpp" />
-    <ClCompile Include="zxing\ZXingException.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorsBase.h" />
@@ -201,8 +204,9 @@
     <ClInclude Include="ColorsMask.h" />
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="FileIO.h" />
-    <ClInclude Include="ImageReader.h" />
+    <ClInclude Include="ImageReaderSource.h" />
     <ClInclude Include="medianBlur.h" />
+    <ClInclude Include="MedianFilter.h" />
     <ClInclude Include="PerspectTransform.h" />
     <ClInclude Include="PixelsOperation.h" />
     <ClInclude Include="primitives.h" />
@@ -213,7 +217,6 @@
     <ClInclude Include="RS_ecc.h" />
     <ClInclude Include="templateFuncs.h" />
     <ClInclude Include="zlibmgr.h" />
-    <ClInclude Include="ZXingDeCoder.h" />
     <ClInclude Include="zxing\BarcodeFormat.h" />
     <ClInclude Include="zxing\Binarizer.h" />
     <ClInclude Include="zxing\BinaryBitmap.h" />
@@ -239,6 +242,7 @@
     <ClInclude Include="zxing\common\Str.h" />
     <ClInclude Include="zxing\common\StringUtils.h" />
     <ClInclude Include="zxing\DecodeHints.h" />
+    <ClInclude Include="zxing\Exception.h" />
     <ClInclude Include="zxing\FormatException.h" />
     <ClInclude Include="zxing\IllegalStateException.h" />
     <ClInclude Include="zxing\InvertedLuminanceSource.h" />
@@ -266,7 +270,6 @@
     <ClInclude Include="zxing\ResultPoint.h" />
     <ClInclude Include="zxing\ResultPointCallback.h" />
     <ClInclude Include="zxing\ZXing.h" />
-    <ClInclude Include="zxing\ZXingException.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

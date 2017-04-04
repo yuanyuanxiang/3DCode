@@ -20,11 +20,11 @@
  * limitations under the License.
  */
 
-#include "zxing/common/reedsolomon/ReedSolomonDecoder.h"
-#include "zxing/common/Counted.h"
-#include "zxing/common/Array.h"
-#include "zxing/common/DecoderResult.h"
-#include "zxing/common/BitMatrix.h"
+#include <zxing/common/reedsolomon/ReedSolomonDecoder.h>
+#include <zxing/common/Counted.h>
+#include <zxing/common/Array.h>
+#include <zxing/common/DecoderResult.h>
+#include <zxing/common/BitMatrix.h>
 
 namespace zxing {
 namespace qrcode {
@@ -33,13 +33,13 @@ class Decoder {
 private:
   ReedSolomonDecoder rsDecoder_;
 
-  // 纠错等级
+  // EcLevel, added by yuanyuanxiang
   int m_nLevel;
 
-  // 编码版本
+  // Version, added by yuanyuanxiang
   int m_nVersion;
 
-  // 掩码版本
+  // MaskingNo, added by yuanyuanxiang
   int m_nMaskingNo;
 
   void correctErrors(ArrayRef<char> bytes, int numDataCodewords);
@@ -48,13 +48,13 @@ public:
   Decoder();
   Ref<DecoderResult> decode(Ref<BitMatrix> bits);
 
-  // 获取纠错等级
+  // Get EcLevel, added by yuanyuanxiang
   int GetErrorCorrectLevel() const;
 
-  // 获取编码版本
+  // Get Version, added by yuanyuanxiang
   int GetQRCodeVersion() const;
 
-  // 获取掩码版本
+  // Get MsakingNo, added by yuanyuanxiang
   int GetMaskingNo() const;
 };
 

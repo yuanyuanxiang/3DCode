@@ -8,12 +8,12 @@
 #ifndef DETECTOREXCEPTION_H_
 #define DETECTOREXCEPTION_H_
 
-#include "zxing/ZXingException.h"
+#include <zxing/Exception.h>
 
 namespace zxing {
 namespace datamatrix {
 
-class DetectorException : public ZXingException {
+class DetectorException : public Exception {
   public:
     DetectorException(const char *msg);
     virtual ~DetectorException() throw();

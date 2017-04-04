@@ -1,11 +1,12 @@
+/** 
+* @file CodeTransform.h
+* @brief 转换数据编码，仅适用于 Windows 平台
+* @date 2016/8/24 建立此文档
+*/
+
 #ifdef WIN32
 
 #pragma once
-
-/************************************************************************/
-// 转换数据编码，仅适用于 Windows 平台
-// 2016/8/24 建立此文档
-/************************************************************************/
 
 // 将Unicode编码转换成ANSI编码(需要手动delete转换结果)
 char* UnicodeConvert2ANSI(LPCWCH strEncodeData, int &ncLength);

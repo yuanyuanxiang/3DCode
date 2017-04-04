@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "zxing/common/DetectorResult.h"
+#include <zxing/common/DetectorResult.h>
 
 #ifndef ZXingWidget_AtztecDetecorResult_h
 #define ZXingWidget_AtztecDetecorResult_h

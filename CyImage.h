@@ -5,22 +5,28 @@
 #include "atlimage.h"
 #include "DataTypes.h"
 
-/** 图像读取/写入/处理类
-// ********** CyImage：继承自CImage *********** //
-// ***** 首都师范大学，袁沅祥，2015年5月. ***** //
-// yuan_yuanxiang@163.com
-// 仅限在ATL环境
-// 2016/8/27 修改
+/** 
+* @file CyImage.h
+* @brief 图像读取/写入/处理类
+* @author 袁沅祥
 */
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p) if((p) != NULL){ delete [] (p); (p) = NULL; }	//安全删除指针p
+#define SAFE_DELETE(p) if((p) != NULL){ delete [] (p); (p) = NULL; }/**< 安全删除指针p */
 #endif
 
 #ifndef RAD
-#define RAD(i) (PI * (i) / 180.0f)	//角度转弧度
-#endif // !RAD
+#define RAD(i) (PI * (i) / 180.0f)	/**< 角度转弧度 */
+#endif
 
+/**
+* @class CyImage
+* @brief 继承自CImage 
+* @author 袁沅祥
+* @date 2015年5月
+* @warning 仅限在ATL环境
+* @remark yuan_yuanxiang@163.com
+*/
 class CyImage : public CImage
 {
 public:
@@ -82,7 +88,8 @@ public:
 	/* 对图像旋转，返回新图像的数据，宽度、高度和每行浮点数，需要delete方法 */
 	float* Rotate(float angle, int &NewWidth, int &NewHeight, int &NewRowlen);
 	float* Rotate(float angle, float x0, float y0, int &NewWidth, int &NewHeight, int &NewRowlen);
-	float* Rotate(float angle, float x0, float y0, int &Xmin, int &Ymin, int &Xmax, int &Ymax, int &NewWidth, int &NewHeight, int &NewRowlen);
+	float* Rotate(float angle, float x0, float y0, int &Xmin, int &Ymin, int &Xmax, int &Ymax, 
+		int &NewWidth, int &NewHeight, int &NewRowlen);
 
 	/* 根据参数放大图像，返回浮点数据，需要delete方法 */
 	float* Zoom(int NewWidth, int NewHeight, int bNeededReturn);
@@ -103,9 +110,9 @@ public:
 #endif
 
 private:
-	float*	m_pFloatData;													//对应图像的浮点数
-	float	m_fMaximum;														//浮点数据的最大值
-	float	m_fMinimum;														//浮点数据的最小值
+	float*	m_pFloatData;													/**< 对应图像的浮点数 */
+	float	m_fMaximum;														/**< 浮点数据的最大值 */
+	float	m_fMinimum;														/**< 浮点数据的最小值 */
 	
 	BOOL	InitFloatData();												//初始化浮点数据
 	void	ComputeMinMax();												//浮点数据最大最小值

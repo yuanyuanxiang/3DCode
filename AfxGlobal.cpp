@@ -9,7 +9,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-// 获取活动文档
+/** 
+* @brief 获取活动文档
+*/
 CDocument* AfxGetActiveDoc()
 {
 	CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
@@ -18,7 +20,9 @@ CDocument* AfxGetActiveDoc()
 	return pDoc;
 }
 
-// 获取活动视图
+/** 
+* @brief 获取活动视图
+*/
 CView* AfxGetActiveView()
 {
 	CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();

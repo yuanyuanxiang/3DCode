@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include "zxing/common/BitArray.h"
+#include <zxing/common/BitArray.h>
 
 using zxing::BitArray;
 using std::ostream;

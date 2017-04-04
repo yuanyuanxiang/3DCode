@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-#include "zxing/datamatrix/DataMatrixReader.h"
-#include "zxing/datamatrix/detector/Detector.h"
+#include <zxing/datamatrix/DataMatrixReader.h>
+#include <zxing/datamatrix/detector/Detector.h>
 #include <iostream>
 
 namespace zxing {

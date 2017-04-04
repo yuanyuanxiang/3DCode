@@ -18,17 +18,18 @@
  * limitations under the License.
  */
 
-#include "zxing/oned/OneDReader.h"
-#include "zxing/common/BitArray.h"
-#include "zxing/Result.h"
+#include <zxing/oned/OneDReader.h>
+#include <zxing/common/BitArray.h>
+#include <zxing/Result.h>
 
 namespace zxing {
 namespace oned {
 
 class ITFReader : public OneDReader {
 private:
-  enum {MAX_AVG_VARIANCE = (unsigned int) (PATTERN_MATCH_RESULT_SCALE_FACTOR * 420/1000)};
-  enum {MAX_INDIVIDUAL_VARIANCE = (int) (PATTERN_MATCH_RESULT_SCALE_FACTOR * 780/1000)};
+  static const float MAX_AVG_VARIANCE;
+  static const float MAX_INDIVIDUAL_VARIANCE;
+
   // Stores the actual narrow line width of the image being decoded.
   int narrowLineWidth;
 			

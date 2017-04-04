@@ -19,12 +19,11 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/decoder/DecodedBitStreamParser.h"
-#include "zxing/common/CharacterSetECI.h"
-#include "zxing/FormatException.h"
-#include "zxing/common/StringUtils.h"
+#include <zxing/qrcode/decoder/DecodedBitStreamParser.h>
+#include <zxing/common/CharacterSetECI.h>
+#include <zxing/FormatException.h>
+#include <zxing/common/StringUtils.h>
 #include <iostream>
-#include "DataTypes.h"
 #ifndef NO_ICONV
 #include <iconv.h>
 #endif
@@ -86,7 +85,7 @@ void DecodedBitStreamParser::append(std::string &result,
     size_t oneway = iconv(cd, &fromPtr, &nFrom, &toPtr, &nTo);
     if (oneway == (size_t)(-1)) {
       iconv_close(cd);
-      SAFE_DELETE(bufOut);
+      delete[] bufOut;
       throw ReaderException("error converting characters");
     }
   }
@@ -95,7 +94,7 @@ void DecodedBitStreamParser::append(std::string &result,
   int nResult = maxOut - nTo;
   bufOut[nResult] = '\0';
   result.append((const char *)bufOut);
-  SAFE_DELETE(bufOut);
+  delete[] bufOut;
 #else
   result.append((const char *)bufIn, nIn);
 #endif
@@ -136,11 +135,11 @@ void DecodedBitStreamParser::decodeHanziSegment(Ref<BitSource> bits_,
     append(result, buffer, nBytes, StringUtils::GB2312);
   } catch (ReaderException const& ignored) {
     (void)ignored;
-   SAFE_DELETE(buffer);
+    delete [] buffer;
     throw FormatException();
   }
 
-  SAFE_DELETE(buffer);
+  delete [] buffer;
 }
 
 void DecodedBitStreamParser::decodeKanjiSegment(Ref<BitSource> bits, std::string &result, int count) {
@@ -170,10 +169,10 @@ void DecodedBitStreamParser::decodeKanjiSegment(Ref<BitSource> bits, std::string
     append(result, buffer, nBytes, StringUtils::SHIFT_JIS);
   } catch (ReaderException const& ignored) {
     (void)ignored;
-    SAFE_DELETE(buffer);
+    delete [] buffer;
     throw FormatException();
   }
-  SAFE_DELETE(buffer);
+  delete[] buffer;
 }
 
 void DecodedBitStreamParser::decodeByteSegment(Ref<BitSource> bits_,
@@ -222,13 +221,14 @@ void DecodedBitStreamParser::decodeNumericSegment(Ref<BitSource> bits, std::stri
   while (count >= 3) {
     // Each 10 bits encodes three digits
     if (bits->available() < 10) {
+      delete[] bytes;
       throw ReaderException("format exception");
     }
     int threeDigitsBits = bits->readBits(10);
     if (threeDigitsBits >= 1000) {
       ostringstream s;
       s << "Illegal value for 3-digit unit: " << threeDigitsBits;
-      SAFE_DELETE(bytes);
+      delete[] bytes;
       throw ReaderException(s.str().c_str());
     }
     bytes[i++] = ALPHANUMERIC_CHARS[threeDigitsBits / 100];
@@ -238,6 +238,7 @@ void DecodedBitStreamParser::decodeNumericSegment(Ref<BitSource> bits, std::stri
   }
   if (count == 2) {
     if (bits->available() < 7) {
+      delete[] bytes;
       throw ReaderException("format exception");
     }
     // Two digits left over to read, encoded in 7 bits
@@ -245,13 +246,14 @@ void DecodedBitStreamParser::decodeNumericSegment(Ref<BitSource> bits, std::stri
     if (twoDigitsBits >= 100) {
       ostringstream s;
       s << "Illegal value for 2-digit unit: " << twoDigitsBits;
-      SAFE_DELETE(bytes);
+      delete[] bytes;
       throw ReaderException(s.str().c_str());
     }
     bytes[i++] = ALPHANUMERIC_CHARS[twoDigitsBits / 10];
     bytes[i++] = ALPHANUMERIC_CHARS[twoDigitsBits % 10];
   } else if (count == 1) {
     if (bits->available() < 4) {
+      delete[] bytes;
       throw ReaderException("format exception");
     }
     // One digit left over to read
@@ -259,13 +261,13 @@ void DecodedBitStreamParser::decodeNumericSegment(Ref<BitSource> bits, std::stri
     if (digitBits >= 10) {
       ostringstream s;
       s << "Illegal value for digit unit: " << digitBits;
-      SAFE_DELETE(bytes);
+      delete[] bytes;
       throw ReaderException(s.str().c_str());
     }
     bytes[i++] = ALPHANUMERIC_CHARS[digitBits];
   }
   append(result, bytes, nBytes, StringUtils::ASCII);
-  SAFE_DELETE(bytes);
+  delete[] bytes;
 }
 
 char DecodedBitStreamParser::toAlphaNumericChar(size_t value) {

@@ -33,6 +33,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_DROPFILES()
 END_MESSAGE_MAP()
 
+/// 状态栏数据
 static UINT indicators[] =
 {
 	ID_SEPARATOR,           // 状态行指示器
@@ -41,14 +42,14 @@ static UINT indicators[] =
 	ID_INDICATOR_SCRL,
 };
 
-// CMainFrame 构造/析构
-
+/// CMainFrame 构造
 CMainFrame::CMainFrame()
 {
 	m_pQREncodeDlg = NULL;
 	m_pQRDecodeDlg = NULL;
 }
 
+/// CMainFrame 析构
 CMainFrame::~CMainFrame()
 {
 	SAFE_DELETE(m_pQREncodeDlg);
@@ -200,6 +201,11 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	return TRUE;
 }
 
+/**
+* @brief 创建编码解码面板
+* @details 首先创建编码解码对话框，然后创建编码解码面板，
+*		最后将编码对话框设置为编码面板的子窗口，解码同理。
+*/
 BOOL CMainFrame::CreateDockingWindows()
 {
 	CRect ChildRect;
@@ -213,7 +219,8 @@ BOOL CMainFrame::CreateDockingWindows()
 	m_pQREncodeDlg->ShowWindow(SW_SHOW);
 
 	// 创建输出窗口
-	if (!m_paneQREncode.Create(_T("编码"), this, CRect(0, 0, ChildRect.Width(), ChildRect.Height()), TRUE, ID_VIEW_QR_ENCODE, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+	if (!m_paneQREncode.Create(_T("编码"), this, CRect(0, 0, ChildRect.Width(), ChildRect.Height()), 
+		TRUE, ID_VIEW_QR_ENCODE, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("未能创建编码窗口\n");
 		return FALSE; // 未能创建
@@ -229,7 +236,8 @@ BOOL CMainFrame::CreateDockingWindows()
 	m_pQRDecodeDlg->ShowWindow(SW_SHOW);
 
 	// 创建属性窗口
-	if (!m_paneQRDecode.Create(_T("解码"), this, CRect(0, 0, ChildRect.Width(), ChildRect.Height()), TRUE, ID_VIEW_QR_DECODE, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
+	if (!m_paneQRDecode.Create(_T("解码"), this, CRect(0, 0, ChildRect.Width(), ChildRect.Height()), 
+		TRUE, ID_VIEW_QR_DECODE, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("未能创建解码窗口\n");
 		return FALSE; // 未能创建
@@ -243,10 +251,12 @@ BOOL CMainFrame::CreateDockingWindows()
 
 void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 {
-	HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+	HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons 
+		? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_paneQREncode.SetIcon(hOutputBarIcon, FALSE);
 
-	HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_PROPERTIES_WND_HC : IDI_PROPERTIES_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+	HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons 
+		? IDI_PROPERTIES_WND_HC : IDI_PROPERTIES_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_paneQRDecode.SetIcon(hPropertiesBarIcon, FALSE);
 
 	UpdateMDITabbedBarsIcons();
@@ -336,7 +346,7 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 	CMDIFrameWndEx::OnSettingChange(uFlags, lpszSection);
 }
 
-// 拖拽文件时的响应函数，请先在OnCreate函数添加：DragAcceptFiles(TRUE)
+/// 拖拽文件时的响应函数，请先在OnCreate函数添加：DragAcceptFiles(TRUE)
 void CMainFrame::OnDropFiles(HDROP hDropInfo)
 {
 	// 获取拖动的文件个数

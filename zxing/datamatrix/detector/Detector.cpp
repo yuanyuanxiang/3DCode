@@ -20,11 +20,11 @@
  */
 
 #include <map>
-#include "zxing/ResultPoint.h"
-#include "zxing/common/GridSampler.h"
-#include "zxing/datamatrix/detector/Detector.h"
-#include "zxing/common/detector/MathUtils.h"
-#include "zxing/NotFoundException.h"
+#include <zxing/ResultPoint.h>
+#include <zxing/common/GridSampler.h>
+#include <zxing/datamatrix/detector/Detector.h>
+#include <zxing/common/detector/MathUtils.h>
+#include <zxing/NotFoundException.h>
 #include <sstream>
 #include <cstdlib>
 #include <algorithm>
@@ -369,7 +369,7 @@ Ref<ResultPointsAndTransitions> Detector::transitionsBetween(Ref<ResultPoint> fr
 
   int dx = abs(toX - fromX);
   int dy = abs(toY - fromY);
-  int error = -dx >> 1;
+  int error = -dx / 2;
   int ystep = fromY < toY ? 1 : -1;
   int xstep = fromX < toX ? 1 : -1;
   int transitions = 0;

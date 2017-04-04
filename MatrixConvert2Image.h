@@ -1,6 +1,10 @@
+/**
+* @file MatrixConvert2Image.h
+* @brief 矩阵转图像
+*/
+
 #ifdef WIN32
 
-#include "CyImage.h"
 #pragma once
 
 #define COLOR_FOREGROUND	0		//前景色
@@ -13,10 +17,10 @@
 int FindMinValueIndex(COLORREF x, COLORREF y, COLORREF z, COLORREF w);
 
 // 将二维码矩阵转换为图像
-BOOL Matrix2Image(BYTE* bDMatrix, int nSymbleSize, CyImage* pImage, int nPixelSize, COLORREF ForegroundColor, COLORREF BackgroundColor);
+BOOL Matrix2Image(BYTE* bDMatrix, int nSymbleSize, CImage* pImage, int nPixelSize, COLORREF ForegroundColor, COLORREF BackgroundColor);
 
 // 将二维码矩阵转换为图像
-BOOL Matrix2ColorImage(BYTE bMatrix[MAX_MODULESIZE][MAX_MODULESIZE], int nSymbleSize, CyImage* pImage, int nPixelSize, 
+BOOL Matrix2ColorImage(BYTE bMatrix[MAX_MODULESIZE][MAX_MODULESIZE], int nSymbleSize, CImage* pImage, int nPixelSize, 
 					   COLORREF ForegroundColor, COLORREF BackgroundColor, COLORREF QREncodeColor1, COLORREF QREncodeColor2);
 
 #endif // WIN32

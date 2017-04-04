@@ -36,17 +36,17 @@
 
 #include <afxcontrolbars.h>     // 功能区和控件条的 MFC 支持
 
-#define SAFE_DELETE(p) if((p) != NULL){ delete [] (p); (p) = NULL; }	//安全删除指针p
+#define SAFE_DELETE(p) if((p) != NULL){ delete [] (p); (p) = NULL; }/**< 安全删除指针p */
 
-#define SAFE_NEW(type, p) if ((p) == NULL) { (p) = new type; }		//仅当p为空时候分配内存
+#define SAFE_NEW(type, p) if ((p) == NULL) { (p) = new type; }		/**< 仅当p为空时候分配内存 */
 
-#define WIDTHBYTES(bits)    (((bits) + 31) / 32 * 4)				//计算每行字节数
+#define WIDTHBYTES(bits)    (((bits) + 31) / 32 * 4)				/**< 计算每行字节数 */
 
-#define PI 3.141592653f
+#define PI 3.141592653f				/**< PI */
 
-#define RAD(i) (PI * (i) / 180.0f)	//角度转弧度
+#define RAD(i) (PI * (i) / 180.0f)	/**< 角度转弧度 */
 
-#define MAX_CODEUTF8NUM		1000	// 最多编码utf8文字字数
+#define MAX_CODEUTF8NUM		1000	/**< 最多编码utf8文字字数 */
 
 #undef ANDROID_CPP
 

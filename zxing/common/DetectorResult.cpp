@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "zxing/common/DetectorResult.h"
+#include <zxing/common/DetectorResult.h>
 
 namespace zxing {
 

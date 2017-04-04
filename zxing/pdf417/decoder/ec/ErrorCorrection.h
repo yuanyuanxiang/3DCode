@@ -20,13 +20,13 @@
  * 2012-09-17 HFN translation from Java into C++
  */
 
-#include "zxing/common/Counted.h"
-#include "zxing/common/Array.h"
-#include "zxing/common/DecoderResult.h"
-#include "zxing/common/BitMatrix.h"
-#include "zxing/pdf417/decoder/ec/ModulusGF.h"
-#include "zxing/pdf417/decoder/ec/ModulusPoly.h"
-#include "zxing/common/reedsolomon/ReedSolomonException.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/Array.h>
+#include <zxing/common/DecoderResult.h>
+#include <zxing/common/BitMatrix.h>
+#include <zxing/pdf417/decoder/ec/ModulusGF.h>
+#include <zxing/pdf417/decoder/ec/ModulusPoly.h>
+#include <zxing/common/reedsolomon/ReedSolomonException.h>
 
 namespace zxing {
 namespace pdf417 {

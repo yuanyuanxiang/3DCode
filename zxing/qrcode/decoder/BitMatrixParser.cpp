@@ -18,8 +18,8 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/decoder/BitMatrixParser.h"
-#include "zxing/qrcode/decoder/DataMask.h"
+#include <zxing/qrcode/decoder/BitMatrixParser.h>
+#include <zxing/qrcode/decoder/DataMask.h>
 
 
 namespace zxing {

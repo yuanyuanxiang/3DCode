@@ -18,9 +18,9 @@
  * limitations under the License.
  */
 
-#include "zxing/common/GlobalHistogramBinarizer.h"
-#include "zxing/NotFoundException.h"
-#include "zxing/common/Array.h"
+#include <zxing/common/GlobalHistogramBinarizer.h>
+#include <zxing/NotFoundException.h>
+#include <zxing/common/Array.h>
 
 using zxing::GlobalHistogramBinarizer;
 using zxing::Binarizer;

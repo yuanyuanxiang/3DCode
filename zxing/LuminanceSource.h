@@ -20,8 +20,8 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Counted.h"
-#include "zxing/common/Array.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/Array.h>
 #include <string.h>
 
 namespace zxing {
@@ -38,7 +38,7 @@ class LuminanceSource : public Counted {
   int getWidth() const { return width; }
   int getHeight() const { return height; }
 
-  // Callers take ownership of the returned memory and must call DELETE [] on it themselves.
+  // Callers take ownership of the returned memory and must call delete [] on it themselves.
   virtual ArrayRef<char> getRow(int y, ArrayRef<char> row) const = 0;
   virtual ArrayRef<char> getMatrix() const = 0;
 

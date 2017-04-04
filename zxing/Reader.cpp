@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-#include "zxing/Reader.h"
+#include <zxing/Reader.h>
 
 namespace zxing {
 

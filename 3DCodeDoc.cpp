@@ -30,19 +30,20 @@ BEGIN_MESSAGE_MAP(C3DCodeDoc, CDocument)
 END_MESSAGE_MAP()
 
 
-// C3DCodeDoc 构造/析构
-
+/// C3DCodeDoc 构造
 C3DCodeDoc::C3DCodeDoc()
 {
 	m_pImage = new CyImage;
 	m_bImageLocked = FALSE;
 }
 
+/// C3DCodeDoc 析构
 C3DCodeDoc::~C3DCodeDoc()
 {
 	SAFE_DELETE(m_pImage);
 }
 
+/// 新建文档时的响应函数
 BOOL C3DCodeDoc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
@@ -54,8 +55,7 @@ BOOL C3DCodeDoc::OnNewDocument()
 	return TRUE;
 }
 
-// C3DCodeDoc 序列化
-
+/// C3DCodeDoc 序列化
 void C3DCodeDoc::Serialize(CArchive& ar)
 {
 	if (ar.IsStoring())
@@ -70,7 +70,7 @@ void C3DCodeDoc::Serialize(CArchive& ar)
 
 #ifdef SHARED_HANDLERS
 
-// 缩略图的支持
+/// 缩略图的支持
 void C3DCodeDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 {
 	// 修改此代码以绘制文档数据
@@ -91,7 +91,7 @@ void C3DCodeDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 	dc.SelectObject(pOldFont);
 }
 
-// 搜索处理程序的支持
+/// 搜索处理程序的支持
 void C3DCodeDoc::InitializeSearchContent()
 {
 	CString strSearchContent;
@@ -122,9 +122,8 @@ void C3DCodeDoc::SetSearchContent(const CString& value)
 
 #endif // SHARED_HANDLERS
 
-// C3DCodeDoc 诊断
-
 #ifdef _DEBUG
+/// C3DCodeDoc 诊断
 void C3DCodeDoc::AssertValid() const
 {
 	CDocument::AssertValid();
@@ -139,7 +138,7 @@ void C3DCodeDoc::Dump(CDumpContext& dc) const
 
 // C3DCodeDoc 命令
 
-
+/// 打开文档时的响应函数
 BOOL C3DCodeDoc::OnOpenDocument(LPCTSTR lpszPathName)
 {
 	if (!CDocument::OnOpenDocument(lpszPathName))
@@ -150,37 +149,38 @@ BOOL C3DCodeDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	return SUCCEEDED(m_pImage->Load(lpszPathName));
 }
 
+/// 保存文档时的响应函数
 BOOL C3DCodeDoc::OnSaveDocument(LPCTSTR lpszPathName)
 {
 	return 	SUCCEEDED(m_pImage->Save(lpszPathName));
 }
 
-
+/// 获取图像指针
 CyImage* C3DCodeDoc::GetImage()
 {
 	return m_pImage;
 }
 
 
-// 获取感兴趣区域
+/// 获取感兴趣区域
 RoiRect& C3DCodeDoc::GetROI()
 {
 	return m_roi;
 }
 
-
+/// 判断图像为空
 BOOL C3DCodeDoc::ImageIsNull()
 {
 	return m_pImage->IsNull();
 }
 
-// 因为编码会销毁现有图像，故将外部图像锁定
+/// 因为编码会销毁现有图像，故将外部图像锁定
 BOOL C3DCodeDoc::ImageIsLocked()
 {
 	return m_bImageLocked;
 }
 
-// 返回CSize = (nWidth, nHeight).
+/// 返回CSize = (nWidth, nHeight).
 const CSize C3DCodeDoc::GetImageSize()
 {
 	if (m_pImage->IsNull())
@@ -188,7 +188,7 @@ const CSize C3DCodeDoc::GetImageSize()
 	return CSize(m_pImage->GetWidth(), m_pImage->GetHeight());
 }
 
-// 获取文档对应的C3DCodeView活动视图
+/// 获取文档对应的C3DCodeView活动视图
 C3DCodeView* C3DCodeDoc::GetView()
 {
 	CView* pView = NULL;

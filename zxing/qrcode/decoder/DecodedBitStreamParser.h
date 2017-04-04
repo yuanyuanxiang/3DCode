@@ -25,13 +25,13 @@
 #include <string>
 #include <sstream>
 #include <map>
-#include "zxing/qrcode/decoder/Mode.h"
-#include "zxing/common/BitSource.h"
-#include "zxing/common/Counted.h"
-#include "zxing/common/Array.h"
-#include "zxing/common/DecoderResult.h"
-#include "zxing/common/CharacterSetECI.h"
-#include "zxing/DecodeHints.h"
+#include <zxing/qrcode/decoder/Mode.h>
+#include <zxing/common/BitSource.h>
+#include <zxing/common/Counted.h>
+#include <zxing/common/Array.h>
+#include <zxing/common/DecoderResult.h>
+#include <zxing/common/CharacterSetECI.h>
+#include <zxing/DecodeHints.h>
 
 namespace zxing {
 namespace qrcode {

@@ -18,8 +18,8 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/decoder/DataBlock.h"
-#include "zxing/common/IllegalArgumentException.h"
+#include <zxing/qrcode/decoder/DataBlock.h>
+#include <zxing/common/IllegalArgumentException.h>
 
 namespace zxing {
 namespace qrcode {

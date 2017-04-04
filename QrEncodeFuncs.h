@@ -1,3 +1,8 @@
+/**
+* @file
+* @brief QR±àÂë·½·¨
+*/
+
 #ifdef WIN32
 
 #pragma once

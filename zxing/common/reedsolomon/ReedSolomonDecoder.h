@@ -22,10 +22,10 @@
 
 #include <memory>
 #include <vector>
-#include "zxing/common/Counted.h"
-#include "zxing/common/Array.h"
-#include "zxing/common/reedsolomon/GenericGFPoly.h"
-#include "zxing/common/reedsolomon/GenericGF.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/Array.h>
+#include <zxing/common/reedsolomon/GenericGFPoly.h>
+#include <zxing/common/reedsolomon/GenericGF.h>
 
 namespace zxing {
 class GenericGFPoly;

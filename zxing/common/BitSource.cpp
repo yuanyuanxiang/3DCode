@@ -19,9 +19,9 @@
  * limitations under the License.
  */
 
-#include "zxing/common/BitSource.h"
+#include <zxing/common/BitSource.h>
 #include <sstream>
-#include "zxing/common/IllegalArgumentException.h"
+#include <zxing/common/IllegalArgumentException.h>
 
 namespace zxing {
 

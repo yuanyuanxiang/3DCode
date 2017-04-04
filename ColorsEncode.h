@@ -1,12 +1,12 @@
-/************************************************************************
-* @file 
+/** 
+* @file ColorsEncode.h
 * @details 编码彩色数据，可在ANDROID下使用。
 * @author 
 * @email 
 * @version V1.1
 * @date 2016/10/15
 * Copyleft (c), All rights reserved.							
-************************************************************************/
+*/
 
 #pragma once
 
@@ -22,14 +22,16 @@
 
 #define COLOR_QRCOLOR2		3			/**< 彩色二(背景) */
 
-/************************************************************************
-* @class ColorsEncode 彩色编码模块
-************************************************************************/
+/** 
+* @class ColorsEncode 
+* @brief 彩色编码模块
+*/
 class ColorsEncode : public ColorsBase
 {
 public:
-	/** 创建一个彩色编码解码基类对象
-	* @param[in] bMatrix[MAX_MODULESIZE][MAX_MODULESIZE]	二维码数据
+	/** 
+	* @brief 创建一个彩色编码解码基类对象
+	* @param[in] bMatrix									二维码数据
 	* @param[in] nSymbolSize								二维码尺寸
 	* @param[in] LogoRect									二维码LOGO
 	*/
@@ -53,7 +55,7 @@ public:
 		m_nVersion = 0;
 	}
 
-	// 默认的析构函数
+	/// 默认的析构函数
 	~ColorsEncode() { }
 
 	// 为原二维码着色
@@ -61,10 +63,10 @@ public:
 
 protected:
 	// 彩色编码及数据格式
-	int				m_strLen;		// 数据长度
-	int				m_ecLevel;		// 纠错等级
-	int				m_nMaskingNo;	// 掩码版本
-	int				m_nVersion;		// 编码版本
+	int				m_strLen;		/**< 数据长度 */
+	int				m_ecLevel;		/**< 纠错等级 */
+	int				m_nMaskingNo;	/**< 掩码版本 */
+	int				m_nVersion;		/**< 编码版本 */
 
 #if (ENCODE_MOUDLE)
 	// 获取位置识别区的16个模块的索引

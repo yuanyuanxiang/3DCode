@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/detector/FinderPattern.h"
+#include <zxing/qrcode/detector/FinderPattern.h>
 
 using std::abs;
 using zxing::Ref;

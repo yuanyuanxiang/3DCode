@@ -3,6 +3,9 @@
 #ifdef _AFX
 
 /****************************************************************
+* @file ImageViewerDllFuncs.h
+* @brief 动态链接库 ImageViewer.dll 接口函数声明
+* @details 
 	一、文档说明
 		动态链接库 ImageViewer.dll 接口函数声明
 

@@ -1,11 +1,20 @@
 #ifndef _ZLIBMGR
 #define _ZLIBMGR
 
-// 10KB
+/**
+* @file zlibmgr.h
+* @brief zlib±àÂë½âÂë
+*/
+
+/// 10KB
 #define  MAXBUFFERSIZE 10240
 
 #include "zlib/zlib.h"
 
+/**
+* @class CZlibMgr
+* @brief zlib¿â½Ó¿Ú
+*/
 class CZlibMgr
 {
 public:

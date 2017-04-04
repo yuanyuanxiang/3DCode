@@ -18,11 +18,12 @@
  * limitations under the License.
  */
 
-#include "zxing/common/PerspectiveTransform.h"
+#include <zxing/common/PerspectiveTransform.h>
 
 namespace zxing {
 using namespace std;
 
+// by yuanyuanxiang
 PerspectiveTransform::PerspectiveTransform()
 {
 	memset(this, 0, sizeof(PerspectiveTransform));

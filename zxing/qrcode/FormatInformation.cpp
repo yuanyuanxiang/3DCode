@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/FormatInformation.h"
+#include <zxing/qrcode/FormatInformation.h>
 #include <limits>
 
 namespace zxing {

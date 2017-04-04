@@ -1,3 +1,8 @@
+/**
+* @file 
+* @brief 字符串转换的实现
+*/
+
 #include "stdafx.h"
 #include "CodeTransform.h"
 
@@ -8,10 +13,10 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p) if((p) != NULL){ delete [] (p); (p) = NULL; }	//安全删除指针p
+#define SAFE_DELETE(p) if((p) != NULL){ delete [] (p); (p) = NULL; }/**< 安全删除指针p */
 #endif
 
-// 将Unicode编码转换成ANSI编码(需要手动delete转换结果)
+/// 将Unicode编码转换成ANSI编码(需要手动delete转换结果)
 char* UnicodeConvert2ANSI(LPCWCH strUnicode, int &ncLength)
 {
 	ncLength = WideCharToMultiByte(CP_ACP, 0, strUnicode, -1, NULL, 0, NULL, NULL);
@@ -22,7 +27,7 @@ char* UnicodeConvert2ANSI(LPCWCH strUnicode, int &ncLength)
 }
 
 
-// 将ANSI编码转换成Unicode编码
+/// 将ANSI编码转换成Unicode编码
 CString ANSIConvert2Unicode(char *strANSI, int &ncLength)
 {
 	ncLength = MultiByteToWideChar(CP_ACP, 0, strANSI, -1, NULL, 0);
@@ -34,7 +39,7 @@ CString ANSIConvert2Unicode(char *strANSI, int &ncLength)
 }
 
 
-// 将Unicode编码转换成UTF-8编码(需要手动delete转换结果)
+/// 将Unicode编码转换成UTF-8编码(需要手动delete转换结果)
 char* UnicodeConvert2UTF8(LPCWCH strUnicode, int &ncLength)
 {
 	ncLength = WideCharToMultiByte(CP_UTF8, 0, strUnicode, -1, NULL, 0, NULL, NULL);
@@ -48,7 +53,7 @@ char* UnicodeConvert2UTF8(LPCWCH strUnicode, int &ncLength)
 }
 
 
-// 将utf-8编码转换成Unicode编码
+/// 将utf-8编码转换成Unicode编码
 CString UTF8Convert2Unicode(char* strUtf8, int &ncLength)
 {
 	ncLength = MultiByteToWideChar(CP_UTF8, 0, strUtf8, -1, NULL, 0);
@@ -60,7 +65,7 @@ CString UTF8Convert2Unicode(char* strUtf8, int &ncLength)
 }
 
 
-// 将ANSI编码转换成UTF-8编码
+/// 将ANSI编码转换成UTF-8编码
 char* ANSIConvert2UTF8(char* strANSI, int &ncLength)
 {
 	CString strUnicode = ANSIConvert2Unicode(strANSI, ncLength);
@@ -69,7 +74,7 @@ char* ANSIConvert2UTF8(char* strANSI, int &ncLength)
 }
 
 
-// 将UTF8编码转换成ANSI编码
+/// 将UTF8编码转换成ANSI编码
 char* UTF8Convert2ANSI(char* strUtf8, int &ncLength)
 {
 	CString strUnicode = UTF8Convert2Unicode(strUtf8, ncLength);

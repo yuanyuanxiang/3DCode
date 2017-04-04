@@ -60,7 +60,7 @@ void CChildFrame::Dump(CDumpContext& dc) const
 
 // CChildFrame 消息处理程序
 
-
+/// 切换文档时的响应函数
 void CChildFrame::OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd)
 {
 	CMDIChildWndEx::OnMDIActivate(bActivate, pActivateWnd, pDeactivateWnd);
@@ -74,7 +74,7 @@ void CChildFrame::OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeact
 	}
 }
 
-
+/// 子框架销毁时调用
 void CChildFrame::OnDestroy()
 {
 	CMDIChildWndEx::OnDestroy();

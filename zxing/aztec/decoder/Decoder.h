@@ -22,9 +22,9 @@
 #ifndef __ZXING_AZTEC_DECODER_DECODER_H__
 #define __ZXING_AZTEC_DECODER_DECODER_H__
 
-#include "zxing/common/BitMatrix.h"
-#include "zxing/common/Str.h"
-#include "zxing/aztec/AztecDetectorResult.h"
+#include <zxing/common/BitMatrix.h>
+#include <zxing/common/Str.h>
+#include <zxing/aztec/AztecDetectorResult.h>
 
 namespace zxing {
 

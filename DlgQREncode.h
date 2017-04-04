@@ -1,9 +1,16 @@
+/**
+* @file DlgQREncode.h
+* @brief CDlgQREncode 类的接口
+*/
+
 #pragma once
 
 #include "EncodeParent.h"
 
-// CDlgQREncode 对话框
-
+/**
+* @class CDlgQREncode
+* @brief CDlgQREncode 对话框
+*/
 class CDlgQREncode : public CEncodeParent
 {
 public:

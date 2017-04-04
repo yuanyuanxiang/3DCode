@@ -10,17 +10,17 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifndef MAX_CODEUTF8NUM
-#define MAX_CODEUTF8NUM		1000	// 最多编码utf8文字字数
+#define MAX_CODEUTF8NUM		1000	/**< 最多编码utf8文字字数 */
 #endif
 
-/* - 编码数据 -
-CString strEncodeData	编码数据
-CQR_Encode* pQR_Encode	编码类
-int nLevel				纠错率
-int nVersion			版本号
-BOOL bAutoExtent		自动扩展
-int nMaskingNo			掩码号
-备注：数据均转化为utf8格式进行编码
+/** - 编码数据 -
+* @param[in] strEncodeData		编码数据
+* @param[in] * pQR_Encode		编码类
+* @param[in] nLevel				纠错率
+* @param[in] nVersion			版本号
+* @param[in] bAutoExtent		自动扩展
+* @param[in] nMaskingNo			掩码号
+* @note 数据均转化为utf8格式进行编码
 */
 BOOL EncodeData(CString strEncodeData, CQR_Encode* pQR_Encode, int nLevel, int nVersion, BOOL bAutoExtent, int nMaskingNo)
 {
@@ -32,26 +32,29 @@ BOOL EncodeData(CString strEncodeData, CQR_Encode* pQR_Encode, int nLevel, int n
 		SAFE_DELETE(utf8);
 		return FALSE;
 	}
+	if (NULL == utf8)
+		return TRUE;
 	BOOL m_bDataEncoded = pQR_Encode->EncodeDataUtf8(nLevel, nVersion, bAutoExtent, nMaskingNo, utf8, ncLength);
 	SAFE_DELETE(utf8);
 #else
-	BOOL m_bDataEncoded = pQR_Encode->EncodeData(nLevel, nVersion, bAutoExtent, nMaskingNo, strEncodeData);
+	BOOL m_bDataEncoded = pQR_Encode->EncodeDataUtf8(nLevel, nVersion, bAutoExtent, nMaskingNo, strEncodeData);
 #endif
 	return m_bDataEncoded;
 }
 
 
 /* - 转化图像 -
-CyImage* pImage					二维码图像
-int nPixelSize					像素大小
-COLORREF ForegroundColor		前景色
-COLORREF BackgroundColor		背景色
-CLogoRect LogoRect				LOGO区
-CQR_Encode* pQR_Encode			QR码
-BOOL bForegroundColorReturned	返回前景色索引
-备注：将二维码转换为图像进行显示，默认返回前景色索引。
+* @param[in] * pImage					二维码图像
+* @param[in] nPixelSize					像素大小
+* @param[in] ForegroundColor			前景色
+* @param[in] BackgroundColor			背景色
+* @param[in] LogoRect					LOGO区
+* @param[in] * pQR_Encode				QR码
+* @param[in] bForegroundColorReturned	返回前景色索引
+* @note 将二维码转换为图像进行显示，默认返回前景色索引。
 */
-vector<CPixelPoint> Convert2Image(CyImage* pImage, int nPixelSize, COLORREF ForegroundColor, COLORREF BackgroundColor, CLogoRect LogoRect, CQR_Encode* pQR_Encode, BOOL bForegroundColorReturned)
+vector<CPixelPoint> Convert2Image(CyImage* pImage, int nPixelSize, COLORREF ForegroundColor, COLORREF BackgroundColor, 
+								  CLogoRect LogoRect, CQR_Encode* pQR_Encode, BOOL bForegroundColorReturned)
 {
 	int nSymbleSize = pQR_Encode->m_nSymbleSize;
 	int nWidth = nPixelSize * nSymbleSize + QR_MARGIN * 2;
@@ -68,18 +71,20 @@ vector<CPixelPoint> Convert2Image(CyImage* pImage, int nPixelSize, COLORREF Fore
 	CLogoRect origin(0, 0, 8, 8);							// 二维码原点
 	for (int i = 0; i < nSymbleSize; ++i)
 	{
+		int nRow = i * nPixelSize;
 		for (int j = 0; j < nSymbleSize; ++j)
 		{
+			int nCol = j * nPixelSize;
 			if (pQR_Encode->m_byModuleData[i][j] == bForegroundColorReturned)
 			{
 				// 设置背景色
-				SetPixel(pHead, nPixelSize, i * nPixelSize, j * nPixelSize, nRowlen, 3, BackgroundColor);
+				SetPixel(pHead, nPixelSize, nRow, nCol, nRowlen, 3, BackgroundColor);
 			}
 			else if (IndexNotInRect(i, j, LogoRect) && // 去掉Logo区域
 				IndexNotInRect(j, i, right) && IndexNotInRect(j, i, origin) && IndexNotInRect(j, i, top))
 			{
 				// 设置前景色
-				SetPixel(pHead, nPixelSize, i * nPixelSize, j * nPixelSize, nRowlen, 3, ForegroundColor);
+				SetPixel(pHead, nPixelSize, nRow, nCol, nRowlen, 3, ForegroundColor);
 				ForegroundColorIndex.push_back(CPixelPoint(i, j));//i行j列
 			}
 		}

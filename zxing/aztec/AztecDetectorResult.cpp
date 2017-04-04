@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "zxing/aztec/AztecDetectorResult.h"
+#include <zxing/aztec/AztecDetectorResult.h>
 
 using zxing::aztec::AztecDetectorResult;
 

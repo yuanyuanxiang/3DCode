@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "zxing/ChecksumException.h"
+#include <zxing/ChecksumException.h>
 
 using zxing::ChecksumException;
 

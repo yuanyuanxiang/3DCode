@@ -9,7 +9,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-/* 设置窗口显示整数 */
+/** 设置窗口显示整数 */
 void SetWindowInt(CWnd* pWnd, int nInt)
 {
 	CString text;
@@ -18,7 +18,7 @@ void SetWindowInt(CWnd* pWnd, int nInt)
 }
 
 
-/* 设置窗口显示小数 */
+/** 设置窗口显示小数 */
 void SetWindowFloat(CWnd* pWnd, float val)
 {
 	CString text;
@@ -27,7 +27,7 @@ void SetWindowFloat(CWnd* pWnd, float val)
 }
 
 
-/* 取得窗口所显示整数 */
+/** 取得窗口所显示整数 */
 int GetWindowInt(CWnd* pWnd)
 {
 	CString text;
@@ -36,7 +36,7 @@ int GetWindowInt(CWnd* pWnd)
 }
 
 
-/* 取得窗口所显示的浮点数 */
+/** 取得窗口所显示的浮点数 */
 double GetWindowFloat(CWnd* pWnd)
 {
 	CString text;

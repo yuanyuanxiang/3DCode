@@ -1,6 +1,9 @@
+/**
+* @file 3DCode.h 
+* @brief 3DCode 应用程序的主头文件
+* @author 袁沅祥
+*/
 
-// 3DCode.h : 3DCode 应用程序的主头文件
-//
 #pragma once
 
 #ifndef __AFXWIN_H__
@@ -8,11 +11,6 @@
 #endif
 
 #include "resource.h"       // 主符号
-
-
-// C3DCodeApp:
-// 有关此类的实现，请参阅 3DCode.cpp
-//
 
 class CyImage;
 
@@ -22,6 +20,9 @@ class C3DCodeDoc;
 
 class C3DCodeView;
 
+/** @class C3DCodeApp
+* @brief 有关此类的实现，请 @see 3DCode.cpp
+*/
 class C3DCodeApp : public CWinAppEx
 {
 public:

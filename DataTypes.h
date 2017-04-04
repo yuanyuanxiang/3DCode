@@ -1,13 +1,13 @@
 #pragma once
 
-/************************************************************************/
-// 本文档定义了程序可能用到的数据类型
-// 如果需要在ANDROID使用，请#define ANDROID_CPP
-// 2016/8/24 注
-//
-/************************************************************************/
+/** 
+* @file DataTypes.h
+* @brief 本文档定义了程序可能用到的数据类型
+* @note 如果需要在ANDROID使用，请#define ANDROID_CPP
+* @date 2016/8/24 注
+*/
 
-
+#include <math.h>
 typedef int BOOL;
 typedef unsigned char BYTE;
 typedef unsigned char uchar;
@@ -22,31 +22,33 @@ typedef unsigned int uint;
 #endif
 
 #ifndef max
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#define max(a,b)            (((a) > (b)) ? (a) : (b))					/**< 最大值 */
 #endif
 
 #ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#define min(a,b)            (((a) < (b)) ? (a) : (b))					/**< 最小值 */
 #endif
 
-#define WIDTHBYTES(bits)    (((bits) + 31) / 32 * 4)					//计算每行字节数(4字节对齐)
+#define WIDTHBYTES(bits)    (((bits) + 31) / 32 * 4)					/**< 计算每行字节数(4字节对齐) */
 
 #ifndef SAFE_DELETE
-	#define SAFE_DELETE(p) if((p) != NULL){ delete [] (p); (p) = NULL; }	//安全删除指针p
+	#define SAFE_DELETE(p) if((p) != NULL){ delete [] (p); (p) = NULL; }/**< 安全删除指针p  */
 #endif
 
 #ifndef RGB
+/// RGB
 #define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
 #endif
 
 #ifndef ZeroMemory
+/// 置零
 #define ZeroMemory(Destination,Length) memset((Destination),0,(Length))
 #endif
 
-#define PI 3.141592653f
-#define QR_MARGIN	4
+#define PI 3.141592653f /**< PI */
+#define QR_MARGIN	4	/**< QR边界 */
 
-#ifdef ANDROID_CPP
+#ifdef ANDROID_CPP		/**< 如果在安装下编译，需要包含某些文件 */
 
 #include "stdlib.h"
 #include "string.h"
@@ -65,7 +67,10 @@ typedef ULONG_PTR			DWORD_PTR;
 
 #endif // ANDROID_CPP
 
-// 二维浮点坐标(x, y)
+/** 
+* @class float2
+* @brief 二维浮点坐标(x, y)
+*/
 class float2
 {
 public:
@@ -98,43 +103,43 @@ public:
 		return *this;
 	}
 	// ==
-	bool operator == (const float2 point)
+	bool operator == (const float2 & point)
 	{
 		return (x == point.x && y == point.y);
 	}
-	bool operator == (float val)
+	bool operator == (const float val)
 	{
 		return (x == val && y == val);
 	}
 	// !=
-	bool operator != (const float2 point)
+	bool operator != (const float2 & point)
 	{
 		return (x != point.x || y != point.y);
 	}
-	bool operator != (float val)
+	bool operator != (const float val)
 	{
 		return (x != val || y != val);
 	}
 	// += -= *= /=
-	float2 operator += (const float2 pos)
+	float2 operator += (const float2 & pos)
 	{
 		x += pos.x;
 		y += pos.y;
 		return *this;
 	}
-	float2 operator -= (const float2 pos)
+	float2 operator -= (const float2 & pos)
 	{
 		x -= pos.x;
 		y -= pos.y;
 		return *this;
 	}
-	float2 operator *= (const float2 pos)
+	float2 operator *= (const float2 & pos)
 	{
 		x *= pos.x;
 		y *= pos.y;
 		return *this;
 	}
-	float2 operator /= (const float2 pos)
+	float2 operator /= (const float2 & pos)
 	{
 		x /= pos.x;
 		y /= pos.y;
@@ -165,60 +170,67 @@ public:
 		return *this;
 	}
 	// 浮点运算(1)
-	friend float2 operator + (const float2 pos, const float val)
+	friend float2 operator + (const float2 & pos, const float val)
 	{
 		return float2(pos.x + val, pos.y + val);
 	}
-	friend float2 operator - (const float2 pos, const float val)
+	friend float2 operator - (const float2 & pos, const float val)
 	{
 		return float2(pos.x - val, pos.y - val);
 	}
-	friend float2 operator * (const float2 pos, const float val)
+	friend float2 operator * (const float2 & pos, const float val)
 	{
 		return float2(pos.x * val, pos.y * val);
 	}
-	friend float2 operator / (const float2 pos, const float val)
+	friend float2 operator / (const float2 & pos, const float val)
 	{
 		return float2(pos.x / val, pos.y / val);
 	}
 	// 浮点运算(2)
-	friend float2 operator + (const float val, const float2 pos)
+	friend float2 operator + (const float val, const float2 & pos)
 	{
 		return float2(val + pos.x, val + pos.y);
 	}
-	friend float2 operator - (const float val, const float2 pos)
+	friend float2 operator - (const float val, const float2 & pos)
 	{
 		return float2(val - pos.x, val - pos.y);
 	}
-	friend float2 operator * (const float val, const float2 pos)
+	friend float2 operator * (const float val, const float2 & pos)
 	{
 		return float2(val * pos.x, val * pos.y);
 	}
-	friend float2 operator / (const float val, const float2 pos)
+	friend float2 operator / (const float val, const float2 & pos)
 	{
 		return float2(val / pos.x, val / pos.y);
 	}
 	// 四则运算
-	friend float2 operator + (const float2 pos1, const float2 pos2)
+	friend float2 operator + (const float2 & pos1, const float2 & pos2)
 	{
 		return float2(pos1.x + pos2.x, pos1.y + pos2.y);
 	}
-	friend float2 operator - (const float2 pos1, const float2 pos2)
+	friend float2 operator - (const float2 & pos1, const float2 & pos2)
 	{
 		return float2(pos1.x - pos2.x, pos1.y - pos2.y);
 	}
-	friend float2 operator * (const float2 pos1, const float2 pos2)
+	friend float2 operator * (const float2 & pos1, const float2 & pos2)
 	{
 		return float2(pos1.x * pos2.x, pos1.y * pos2.y);
 	}
-	friend float2 operator / (const float2 pos1, const float2 pos2)
+	friend float2 operator / (const float2 & pos1, const float2 & pos2)
 	{
 		return float2(pos1.x / pos2.x, pos1.y / pos2.y);
+	}
+	friend float2 abs(const float2 & point)
+	{
+		return float2(abs(point.x), abs(point.y));
 	}
 };
 
 
-// 三维浮点坐标(x, y, z)
+/** 
+* @class float3
+* @brief 三维浮点坐标(x, y. z)
+*/
 class float3
 {
 public:
@@ -332,82 +344,92 @@ public:
 		return *this;
 	}
 	// 与浮点运算(1)
-	friend float3 operator + (float3 point, float val)
+	friend float3 operator + (const float3 & point, float val)
 	{
 		return float3(point.x + val, point.y + val, point.z + val);
 	}
-	friend float3 operator - (float3 point, float val)
+	friend float3 operator - (const float3 & point, float val)
 	{
 		return float3(point.x - val, point.y - val, point.z - val);
 	}
-	friend float3 operator * (float3 point, float val)
+	friend float3 operator * (const float3 & point, float val)
 	{
 		return float3(point.x * val, point.y * val, point.z * val);
 	}
-	friend float3 operator / (float3 point, float val)
+	friend float3 operator / (const float3 & point, float val)
 	{
 		return float3(point.x / val, point.y / val, point.z / val);
 	}
 	// 与浮点运算(2)
-	friend float3 operator + (float val, float3 point)
+	friend float3 operator + (float val, const float3 & point)
 	{
 		return float3(val + point.x, val + point.y, val + point.z);
 	}
-	friend float3 operator - (float val, float3 point)
+	friend float3 operator - (float val, const float3 & point)
 	{
 		return float3(val - point.x, val - point.y, val - point.z);
 	}
-	friend float3 operator * (float val, float3 point)
+	friend float3 operator * (float val, const float3 & point)
 	{
 		return float3(val * point.x, val * point.y, val * point.z);
 	}
-	friend float3 operator / (float val, float3 point)
+	friend float3 operator / (float val, const float3 & point)
 	{
 		return float3(val / point.x, val / point.y, val / point.z);
 	}
 	// 四则运算
-	friend float3 operator + (float3 P, float3 Q)
+	friend float3 operator + (const float3 & P, const float3 & Q)
 	{
 		return float3(P.x + Q.x, P.y + Q.y, P.z + Q.z);
 	}
-	friend float3 operator - (float3 P, float3 Q)
+	friend float3 operator - (const float3 & P, const float3 & Q)
 	{
 		return float3(P.x - Q.x, P.y - Q.y, P.z - Q.z);
 	}
-	friend float3 operator * (float3 P, float3 Q)
+	friend float3 operator * (const float3 & P, const float3 & Q)
 	{
 		return float3(P.x * Q.x, P.y * Q.y, P.z * Q.z);
 	}
-	friend float3 operator / (float3 P, float3 Q)
+	friend float3 operator / (const float3 & P, const float3 & Q)
 	{
 		return float3(P.x / Q.x, P.y / Q.y, P.z / Q.z);
 	}
+	friend float3 abs(const float3 & point)
+	{
+		return float3(abs(point.x), abs(point.y), abs(point.z));
+	}
 };
 
-// RGB宏：COLORREF转为灰度值
-#define RgbColorRef2Gray(ref)			((299 * GetRValue(ref) + 587 * GetGValue(ref) + 114 * GetBValue(ref)) / 1000.f)
+/// RGB转灰度(@see http://blog.csdn.net/cool1949/article/details/6649429)
+#define RGB2GRAY(R, G, B) (  ((R)*38 + (G)*75 + (B)*15) >> 7 )
 
-// RGB宏：rgb转为float3数据
+/// RGB宏：COLORREF转为灰度值
+#define RgbColorRef2Gray(ref)			( (GetRValue(ref)*38 + GetGValue(ref)*75 + GetBValue(ref)*15) >> 7 )
+
+/// RGB宏：rgb转为float3数据
 #define RgbColor2Float3(r, g, b)		float3(r, g, b)
 
-// 将COLORREF转为float3数据
+/// 将COLORREF转为float3数据
 #define RgbColorRef2Float3(ref)			float3(GetRValue(ref), GetGValue(ref), GetBValue(ref))
 
-// float3数据转灰度
+/// float3数据转灰度
 #define RgbColor2Gray(rgbc)				(0.299f * rgbc.x + 0.587f * rgbc.y + 0.114f * rgbc.z)
 
-#define BIT_SET(a, b) ((a) |= (1<<(b)))			//设置a第b位为1
-#define BIT_CLEAR(a, b) ((a) &= ~(1<<(b)))		//设置a第b位为0
-#define BIT_FLIP(a, b) ((a) ^= (1<<(b)))		//开关a的b位
-#define BIT_CHECK(a, b) ((a) & (1<<(b)))		//检查a的b位
+#define BIT_SET(a, b) ((a) |= (1<<(b)))			/**< 设置a第b位为1 */
+#define BIT_CLEAR(a, b) ((a) &= ~(1<<(b)))		/**< 设置a第b位为0 */
+#define BIT_FLIP(a, b) ((a) ^= (1<<(b)))		/**< 开关a的b位 */
+#define BIT_CHECK(a, b) ((a) & (1<<(b)))		/**< 检查a的b位 */
 
-// 如果a的i位为1，则设置b的j位为1
+/// 如果a的i位为1，则设置b的j位为1
 #define BIT_CHECK_SET(a, i, b, j) if(BIT_CHECK(a, i)) BIT_SET(b, j)
 
-// 随机设置b的j位为1，使1以概率p出现
+/// 随机设置b的j位为1，使1以概率p出现
 #define BIT_RANDOM_SET(p, b, j) if(1.0F * rand() / RAND_MAX <= p) BIT_SET(b, j)
 
-// 矩形类
+/** 
+* @class CMyRect
+* @brief 矩形类
+*/
 class CMyRect
 {
 public:
@@ -423,20 +445,20 @@ public:
 	~CMyRect()
 	{
 	}
-	int Width()
+	int Width() const 
 	{
 		return right - left;
 	}
-	int Height()
+	int Height() const 
 	{
 		return bottom - top;
 	}
-	bool operator == (const CMyRect rect)
+	bool operator == (const CMyRect & rect) const 
 	{
 		return (left == rect.left && right == rect.right
 			&& top == rect.top && bottom == rect.bottom);
 	}
-	bool IsEmpty()
+	bool IsEmpty() const 
 	{
 		return (left == 0 && right == 0 && top == 0 && bottom == 0);
 	}
@@ -451,7 +473,10 @@ typedef CMyRect CLogoRect;
 /// 感兴趣区域
 typedef CMyRect RoiRect;
 
-// 点类
+/** 
+* @class CPixelPoint
+* @brief 点类
+*/
 class CPixelPoint
 {
 public:
@@ -465,7 +490,7 @@ public:
 	{
 	}
 	// 根据x坐标比较两个点大小(P1>P2)
-	friend bool Compare2Points(CPixelPoint &P1, CPixelPoint &P2)
+	friend bool operator > (const CPixelPoint &P1, const CPixelPoint &P2)
 	{
 		return (P1.x > P2.x);
 	}
@@ -473,10 +498,13 @@ public:
 	int x, y;
 };
 
-// rgb(r, g, b, a)转int，用于比较大小
+/// rgb(r, g, b, a)转int，用于比较大小
 #define RGB2INT(rgba) (299 * BYTE((rgba).r) + 587 * BYTE((rgba).g) + 114 * BYTE((rgba).b))
 
-// 彩色(r, g, b)
+/** 
+* @class rgb
+* @brief 彩色(r, g, b)
+*/
 template <typename Type>
 class rgb
 {
@@ -492,7 +520,7 @@ public:
 	{
 	}
 	// 比较两个rgb像素的大小(C1<C2)
-	friend bool operator < (const rgb<Type> C1, const rgb<Type> C2)
+	friend bool operator < (const rgb<Type> & C1, const rgb<Type> & C2)
 	{
 		return RGB2INT(C1) < RGB2INT(C2);
 	}
@@ -525,9 +553,10 @@ public:
 	}
 };
 
-/** @brief 图像的信息头
-* 
-* 该数据结构存放了图像的重要信息, 图像的注释性信息:
+/** 
+* @struct ImageHeader
+* @brief 图像的信息头
+* @details 该数据结构存放了图像的重要信息, 图像的注释性信息.
 * @var ImageHeader::m_sTag - 图像标识
 * @var ImageHeader::m_nWidth - 图像宽度
 * @var ImageHeader::m_nHeight - 图像高度
@@ -554,19 +583,19 @@ struct ImageHeader
 };
 
 // 判断索引(i行, j列)不在矩形内
-BOOL IndexNotInRect(int i, int j, CLogoRect &rect);
+BOOL IndexNotInRect(int i, int j, const CLogoRect &rect);
 
 // 二维，两点间的距离
-float Distance(float2 P, float2 Q);
+float Distance(const float2 & P, const float2 & Q);
 
 // 二维，两点间的距离平方
-float _Distance(float2 P, float2 Q);
+float _Distance(const float2 & P, const float2 & Q);
 
 // 三维，两点间的距离
-float Distance(float3 P, float3 Q);
+float Distance(const float3 & P, const float3 & Q);
 
 // 三维，两点间的距离平方
-float _Distance(float3 P, float3 Q);
+float _Distance(const float3 & P, const float3 & Q);
 
 // 将矩形按倍数放大
 void ZoomRect(CLogoRect &rect, float rate = 1.f);
@@ -575,13 +604,13 @@ void ZoomRect(CLogoRect &rect, float rate = 1.f);
 void MoveRect(CLogoRect &rect, float dx = 0.f, float dy = 0.f);
 
 // 对数据进行掩码操作
-void XOR(int *nCodes, int *nMaskingNo, int nLength);
+void XOR(int *nCodes, const int *nMaskingNo, int nLength);
 
 // 判断图像是否4字节对齐
 BOOL IsAligned(int nWidth, int nChannel);
 
 // 计算2D坐标的模
-float fabs(const float2 pos);
+float fabs(const float2 & pos);
 
 // 计算3D坐标的模
-float fabs(const float3 pos);
+float fabs(const float3 & pos);

@@ -1,13 +1,18 @@
-
-// 3DCodeDoc.h : C3DCodeDoc 类的接口
-//
-
+/**
+* @file 3DCodeDoc.h 
+* @brief C3DCodeDoc 类的接口
+* @author 袁沅祥
+*/
 
 #pragma once
 #include "CyImage.h"
 
 class C3DCodeView;
 
+/**
+* @class C3DCodeDoc
+* @brief 文档
+*/
 class C3DCodeDoc : public CDocument
 {
 protected: // 仅从序列化创建
@@ -16,16 +21,16 @@ protected: // 仅从序列化创建
 
 // 特性
 private:
-	// 编解码图像
+	/// 编解码图像
 	CyImage* m_pImage;
 
 	/// 感兴趣区域
 	RoiRect m_roi;
 
-	// 锁定图像
+	/// 锁定图像
 	BOOL m_bImageLocked;
 
-	// 编解码数据
+	/// 编解码数据
 	CString m_strData;
 
 public:

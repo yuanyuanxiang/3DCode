@@ -13,8 +13,14 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Test">
+    <Filter Include="QR_Maker">
+      <UniqueIdentifier>{6ce29bf8-7bb8-40d0-94a3-7db52eece424}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ColoredQR">
       <UniqueIdentifier>{31c00287-0c78-46fb-889f-d1eab75e6197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReedSolomon">
+      <UniqueIdentifier>{28b526f3-62ce-4c00-b18b-4398746f5ee4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,9 +108,6 @@
     <ClCompile Include="zxing\ResultPointCallback.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="zxing\ZXingException.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="zxing\common\BitArray.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -157,52 +160,52 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ZXingTest.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="ColorsDecode.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="DataTypes.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="FileIO.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="PixelsOperation.cpp">
-      <Filter>Test</Filter>
-    </ClCompile>
-    <ClCompile Include="QR_Encode.cpp">
-      <Filter>Test</Filter>
-    </ClCompile>
-    <ClCompile Include="reedSolomon.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="RS_ecc.cpp">
-      <Filter>Test</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageReader.cpp">
-      <Filter>Test</Filter>
-    </ClCompile>
-    <ClCompile Include="ZXingDeCoder.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="QrDecoder.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="PerspectTransform.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="zlibmgr.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="Decodefuncs.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="ColorsBase.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClCompile>
     <ClCompile Include="ColorsEncode.cpp">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
+    </ClCompile>
+    <ClCompile Include="zxing\Exception.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageReaderSource.cpp">
+      <Filter>ColoredQR</Filter>
+    </ClCompile>
+    <ClCompile Include="reedSolomon.cpp">
+      <Filter>ReedSolomon</Filter>
+    </ClCompile>
+    <ClCompile Include="QR_Encode.cpp">
+      <Filter>QR_Maker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,9 +305,6 @@
     <ClInclude Include="zxing\ZXing.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="zxing\ZXingException.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="zxing\common\Array.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -366,61 +366,70 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ColorsDecode.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="DataTypes.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="FileIO.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="PixelsOperation.h">
-      <Filter>Test</Filter>
-    </ClInclude>
-    <ClInclude Include="primitives.h">
-      <Filter>Test</Filter>
-    </ClInclude>
-    <ClInclude Include="QR_Encode.h">
-      <Filter>Test</Filter>
-    </ClInclude>
-    <ClInclude Include="reedSolomon.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="RS_ecc.h">
-      <Filter>Test</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageReader.h">
-      <Filter>Test</Filter>
-    </ClInclude>
-    <ClInclude Include="ZXingDeCoder.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="QrDecoder.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="PerspectTransform.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="templateFuncs.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="zlibmgr.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="ColorsMask.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="medianBlur.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="DecodeFuncs.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="ColorsBase.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="ColorsEncode.h">
-      <Filter>Test</Filter>
+      <Filter>ColoredQR</Filter>
+    </ClInclude>
+    <ClInclude Include="zxing\Exception.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageReaderSource.h">
+      <Filter>ColoredQR</Filter>
+    </ClInclude>
+    <ClInclude Include="reedSolomon.h">
+      <Filter>ReedSolomon</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives.h">
+      <Filter>ReedSolomon</Filter>
+    </ClInclude>
+    <ClInclude Include="QR_Encode.h">
+      <Filter>QR_Maker</Filter>
+    </ClInclude>
+    <ClInclude Include="MedianFilter.h">
+      <Filter>ColoredQR</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>ColoredQR</Filter>
+    </ClInclude>
+    <ClInclude Include="K_Means.h">
+      <Filter>ColoredQR</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

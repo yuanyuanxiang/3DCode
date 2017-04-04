@@ -1,9 +1,14 @@
-
-// ChildFrm.h : CChildFrame 类的接口
-//
+/** 
+* @file ChildFrm.h 
+* @brief CChildFrame 类的接口
+*/
 
 #pragma once
 
+/**
+* @class CChildFrame
+* @brief 子框架
+*/
 class CChildFrame : public CMDIChildWndEx
 {
 	DECLARE_DYNCREATE(CChildFrame)

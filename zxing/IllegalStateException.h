@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "zxing/ReaderException.h"
+#include <zxing/ReaderException.h>
 
 namespace zxing {
 

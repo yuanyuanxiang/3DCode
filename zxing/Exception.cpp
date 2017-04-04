@@ -20,17 +20,17 @@
 
  */
 
-#include "zxing/ZXing.h"
-#include "zxing/ZXingException.h"
+#include <zxing/ZXing.h>
+#include <zxing/Exception.h>
 #include <string.h>
 
-using zxing::ZXingException;
+using zxing::Exception;
 
-void ZXingException::deleteMessage() {
+void Exception::deleteMessage() {
   delete [] message;
 }
 
-char const* ZXingException::copy(char const* msg) {
+char const* Exception::copy(char const* msg) {
   char* message = 0;
   if (msg) {
     int l = strlen(msg)+1;

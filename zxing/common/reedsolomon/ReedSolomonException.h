@@ -20,10 +20,10 @@
  * limitations under the License.
  */
 
-#include "zxing/ZXingException.h"
+#include <zxing/Exception.h>
 
 namespace zxing {
-class ReedSolomonException : public ZXingException {
+class ReedSolomonException : public Exception {
 public:
   ReedSolomonException(const char *msg) throw();
   ~ReedSolomonException() throw();

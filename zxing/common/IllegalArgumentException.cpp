@@ -18,10 +18,10 @@
  * limitations under the License.
  */
 
-#include "zxing/common/IllegalArgumentException.h"
+#include <zxing/common/IllegalArgumentException.h>
 
 using zxing::IllegalArgumentException;
 
-IllegalArgumentException::IllegalArgumentException() : ZXingException() {}
-IllegalArgumentException::IllegalArgumentException(const char *msg) : ZXingException(msg) {}
+IllegalArgumentException::IllegalArgumentException() : Exception() {}
+IllegalArgumentException::IllegalArgumentException(const char *msg) : Exception(msg) {}
 IllegalArgumentException::~IllegalArgumentException() throw() {}

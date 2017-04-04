@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/QRCodeReader.h"
-#include "zxing/qrcode/detector/Detector.h"
+#include <zxing/qrcode/QRCodeReader.h>
+#include <zxing/qrcode/detector/Detector.h>
 
 #include <iostream>
 
@@ -29,29 +29,24 @@ namespace zxing {
 		
 		using namespace std;
 		
-		QRCodeReader::QRCodeReader() :decoder_(){
-			m_fModuleSize = 4.f;
+		QRCodeReader::QRCodeReader() :decoder_() {
+			m_fModuleSize = 4.0f; // added by yuanyuanxiang
 		}
-
 		//TODO: see if any of the other files in the qrcode tree need tryHarder
-		Ref<Result> QRCodeReader::decode(Ref<BinaryBitmap> image, DecodeHints hints)
-		{
+		Ref<Result> QRCodeReader::decode(Ref<BinaryBitmap> image, DecodeHints hints) {
 			Detector detector(image->getBlackMatrix());
-
 			Ref<DetectorResult> detectorResult(detector.detect(hints));
 
-			// 获取模块尺寸
+			// Get module size, added by yuanyuanxiang
 			m_fModuleSize = detector.GetModuleSize();
 
-			// 获取透视变换
+			// Get transform matrix, added by yuanyuanxiang
 			m_Transform = detector.GetTransform();
 
 			ArrayRef< Ref<ResultPoint> > points (detectorResult->getPoints());
-
 			Ref<DecoderResult> decoderResult(decoder_.decode(detectorResult->getBits()));
-
-			Ref<Result> result(new Result(decoderResult->getText(), decoderResult->getRawBytes(), points, BarcodeFormat::QR_CODE));
-
+			Ref<Result> result(
+							   new Result(decoderResult->getText(), decoderResult->getRawBytes(), points, BarcodeFormat::QR_CODE));
 			return result;
 		}
 		

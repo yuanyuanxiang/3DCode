@@ -19,17 +19,17 @@
  * limitations under the License.
  */
 
-#include "zxing/aztec/decoder/Decoder.h"
+#include <zxing/aztec/decoder/Decoder.h>
 #ifndef NO_ICONV
-#include <iconv.h"
+#include <iconv.h>
 #endif
 #include <iostream>
-#include "zxing/FormatException.h"
-#include "zxing/common/reedsolomon/ReedSolomonDecoder.h"
-#include "zxing/common/reedsolomon/ReedSolomonException.h"
-#include "zxing/common/reedsolomon/GenericGF.h"
-#include "zxing/common/IllegalArgumentException.h"
-#include "zxing/common/DecoderResult.h"
+#include <zxing/FormatException.h>
+#include <zxing/common/reedsolomon/ReedSolomonDecoder.h>
+#include <zxing/common/reedsolomon/ReedSolomonException.h>
+#include <zxing/common/reedsolomon/GenericGF.h>
+#include <zxing/common/IllegalArgumentException.h>
+#include <zxing/common/DecoderResult.h>
 
 using zxing::aztec::Decoder;
 using zxing::DecoderResult;

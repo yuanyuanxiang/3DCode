@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/detector/AlignmentPatternFinder.h"
-#include "zxing/ReaderException.h"
-#include "zxing/common/BitArray.h"
+#include <zxing/qrcode/detector/AlignmentPatternFinder.h>
+#include <zxing/ReaderException.h>
+#include <zxing/common/BitArray.h>
 #include <vector>
 #include <cmath>
 #include <cstdlib>
@@ -134,7 +134,7 @@ AlignmentPatternFinder::~AlignmentPatternFinder() {
     (*possibleCenters_)[i]->release();
     (*possibleCenters_)[i] = 0;
   }
-  DELETE possibleCenters_;
+  delete possibleCenters_;
 }
 
 Ref<AlignmentPattern> AlignmentPatternFinder::find() {

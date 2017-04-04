@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "zxing/common/DecoderResult.h"
+#include <zxing/common/DecoderResult.h>
 
 using namespace std;
 using namespace zxing;

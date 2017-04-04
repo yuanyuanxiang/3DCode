@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Counted.h"
+#include <zxing/common/Counted.h>
 
 namespace zxing {
 

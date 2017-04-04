@@ -19,18 +19,18 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/detector/Detector.h"
-#include "zxing/qrcode/detector/FinderPatternFinder.h"
-#include "zxing/qrcode/detector/FinderPattern.h"
-#include "zxing/qrcode/detector/AlignmentPattern.h"
-#include "zxing/qrcode/detector/AlignmentPatternFinder.h"
-#include "zxing/qrcode/Version.h"
-#include "zxing/common/GridSampler.h"
-#include "zxing/DecodeHints.h"
-#include "zxing/common/detector/MathUtils.h"
+#include <zxing/qrcode/detector/Detector.h>
+#include <zxing/qrcode/detector/FinderPatternFinder.h>
+#include <zxing/qrcode/detector/FinderPattern.h>
+#include <zxing/qrcode/detector/AlignmentPattern.h>
+#include <zxing/qrcode/detector/AlignmentPatternFinder.h>
+#include <zxing/qrcode/Version.h>
+#include <zxing/common/GridSampler.h>
+#include <zxing/DecodeHints.h>
+#include <zxing/common/detector/MathUtils.h>
 #include <sstream>
 #include <cstdlib>
-#include <algorithm>
+#include <algorithm>  // vs12, std::min und std:max
 
 using std::ostringstream;
 using std::abs;
@@ -65,11 +65,13 @@ Ref<ResultPointCallback> Detector::getResultPointCallback() const {
   return callback_;
 }
 
+// added by yuanyuanxiang
 float Detector::GetModuleSize() const
 {
 	return m_fModuleSize;
 }
 
+// added by yuanyuanxiang
 Ref<PerspectiveTransform> Detector::GetTransform() const
 {
 	return m_Transform;
@@ -87,6 +89,7 @@ Ref<DetectorResult> Detector::processFinderPatternInfo(Ref<FinderPatternInfo> in
   Ref<FinderPattern> topRight(info->getTopRight());
   Ref<FinderPattern> bottomLeft(info->getBottomLeft());
 
+  // altered by yuanyuanxiang
   m_fModuleSize = calculateModuleSize(topLeft, topRight, bottomLeft);
   if (m_fModuleSize < 1.0f) {
     throw zxing::ReaderException("bad module size");
@@ -127,7 +130,7 @@ Ref<DetectorResult> Detector::processFinderPatternInfo(Ref<FinderPatternInfo> in
     }
 
   }
-  // Ô¬ãäÏé ÐÞ¸Ä
+  // altered by yuanyuanxiang
   m_Transform = createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
   Ref<BitMatrix> bits(sampleGrid(image_, dimension, m_Transform));
   ArrayRef< Ref<ResultPoint> > points(new Array< Ref<ResultPoint> >(alignmentPattern == 0 ? 3 : 4));

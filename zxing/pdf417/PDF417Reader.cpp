@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#include "zxing/pdf417/PDF417Reader.h"
-#include "zxing/pdf417/detector/Detector.h"
+#include <zxing/pdf417/PDF417Reader.h>
+#include <zxing/pdf417/detector/Detector.h>
 
 using zxing::Ref;
 using zxing::Result;

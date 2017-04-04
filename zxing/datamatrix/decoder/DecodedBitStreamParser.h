@@ -23,10 +23,10 @@
 
 #include <string>
 #include <sstream>
-#include "zxing/common/Array.h"
-#include "zxing/common/BitSource.h"
-#include "zxing/common/Counted.h"
-#include "zxing/common/DecoderResult.h"
+#include <zxing/common/Array.h>
+#include <zxing/common/BitSource.h>
+#include <zxing/common/Counted.h>
+#include <zxing/common/DecoderResult.h>
 
 
 namespace zxing {

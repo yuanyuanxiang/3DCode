@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 
-#include "zxing/LuminanceSource.h"
+#include <zxing/LuminanceSource.h>
 
 namespace zxing {
 
@@ -40,6 +40,12 @@ public:
 
   ArrayRef<char> getRow(int y, ArrayRef<char> row) const;
   ArrayRef<char> getMatrix() const;
+
+  bool isCropSupported() const {
+    return true;
+  }
+
+  Ref<LuminanceSource> crop(int left, int top, int width, int height) const;
 
   bool isRotateSupported() const {
     return true;

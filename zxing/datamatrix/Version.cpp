@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-#include "zxing/datamatrix/Version.h"
+#include <zxing/datamatrix/Version.h>
 #include <limits>
 #include <iostream>
 

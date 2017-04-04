@@ -20,17 +20,6 @@
 
 #include <iostream>
 
-/* 下述三个宏定义由袁沅祥于2016/8/31添加 */
-
-#undef NEW
-#define NEW new // 分配内存
-
-#undef DELETE
-#define DELETE delete // 回收内存
-
-#undef SAFE_DELETE
-#define SAFE_DELETE(p) if(NULL != (p)) { DELETE [] (p); (p) = NULL; } // 安全删除指针
-
 namespace zxing {
 
 /* base class for reference-counted objects */
@@ -43,22 +32,20 @@ public:
   }
   virtual ~Counted() {
   }
-  // 引用计数加一
   Counted *retain() {
     count_++;
     return this;
   }
-  // 引用计数减一
   void release() {
     count_--;
     if (count_ == 0) {
-      count_ = 0; // 0xDEADF001;
-      DELETE this;
+      count_ = 0xDEADF001;
+      delete this;
     }
   }
 
 
-  /* return the current count for debugging purposes or similar */
+  /* return the current count for denugging purposes or similar */
   int count() const {
     return count_;
   }
@@ -140,8 +127,7 @@ public:
   }
 
   bool operator!=(const T* that) {
-	  // 8/31修改，原先为：!(*object_ == that)
-    return !(object_ == that);
+    return !(*this == that);
   }
 
   bool empty() const {

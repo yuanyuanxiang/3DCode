@@ -16,10 +16,10 @@
  */
 
 #include <map>
-#include "zxing/pdf417/detector/LinesSampler.h"
-#include "zxing/pdf417/decoder/BitMatrixParser.h"
-#include "zxing/NotFoundException.h"
-#include "zxing/common/Point.h"
+#include <zxing/pdf417/detector/LinesSampler.h>
+#include <zxing/pdf417/decoder/BitMatrixParser.h>
+#include <zxing/NotFoundException.h>
+#include <zxing/common/Point.h>
 #include <algorithm>
 
 using std::map;
@@ -35,11 +35,6 @@ using zxing::Point;
 
 // VC++
 using zxing::Line;
-
-const int LinesSampler::MODULES_IN_SYMBOL;
-const int LinesSampler::BARS_IN_SYMBOL;
-const int LinesSampler::POSSIBLE_SYMBOLS;
-const int LinesSampler::BARCODE_START_OFFSET;
 
 namespace {
 
@@ -383,7 +378,7 @@ void LinesSampler::linesMatrixToCodewords(vector<vector<int> >& clusterNumbers,
       float cwWidth = 0;
 
       // For symbols with 9 bar length simply ignore the last bar.
-      for (int j = 0; j < min(BARS_IN_SYMBOL, cwLength); ++j) {
+      for (int j = 0; j < min((int)LinesSampler::BARS_IN_SYMBOL, cwLength); ++j) {
         cwWidth += (float)barWidths[cwStart + j];
       }
 

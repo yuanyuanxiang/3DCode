@@ -18,8 +18,8 @@
  * limitations under the License.
  */
 
-#include "zxing/multi/MultipleBarcodeReader.h"
-#include "zxing/Reader.h"
+#include <zxing/multi/MultipleBarcodeReader.h>
+#include <zxing/Reader.h>
 
 namespace zxing {
 namespace multi {

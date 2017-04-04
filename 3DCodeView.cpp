@@ -59,8 +59,7 @@ BEGIN_MESSAGE_MAP(C3DCodeView, CScrollView)
 	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
-// C3DCodeView 构造/析构
-
+/// C3DCodeView 构造
 C3DCodeView::C3DCodeView()
 {
 	m_PaintRect = CRect(0, 0, 100, 100);
@@ -68,6 +67,7 @@ C3DCodeView::C3DCodeView()
 	m_bLeftButtonDown = FALSE;
 }
 
+/// C3DCodeView 析构
 C3DCodeView::~C3DCodeView()
 {
 }
@@ -80,8 +80,7 @@ BOOL C3DCodeView::PreCreateWindow(CREATESTRUCT& cs)
 	return CScrollView::PreCreateWindow(cs);
 }
 
-// C3DCodeView 绘制
-
+/// C3DCodeView 绘制
 void C3DCodeView::OnDraw(CDC* pDC)
 {
 	C3DCodeDoc* pDoc = GetDocument();
@@ -122,8 +121,7 @@ void C3DCodeView::OnInitialUpdate()
 }
 
 
-// C3DCodeView 打印
-
+/// C3DCodeView 打印
 BOOL C3DCodeView::OnPreparePrinting(CPrintInfo* pInfo)
 {
 	// 默认准备

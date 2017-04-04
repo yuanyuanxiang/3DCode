@@ -21,7 +21,7 @@
  * limitations under the License.
  */
 
-#include "zxing/ResultPoint.h"
+#include <zxing/ResultPoint.h>
 #include <cmath>
 
 namespace zxing {

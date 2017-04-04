@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 
-#include "zxing/Binarizer.h"
+#include <zxing/Binarizer.h>
 
 namespace zxing {
 	

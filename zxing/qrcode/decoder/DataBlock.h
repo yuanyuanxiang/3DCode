@@ -21,10 +21,10 @@
  */
 
 #include <vector>
-#include "zxing/common/Counted.h"
-#include "zxing/common/Array.h"
-#include "zxing/qrcode/Version.h"
-#include "zxing/qrcode/ErrorCorrectionLevel.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/Array.h>
+#include <zxing/qrcode/Version.h>
+#include <zxing/qrcode/ErrorCorrectionLevel.h>
 
 namespace zxing {
 namespace qrcode {

@@ -20,8 +20,8 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/ErrorCorrectionLevel.h"
-#include "zxing/common/Counted.h"
+#include <zxing/qrcode/ErrorCorrectionLevel.h>
+#include <zxing/common/Counted.h>
 #include <iostream>
 
 namespace zxing {

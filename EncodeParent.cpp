@@ -112,13 +112,18 @@ BEGIN_MESSAGE_MAP(CEncodeParent, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_COMPRESS, &CEncodeParent::OnBnClickedCheckCompress)
 END_MESSAGE_MAP()
 
-
+/// 获取活动文档，设置当前的图像
 BOOL CEncodeParent::SetImage()
 {
 	m_pImage = NULL;
 	return TRUE;
 }
 
+/** 
+* @brief 编码
+* @details 首先，调用SetImage，获得活动文档的图像指针；
+*		接着，按照编码明文->编码密文->添加LOGO的步骤生成二维码。
+*/
 BOOL CEncodeParent::Encode()
 {
 	SetImage();
@@ -172,7 +177,7 @@ BOOL CEncodeParent::Encode()
 }
 
 
-// 该函数必不可少（被其他项目继承并多态化）
+/// 该函数必不可少（被其他项目继承并多态化）
 BOOL CEncodeParent::EncodePrivateData(CQR_Encode* pQR_Encode)
 {
 	// 初始化logo矩形
@@ -204,7 +209,7 @@ BOOL CEncodeParent::EncodePrivateData(CQR_Encode* pQR_Encode)
 	return bEncodeSucess;
 }
 
-// 添加标识
+/// 添加标识
 void CEncodeParent::Addlogo()
 {
 	if (m_nEnableMixed == BOUNDING_MODE_REPLACED)
@@ -218,7 +223,7 @@ void CEncodeParent::Addlogo()
 }
 
 
-// 彩色是否可以编码
+/// 彩色是否可以编码
 BOOL CEncodeParent::IsColorsEncodeAble()
 {
 	// 最小的QR码尺寸为21
@@ -242,7 +247,9 @@ void CEncodeParent::UpdateecLevelTipText()
 }
 
 
-// border1,border2(介于0到0.5)用来控制logo离二维码边界的距离
+/** 
+* @note border1,border2(介于0到0.5)用来控制logo离二维码边界的距离
+*/
 void CEncodeParent::InitLogoRect(float border1, float border2)
 {
 	if (!m_bHasALogo)
@@ -272,7 +279,7 @@ void CEncodeParent::OnCbnSelchangeCombolevel()
 
 void CEncodeParent::OnCbnSelchangeComboversion()
 {
-	m_checkAutoExtent.EnableWindow(m_comboVersion.GetCurSel() != 0 && m_comboVersion.GetCurSel() < 40);
+	m_checkAutoExtent.EnableWindow(m_comboVersion.GetCurSel() && m_comboVersion.GetCurSel() < 40);
 	Encode();
 	ShowImageSize();
 }
@@ -454,7 +461,7 @@ BOOL CEncodeParent::OnInitDialog()
 }
 
 
-// 初始化内层编码参数
+/// 初始化内层编码参数
 void CEncodeParent::InitInnerEncodingParameters()
 {
 	// 纠错等级
@@ -484,7 +491,7 @@ void CEncodeParent::OnCancel()
 }
 
 
-// 重载OnOK，以屏蔽ENTER键
+/// 重载OnOK，以屏蔽ENTER键
 void CEncodeParent::OnOK()
 {
 	TRACE(" * OnOK is called.\n");

@@ -11,7 +11,7 @@ namespace zxing {
 namespace datamatrix {
 
 DetectorException::DetectorException(const char *msg) :
-    ZXingException(msg) {
+    Exception(msg) {
 
 }
 

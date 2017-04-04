@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include "zxing/BinaryBitmap.h"
+#include <zxing/BinaryBitmap.h>
 
 using zxing::Ref;
 using zxing::BitArray;

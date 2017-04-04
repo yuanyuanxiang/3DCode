@@ -21,8 +21,8 @@
  * limitations under the License.
  */
 
-#include "zxing/oned/UPCEANReader.h"
-#include "zxing/Result.h"
+#include <zxing/oned/UPCEANReader.h>
+#include <zxing/Result.h>
 
 namespace zxing {
 namespace oned {

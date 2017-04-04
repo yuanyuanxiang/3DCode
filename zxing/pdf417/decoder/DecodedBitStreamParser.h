@@ -19,9 +19,9 @@
  */
 
 #include <bigint/BigInteger.hh>
-#include "zxing/common/Array.h"
-#include "zxing/common/Str.h"
-#include "zxing/common/DecoderResult.h"
+#include <zxing/common/Array.h>
+#include <zxing/common/Str.h>
+#include <zxing/common/DecoderResult.h>
 
 namespace zxing {
 namespace pdf417 {

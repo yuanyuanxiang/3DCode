@@ -18,8 +18,8 @@
  * limitations under the License.
  */
 
-#include "zxing/DecodeHints.h"
-#include "zxing/common/IllegalArgumentException.h"
+#include <zxing/DecodeHints.h>
+#include <zxing/common/IllegalArgumentException.h>
 
 using zxing::Ref;
 using zxing::ResultPointCallback;
@@ -29,6 +29,7 @@ using zxing::DecodeHints;
 // VC++
 using zxing::BarcodeFormat;
 
+// Fix fatal error LNK1169, by yuanyuanxiang
 // const DecodeHintType DecodeHints::CHARACTER_SET;
 
 const DecodeHints DecodeHints::PRODUCT_HINT(

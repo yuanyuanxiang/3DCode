@@ -21,8 +21,8 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Counted.h"
-#include "zxing/qrcode/Version.h"
+#include <zxing/common/Counted.h>
+#include <zxing/qrcode/Version.h>
 
 namespace zxing {
 namespace qrcode {

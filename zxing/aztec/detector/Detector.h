@@ -24,11 +24,11 @@
 
 #include <vector>
 
-#include "zxing/common/BitArray.h"
-#include "zxing/ResultPoint.h"
-#include "zxing/common/BitMatrix.h"
-#include "zxing/DecodeHints.h"
-#include "zxing/aztec/AztecDetectorResult.h"
+#include <zxing/common/BitArray.h>
+#include <zxing/ResultPoint.h>
+#include <zxing/common/BitMatrix.h>
+#include <zxing/DecodeHints.h>
+#include <zxing/aztec/AztecDetectorResult.h>
 
 namespace zxing {
 namespace aztec {

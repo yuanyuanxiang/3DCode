@@ -21,10 +21,10 @@
  * limitations under the License.
  */
 
-#include "zxing/Reader.h"
-#include "zxing/qrcode/decoder/Decoder.h"
-#include "zxing/DecodeHints.h"
-#include "../common/PerspectiveTransform.h"
+#include <zxing/Reader.h>
+#include <zxing/qrcode/decoder/Decoder.h>
+#include <zxing/DecodeHints.h>
+#include "../common/PerspectiveTransform.h" // added by yuanyuanxiang
 
 namespace zxing {
 namespace qrcode {

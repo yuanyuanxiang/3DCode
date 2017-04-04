@@ -23,8 +23,8 @@
 #define GENERICGFPOLY_H
 
 #include <vector>
-#include "zxing/common/Array.h"
-#include "zxing/common/Counted.h"
+#include <zxing/common/Array.h>
+#include <zxing/common/Counted.h>
 
 namespace zxing {
 
@@ -32,11 +32,11 @@ class GenericGF;
   
 class GenericGFPoly : public Counted {
 private:
-  Ref<GenericGF> field_;
+  GenericGF &field_;
   ArrayRef<int> coefficients_;
     
 public:
-  GenericGFPoly(Ref<GenericGF> field, ArrayRef<int> coefficients);
+  GenericGFPoly(GenericGF &field, ArrayRef<int> coefficients);
   ArrayRef<int> getCoefficients();
   int getDegree();
   bool isZero();

@@ -18,10 +18,10 @@
  * 2012-09-17 HFN translation from Java into C++
  */
 
-#include "zxing/common/Counted.h"
-#include "zxing/common/Array.h"
-#include "zxing/common/DecoderResult.h"
-#include "zxing/common/BitMatrix.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/Array.h>
+#include <zxing/common/DecoderResult.h>
+#include <zxing/common/BitMatrix.h>
 
 namespace zxing {
 namespace pdf417 {

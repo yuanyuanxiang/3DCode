@@ -20,8 +20,8 @@
  * limitations under the License.
  */
 
-#include "zxing/BarcodeFormat.h"
-#include "zxing/ResultPointCallback.h"
+#include <zxing/BarcodeFormat.h>
+#include <zxing/ResultPointCallback.h>
 
 namespace zxing {
 

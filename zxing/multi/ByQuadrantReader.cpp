@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "zxing/multi/ByQuadrantReader.h"
-#include "zxing/ReaderException.h"
+#include <zxing/multi/ByQuadrantReader.h>
+#include <zxing/ReaderException.h>
 
 namespace zxing {
 namespace multi {

@@ -1,10 +1,14 @@
-
-// 3DCodeView.h : C3DCodeView 类的接口
-//
+/** 
+* @file 3DCodeView.h
+* @brief C3DCodeView 类的接口
+*/
 
 #pragma once
 
-
+/**
+* @class C3DCodeView
+* @brief 视图
+*/
 class C3DCodeView : public CScrollView
 {
 protected: // 仅从序列化创建
@@ -17,10 +21,10 @@ public:
 
 // 操作
 private:
-	CRect							m_PaintRect;		// 绘图矩形
-	RoiRect							m_RoiRect;			// 感兴趣区域
-	float							m_fZoomRate;		// 放大比例
-	BOOL							m_bLeftButtonDown;	// 左键按下
+	CRect							m_PaintRect;		/**< 绘图矩形 */
+	RoiRect							m_RoiRect;			/**< 感兴趣区域*/
+	float							m_fZoomRate;		/**< 放大比例 */
+	BOOL							m_bLeftButtonDown;	/**< 左键按下 */
 
 public:
 	void SetPaintRect(const CSize sz);					// 设置绘图矩形大小

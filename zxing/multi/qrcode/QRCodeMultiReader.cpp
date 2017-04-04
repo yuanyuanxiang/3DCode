@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-#include "zxing/multi/qrcode/QRCodeMultiReader.h"
-#include "zxing/ReaderException.h"
-#include "zxing/multi/qrcode/detector/MultiDetector.h"
-#include "zxing/BarcodeFormat.h"
+#include <zxing/multi/qrcode/QRCodeMultiReader.h>
+#include <zxing/ReaderException.h>
+#include <zxing/multi/qrcode/detector/MultiDetector.h>
+#include <zxing/BarcodeFormat.h>
 
 namespace zxing {
 namespace multi {

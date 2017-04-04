@@ -19,15 +19,15 @@
  * limitations under the License.
  */
 
-#include "zxing/aztec/detector/Detector.h"
-#include "zxing/common/GridSampler.h"
-#include "zxing/common/detector/WhiteRectangleDetector.h"
-#include "zxing/common/reedsolomon/ReedSolomonDecoder.h"
-#include "zxing/common/reedsolomon/ReedSolomonException.h"
-#include "zxing/common/reedsolomon/GenericGF.h"
+#include <zxing/aztec/detector/Detector.h>
+#include <zxing/common/GridSampler.h>
+#include <zxing/common/detector/WhiteRectangleDetector.h>
+#include <zxing/common/reedsolomon/ReedSolomonDecoder.h>
+#include <zxing/common/reedsolomon/ReedSolomonException.h>
+#include <zxing/common/reedsolomon/GenericGF.h>
 #include <iostream>
-#include "zxing/common/detector/MathUtils.h"
-#include "zxing/NotFoundException.h"
+#include <zxing/common/detector/MathUtils.h>
+#include <zxing/NotFoundException.h>
 
 using std::vector;
 using zxing::aztec::Detector;

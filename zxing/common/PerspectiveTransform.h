@@ -20,14 +20,14 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Counted.h"
+#include <zxing/common/Counted.h>
 #include <vector>
 
 namespace zxing {
 class PerspectiveTransform : public Counted {
 private:
   float a11, a12, a13, a21, a22, a23, a31, a32, a33;
-  PerspectiveTransform();
+  PerspectiveTransform();// by yuanyuanxiang
   PerspectiveTransform(float a11, float a21, float a31, float a12, float a22, float a32, float a13, float a23,
                        float a33);
 
@@ -45,7 +45,7 @@ public:
 
   friend std::ostream& operator<<(std::ostream& out, const PerspectiveTransform &pt);
 
-  // 获取透视矩阵
+  // 获取透视矩阵, by yuanyuanxiang
   void GetPptMatrix(float ppt[9]);
 };
 }

@@ -16,7 +16,7 @@
  */
 
 #include "EAN8Reader.h"
-#include "zxing/ReaderException.h"
+#include <zxing/ReaderException.h>
 
 using std::vector;
 using zxing::oned::EAN8Reader;

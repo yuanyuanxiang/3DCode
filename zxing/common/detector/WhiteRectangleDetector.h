@@ -22,11 +22,11 @@
  */
 
 #include <vector>
-#include "zxing/ReaderException.h"
-#include "zxing/ResultPoint.h"
-#include "zxing/common/BitMatrix.h"
-#include "zxing/common/Counted.h"
-#include "zxing/ResultPoint.h"
+#include <zxing/ReaderException.h>
+#include <zxing/ResultPoint.h>
+#include <zxing/common/BitMatrix.h>
+#include <zxing/common/Counted.h>
+#include <zxing/ResultPoint.h>
 
 
 namespace zxing {

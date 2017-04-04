@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Array.h"
+#include <zxing/common/Array.h>
 
 namespace zxing {
 /**

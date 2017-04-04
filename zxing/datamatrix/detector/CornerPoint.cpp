@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-#include "zxing/datamatrix/detector/CornerPoint.h"
+#include <zxing/datamatrix/detector/CornerPoint.h>
 
 
 namespace zxing {

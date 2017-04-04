@@ -24,11 +24,11 @@
  */
 
 #include <vector>
-#include "zxing/NotFoundException.h"
-#include "zxing/ResultPoint.h"
-#include "zxing/common/BitMatrix.h"
-#include "zxing/common/Counted.h"
-#include "zxing/ResultPoint.h"
+#include <zxing/NotFoundException.h>
+#include <zxing/ResultPoint.h>
+#include <zxing/common/BitMatrix.h>
+#include <zxing/common/Counted.h>
+#include <zxing/ResultPoint.h>
 
 namespace zxing {
 

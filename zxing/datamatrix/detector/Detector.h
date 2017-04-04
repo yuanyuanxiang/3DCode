@@ -22,11 +22,11 @@
  * limitations under the License.
  */
 
-#include "zxing/common/Counted.h"
-#include "zxing/common/DetectorResult.h"
-#include "zxing/common/BitMatrix.h"
-#include "zxing/common/PerspectiveTransform.h"
-#include "zxing/common/detector/WhiteRectangleDetector.h"
+#include <zxing/common/Counted.h>
+#include <zxing/common/DetectorResult.h>
+#include <zxing/common/BitMatrix.h>
+#include <zxing/common/PerspectiveTransform.h>
+#include <zxing/common/detector/WhiteRectangleDetector.h>
 
 namespace zxing {
 namespace datamatrix {

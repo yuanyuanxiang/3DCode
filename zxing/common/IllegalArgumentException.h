@@ -20,11 +20,11 @@
  * limitations under the License.
  */
 
-#include "zxing/ZXingException.h"
+#include <zxing/Exception.h>
 
 namespace zxing {
 
-class IllegalArgumentException : public ZXingException {
+class IllegalArgumentException : public Exception {
 public:
   IllegalArgumentException();
   IllegalArgumentException(const char *msg);

@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-#include "zxing/qrcode/detector/AlignmentPattern.h"
+#include <zxing/qrcode/detector/AlignmentPattern.h>
 
 using std::abs;
 using zxing::Ref;

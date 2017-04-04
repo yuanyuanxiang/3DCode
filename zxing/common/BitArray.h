@@ -18,10 +18,10 @@
  * limitations under the License.
  */
 
-#include "zxing/ZXing.h"
-#include "zxing/common/Counted.h"
-#include "zxing/common/IllegalArgumentException.h"
-#include "zxing/common/Array.h"
+#include <zxing/ZXing.h>
+#include <zxing/common/Counted.h>
+#include <zxing/common/IllegalArgumentException.h>
+#include <zxing/common/Array.h>
 #include <vector>
 #include <limits>
 #include <iostream>

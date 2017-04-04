@@ -1,40 +1,39 @@
-/************************************************************************
-* @file 
+/** 
+* @file ColorsDecode.h
 * @details 解码彩色数据，可在ANDROID下使用。
 * @author 
 * @email 
 * @version V1.0
 * @date 2016/10/16
 * Copyleft (c), All rights reserved.
-/************************************************************************/
+*/
 
 #pragma once
 #include "ColorsEncode.h"
 
-#define COLOR_A 0		/**< 彩色一(前景) */
-
-#define COLOR_B 1		/**< 彩色二(背景) */
-
-/************************************************************************
-* @class ColorsDecode 彩色解码模块
-************************************************************************/
+/** 
+* @class ColorsDecode 
+* @brief 彩色解码模块
+* @details 本类新增8个成员变量（将通过构造函数与Init函数初始化）
+*/
 class ColorsDecode : public ColorsEncode
 {
-private:// 本类新增12个成员变量（将通过构造函数与Init函数初始化）
+private:
 	// 图像信息
-	BYTE*			m_pHead;		// 图像头指针
-	int				m_nWidth;		// 图像宽度
-	int				m_nHeight;		// 图像高度
-	int				m_nRowlen;		// 图像每行字节数
-	int				m_nChannel;		// 图像每像素字节
-	int				m_nModuleSize;	// 二维码模块大小
+	BYTE*			m_pHead;		/**< 图像头指针 */
+	int				m_nWidth;		/**< 图像宽度 */
+	int				m_nHeight;		/**< 图像高度 */
+	int				m_nRowlen;		/**< 图像每行字节数 */
+	int				m_nChannel;		/**< 图像每像素字节 */
+	int				m_nModuleSize;	/**< 二维码模块大小 */
 	// 编码颜色
-	float3			m_Foreground;	// 彩色前景
-	float3			m_Background;	// 彩色背景
+	float3			m_Foreground;	/**< 彩色前景 */
+	float3			m_Background;	/**< 彩色背景 */
 	
 public:
-	/** 创建一个彩色编码器
-	* @param[in] bMatrix[MAX_MODULESIZE][MAX_MODULESIZE]	二维码数据
+	/** 
+	* @brief 创建一个彩色编码器
+	* @param[in] bMatrix 									二维码数据
 	* @param[in] nSymbolSize								二维码尺寸
 	* @param[in] nModuleSize								模块大小
 	* @note 函数将初始化本类的7个变量
@@ -49,7 +48,8 @@ public:
 
 	~ColorsDecode() { }
 
-	/** 初始化彩色解码器
+	/** 
+	* @brief 初始化彩色解码器
 	* @param[in] * pHead	二维码图像指针
 	* @param[in] nWidth		图像宽度
 	* @param[in] nHeight	图像高度
@@ -68,13 +68,14 @@ public:
 	// RS4方法解码彩色
 	char* DecodeColors(COLORREF QREncodeColor1, COLORREF QREncodeColor2);
 
-	/** 获取彩色数据头信息
+	/** 
+	* @brief 获取彩色数据头信息
 	* @param[out] &strLen			数据长度
 	* @param[out] &nInnerecLevel	纠错等级
 	* @param[out] &nInnerMask		掩码版本
 	* @note 解码之后调用此函数获取解码结果
 	*/
-	void GetHeaderInfo(int &strLen, int &nInnerecLevel, int &nInnerMask)
+	void GetHeaderInfo(int &strLen, int &nInnerecLevel, int &nInnerMask) const 
 	{
 		strLen = m_strLen;
 		nInnerecLevel = m_ecLevel;

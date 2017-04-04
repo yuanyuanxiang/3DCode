@@ -19,8 +19,8 @@
  */
 
 
-#include "zxing/common/GreyscaleRotatedLuminanceSource.h"
-#include "zxing/common/IllegalArgumentException.h"
+#include <zxing/common/GreyscaleRotatedLuminanceSource.h>
+#include <zxing/common/IllegalArgumentException.h>
 
 using zxing::ArrayRef;
 using zxing::GreyscaleRotatedLuminanceSource;

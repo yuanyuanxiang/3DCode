@@ -1,19 +1,17 @@
-/************************************************************************
-* @file 
-* @details 透视变换类：该类参考自ZXing - PerspectiveTransform
-* @author 
-* @email 
-* @version V1.0
-* @date 2016/10/4
-* Copyleft (c), All rights reserved.
-/************************************************************************/
+/** 
+* @file PerspectTransform.h
+* @brief 透视变换类：该类参考自ZXing - PerspectiveTransform.
+* @note Copyleft (c), All rights reserved.
+*/
 
 #pragma once
+
 #include <vector>
 #include "DataTypes.h"
 
 /**
-* @class PerspectTransform - 透视校正类
+* @class PerspectTransform
+* @brief 透视校正类
 */
 class PerspectTransform
 {
@@ -57,6 +55,6 @@ public:
 PerspectTransform createTransform(float2 pos[4], int dimension, float fmodulesize);
 
 /// 进行透视变换
-BYTE *PerspectiveTransform(BYTE* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, 
+BYTE *perspectiveTransform(BYTE* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, 
 						   PerspectTransform & transform, 
 						   float2 m_fPos[4], int nSymbolSize, int nModulesize, int &nDstSize);

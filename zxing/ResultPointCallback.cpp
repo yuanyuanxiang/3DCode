@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-#include "zxing/ResultPointCallback.h"
+#include <zxing/ResultPointCallback.h>
 
 namespace zxing {
 

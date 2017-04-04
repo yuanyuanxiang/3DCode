@@ -17,9 +17,9 @@
 
 #include <cmath>
 #include <algorithm>
-#include "zxing/multi/qrcode/detector/MultiFinderPatternFinder.h"
-#include "zxing/DecodeHints.h"
-#include "zxing/ReaderException.h"
+#include <zxing/multi/qrcode/detector/MultiFinderPatternFinder.h>
+#include <zxing/DecodeHints.h>
+#include <zxing/ReaderException.h>
 
 using std::abs;
 using std::min;

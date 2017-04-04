@@ -71,7 +71,7 @@ void CDlgQRDecode::SetImage()
 	}
 }
 
-
+/// 解码当前图像
 BOOL CDlgQRDecode::Decode()
 {
 	SetImage();
@@ -222,7 +222,7 @@ void CDlgQRDecode::OnPaint()
 }
 
 
-// 使得绘制图像不闪烁
+/// 使得绘制图像不闪烁
 BOOL CDlgQRDecode::OnEraseBkgnd(CDC* pDC)
 {
 	return CDialog::OnEraseBkgnd(pDC);

@@ -1,7 +1,11 @@
-/************************************************************************/
-/* 袁沅祥，摘自OpenCV                                                   */
-/* 2016年10月9日                                                        */
-/************************************************************************/
+/**
+* @file medianBlur.h													*
+* @brief 中值滤波														*
+* 袁沅祥，摘自OpenCV(下述文件)											*
+* ..\sources\modules\imgproc\src\smooth.cpp								*
+* ..\sources\modules\core\src\system.cpp								*
+* 2016年10月9日															*
+*/
 
 #pragma once
 
@@ -12,7 +16,7 @@
 #include <memory.h>
 //#include <intrin.h>
 
-// 设置为1，来开启SSE2指令
+/// 设置为1，来开启SSE2指令
 #define CV_SSE2 1
 
 /*********************************** CPU capabilities ***********************************/
@@ -88,7 +92,7 @@ const uchar icvSaturate8u_cv[] =
 #define CV_FAST_CAST_8U(t)  (assert(-256 <= (t) && (t) <= 512), icvSaturate8u_cv[(t)+256])
 
 /************************************************************************/
-/* System.cpp                                                           */
+/* System.cpp（201-306行）                                              */
 /************************************************************************/
 
 struct HWFeatures
@@ -199,8 +203,9 @@ bool CheckHardwareSupport(int feature)
 }
 
 /************************************************************************/
-/* Smooth.cpp                                                           */
+/* Smooth.cpp(1305-1437行)                                              */
 /************************************************************************/
+
 struct MinMax8u
 {
 	typedef uchar value_type;
@@ -335,7 +340,11 @@ typedef MinMax32f MinMaxVec32f;
 
 #endif
 
-/// 中值滤波(滤波核大小为3 X 3)
+/************************************************************************/
+/* 中值滤波(滤波核大小为3 X 3)											*/
+/* smooth.cpp(参考了1439-1712行)										*/
+/************************************************************************/
+
 template<class Op, class VecOp>
 static void
 	medianBlur_SortNet( uchar *pSrc, int nWidth, int nHeight, int nStep, int nChannel)
