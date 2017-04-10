@@ -28,7 +28,7 @@ void swap(int &nElem1, int &nElem2)
 void SetColorTabFor8BitImage(CImage *pImage)
 {
 	ASSERT(pImage && !pImage->IsNull() && 8 == pImage->GetBPP());
-	if (8 == pImage->GetBPP())
+	if (8 != pImage->GetBPP())
 		return;
 	RGBQUAD ColorTab[256];
 	for (int i = 0; i < 256; i++)
@@ -673,7 +673,7 @@ HRESULT CyImage::Save(LPCTSTR pszFileName, REFGUID guidFileType) const throw()
 	if (GetFileExt(pszFileName).CompareNoCase(_T("txt")) == 0)
 	{
 		USES_CONVERSION;
-		if (WriteTxt(W2A(pszFileName), GetHeadAddress(), GetRowlen(), GetHeight(), GetChannel()))
+		if (WriteTxt(W2A(pszFileName), GetHeadAddress(), GetWidth(), GetHeight(), GetChannel()))
 			return S_OK;
 	}
 	HRESULT hr = CImage::Save(pszFileName, guidFileType);

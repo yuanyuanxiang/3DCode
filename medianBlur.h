@@ -1,10 +1,10 @@
 /**
 * @file medianBlur.h													*
 * @brief 中值滤波														*
-* 袁沅祥，摘自OpenCV(下述文件)											*
-* ..\sources\modules\imgproc\src\smooth.cpp								*
-* ..\sources\modules\core\src\system.cpp								*
-* 2016年10月9日															*
+* 袁沅祥，摘自OpenCV(下述文件)											\n
+* ..\sources\modules\imgproc\src\smooth.cpp								\n
+* ..\sources\modules\core\src\system.cpp								\n
+* 2016年10月9日
 */
 
 #pragma once

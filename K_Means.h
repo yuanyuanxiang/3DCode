@@ -1,12 +1,13 @@
 /** 
 * @file K_Means.h
 * @brief 模板函数,可以跨平台.
+* @details 包括：K均值聚类的核心代码.
 * @author 袁沅祥
 * @version V1.0
 * @date 2017/3/4
 * @note 务必添加此包含"algorithm.h"文件，否则在Eclipse遇到
 * error: 'sort' is not a member of 'std'
-* 凡是以**二级指针作为参数，函数将修改此一级指针.
+* 凡是以**二级指针作为参数，函数将修改此一级指针.\n
 * Copyleft (c), All rights reserved.
 */
 
@@ -20,10 +21,10 @@
 template <typename Type> float Difference(Type *Center, int K);
 
 // 初始化聚类中心(2016/9/19)
-template <typename Type> void InitializeClusterCenters(float *Center, int K, Type* pHead, int nRowBytes, RoiRect roi);
+template <typename Type> void InitializeClusterCenters(float *Center, int K, const Type* pHead, int nRowBytes, RoiRect roi);
 
 // 初始化聚类中心(random随机)
-template <typename Type> void RandomClusterCenters(float *Center, int K, Type* pHead, int nRowBytes, RoiRect roi);
+template <typename Type> void RandomClusterCenters(float *Center, int K, const Type* pHead, int nRowBytes, RoiRect roi);
 
 // 对图像进行用K_means聚类作分割
 template <typename Type> void K_means(Type* pHead, int nRowBytes, RoiRect roi, int K, float fBackground, int nMaxepoches);
@@ -43,7 +44,7 @@ template <typename Type> float Difference(Type *Center, int K)
 	{
 		for (int j = i; j < K; ++j)
 		{
-			sum += fabs(1.0f * (Center[j] - Center[i]));
+			sum += fabs(Center[j] - Center[i]);
 		}
 	}
 	return sum;
@@ -59,7 +60,7 @@ template <typename Type> float Difference(Type *Center, int K)
 * @param[in] roi 图像感兴趣区域
 * @note 函数计算图像直方图，取峰值处的灰度为中心.
 */
-template <typename Type> void InitializeClusterCenters(float *Center, int K, Type* pHead, int nRowBytes, RoiRect roi)
+template <typename Type> void InitializeClusterCenters(float *Center, int K, const Type* pHead, int nRowBytes, RoiRect roi)
 {
 #ifdef _DEBUG
 	TRACE(" * 正在初始化聚类中心...\n");
@@ -67,10 +68,13 @@ template <typename Type> void InitializeClusterCenters(float *Center, int K, Typ
 	// 获取直方图
 	int nHist[256];
 	ImageHistogram(pHead, nRowBytes, nHist, roi);
-	int index[256];
-	for (int i = 0; i < 256; ++i)
+	int index[256];// 直方图的下标
+	for (int i = 0; i < 256; )
 	{
-		index[i] = i;
+		index[i] = i; ++i;
+		index[i] = i; ++i;
+		index[i] = i; ++i;
+		index[i] = i; ++i;
 	}
 	// 插入排序,使灰度值峰值排在前头
 	for (int i = 1; i < 256; ++i)
@@ -83,17 +87,19 @@ template <typename Type> void InitializeClusterCenters(float *Center, int K, Typ
 		}
 	}
 	// 寻找K个中心，这些中心的间距不得小于min_diff
-	int num;
-	float min_diff = 25.0f;
+	int count = 0, num;
+	float min_diff = 64.0f;
 	do
 	{
+		count++;
 		num = 0;
+		Center[0] = (float)index[num]; //第1个中心
 		for (int i = 0; i < K; ++i)
 		{
-			int flag = 0;
-			do
+			// 生成后续K个中心，确保中心差距较大
+			while(num < 256)// 确保能生成一个
 			{
-				Center[i] = (float)index[num];
+				Center[i] = (float)index[num++];
 				int j = 0;
 				for (; j < i; ++j)
 				{
@@ -101,11 +107,13 @@ template <typename Type> void InitializeClusterCenters(float *Center, int K, Typ
 					if (fabs(Center[i] - Center[j]) < min_diff)
 						break;
 				}
-				// Cj到全部Ci的距离较大
+				// Cj到全部Ci的距离较大，退出while循环，接着生成下一个
 				if (j == i)
-					flag = 1;
-				++num;
-			} while (num < 256 && flag == 0);
+					break;
+			}
+			// 可能min_diff设置太大
+			if (num == 256)
+				break;
 #ifdef _DEBUG
 			TRACE("C[%d] = %.6f\t", i, Center[i]);
 #endif // _DEBUG
@@ -113,8 +121,9 @@ template <typename Type> void InitializeClusterCenters(float *Center, int K, Typ
 #ifdef _DEBUG
 		TRACE("\n");
 #endif // _DEBUG
-		min_diff -= 4.0f;
+		min_diff -= 1.0f;
 	} while (num == 256);
+	TRACE(" * [%d]轮搜索聚类中心，类间距不小于%.2f.\n", count, min_diff);
 }
 
 
@@ -126,7 +135,7 @@ template <typename Type> void InitializeClusterCenters(float *Center, int K, Typ
 * @param[in] nRowBytes 图像每行元素个数
 * @param[in] roi 图像感兴趣区域
 */
-template <typename Type> void RandomClusterCenters(float *Center, int K, Type* pHead, int nRowBytes, RoiRect roi)
+template <typename Type> void RandomClusterCenters(float *Center, int K, const Type* pHead, int nRowBytes, RoiRect roi)
 {
 #ifdef _DEBUG
 	TRACE(" * 正在初始化聚类中心...\n");
@@ -153,7 +162,7 @@ template <typename Type> void RandomClusterCenters(float *Center, int K, Type* p
 
 /** 
 * @brief K_means 聚类分割.
-* @param[in] pHead 图像数据
+* @param[in] *pHead 图像数据
 * @param[in] nRowBytes 每行字节数
 * @param[in] roi 图像感兴趣区域
 * @param[in] K 聚类个数

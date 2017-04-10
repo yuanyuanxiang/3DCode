@@ -3,9 +3,10 @@
 #pragma once
 
 /** 
-* @file MedianFilter.h													*
-* @brief  中值滤波                                                      *
-* @see http://blog.csdn.net/mfcing/article/details/43817715				*
+* @file MedianFilter.h
+* @brief  中值滤波
+* @details 包含：中值滤波、自适应中值滤波函数
+* @see http://blog.csdn.net/mfcing/article/details/43817715
 */
 
 // 插入排序

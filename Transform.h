@@ -1,13 +1,14 @@
 /** 
 * @file Transform.h
 * @brief 图像变换模板函数,可以跨平台.
-* @author
-* @email
+* @details 包括：图像缩放、旋转、翻转函数；图像感兴趣区域、保存、直方图函数等
+* @author 袁沅祥
+* @email 962914132@qq.com
 * @version V1.0
 * @date 2016/10/4
 * Copyleft (c), All rights reserved.
 * @note 务必添加此包含"algorithm.h"文件，否则在Eclipse遇到
-* error: 'sort' is not a member of 'std'
+* error: 'sort' is not a member of 'std'；
 * 凡是以**二级指针作为参数，函数将修改此一级指针
 */
 
@@ -51,7 +52,7 @@ template <typename Type> void ImageHistogram(const Type* pHead, int nRowlen, int
 
 /** 
 * @brief 上下翻转图像.
-* @param[in] pHead 数据头
+* @param[in] *pHead 数据头
 * @param[in] nWidth 宽度
 * @param[in] nHeight 高度
 * @param[in] nRowlen 每行个数
@@ -74,7 +75,7 @@ template <typename Type> void ImageFlipV(Type* pHead, const int nWidth, const in
 
 /** 
 * @brief 左右翻转图像
-* @param[in] pHead 数据头
+* @param[in] *pHead 数据头
 * @param[in] nWidth 宽度
 * @param[in] nHeight 高度
 * @param[in] nRowlen 每行个数
@@ -101,7 +102,7 @@ template <typename Type> void ImageFlipH(Type* pHead, const int nWidth, const in
 
 /** 
 * @brief 左右翻转图像
-* @param[in] pHead 数据头
+* @param[in] **pHead 数据头
 * @param[in] nWidth 宽度
 * @param[in] nHeight 高度
 * @param[in] nRowlen 每行个数
@@ -142,7 +143,7 @@ template <typename Type> void ImageTranspose(Type** pHead, const int nWidth, con
 
 /** 
 * @brief 提取图像感兴趣区域
-* @param[in] pHead 数据头
+* @param[in] **pHead 数据头
 * @param[in] &nWidth 宽度
 * @param[in] &nHeight 高度
 * @param[in] &nRowlen 每行个数
@@ -173,10 +174,11 @@ template <typename Type> Type* ImageROI(const Type* pHead, int &nWidth, int &nHe
 	Type* pDst = new Type[nNewHeight * nNewRowlen];
 
 #pragma omp parallel for
+	int x0 = roi.left * nChannel;
 	for (int i = 0; i < nNewHeight; ++i)
 	{
 		int nLine = nHeight - roi.top - i - 1;
-		memcpy(pDst + i * nNewRowlen, pHead + roi.left * nChannel + nLine * nRowlen, nNewRowlen * sizeof(Type));
+		memcpy(pDst + i * nNewRowlen, pHead + x0 + nLine * nRowlen, nNewRowlen * sizeof(Type));
 	}
 
 	// 更新图像信息
@@ -189,8 +191,8 @@ template <typename Type> Type* ImageROI(const Type* pHead, int &nWidth, int &nHe
 
 /** 
 * @brief 将图像以二进制形式写入文件
-* @param[in] * fileName 文件名称
-* @param[in] pHead 数据头
+* @param[in] *fileName 文件名称
+* @param[in] *pHead 数据头
 * @param[in] nWidth 宽度
 * @param[in] nHeight 高度
 * @param[in] nRowlen 每行个数
@@ -314,7 +316,7 @@ template <typename Type> void LimitImage(Type** pfHead, int &nWidth, int &nHeigh
 
 /** 
 * @brief 彩色转黑白.
-* @param[in] pHead 图像数据
+* @param[in] *pHead 图像数据
 * @param[in] nWidth 图像宽度
 * @param[in] nHeight 图像高度
 * @param[in] nRowBytes 每行字节数
@@ -363,9 +365,14 @@ template <typename Type> Type* Rgb2Gray(const Type* pHead, int nWidth, int nHeig
 
 /** 
 * @brief 统计灰度图像的直方图.
+* @param[in] *pHead 图像指针
+* @param[in] nRowlen 图像每行字节数
+* @param[in] nHist 图像直方图
+* @param[in] roi 图像感兴趣区域
 */
 template <typename Type> void ImageHistogram(const Type* pHead, int nRowlen, int nHist[256], RoiRect roi)
 {
+	ASSERT(sizeof(Type) == 1);
 	memset(nHist, 0, 256 * sizeof(int));
 	for (int i = roi.top; i < roi.bottom; ++i)
 	{
@@ -373,7 +380,7 @@ template <typename Type> void ImageHistogram(const Type* pHead, int nRowlen, int
 		for (int j = roi.left; j < roi.right; ++j)
 		{
 			int index = (BYTE)pHead[j + y];
-			++nHist[index];
+			++ nHist[index];
 		}
 	}
 }
