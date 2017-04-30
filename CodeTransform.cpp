@@ -54,7 +54,7 @@ char* UnicodeConvert2UTF8(LPCWCH strUnicode, int &ncLength)
 
 
 /// ½«utf-8±àÂë×ª»»³ÉUnicode±àÂë
-CString UTF8Convert2Unicode(char* strUtf8, int &ncLength)
+CString UTF8Convert2Unicode(const char* strUtf8, int &ncLength)
 {
 	ncLength = MultiByteToWideChar(CP_UTF8, 0, strUtf8, -1, NULL, 0);
 	WCHAR *strUnicode = new WCHAR[ncLength];

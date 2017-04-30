@@ -13,7 +13,7 @@ static char THIS_FILE[] = __FILE__;
 
 
 /** - 旋转图像 - 
-* @param[in] * pSrc 图像指针
+* @param[in] *pSrc 图像指针
 * @param[in] nWidth 图像宽度
 * @param[in] nHeight 图像高度
 * @param[in] nRowlen 图像每行字节数
@@ -80,7 +80,7 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 
 
 /** - 按照rect裁剪图像 -
-* @param[in] * pSrc				图像数据
+* @param[in] *pSrc				图像数据
 * @param[out] &nWidth			图像宽度
 * @param[out] &nHeight			图像高度
 * @param[out] &nRowlen			每行字节数
@@ -204,7 +204,7 @@ float FindMinBetween4Numbers(float x, float y, float z, float w)
 
 
 /** - 旋转图像 -
-* @param[in] * pSrc 图像指针
+* @param[in] *pSrc 图像指针
 * @param[in] nWidth 图像宽度
 * @param[in] nHeight 图像高度
 * @param[in] nRowlen 图像每行字节数
@@ -263,7 +263,7 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 
 
 /** - 旋转图像 -
-* @param[in] * pSrc 图像指针
+* @param[in] *pSrc 图像指针
 * @param[in] nWidth 图像宽度
 * @param[in] nHeight 图像高度
 * @param[in] nRowlen 图像每行字节数
@@ -324,7 +324,7 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 
 
 /** - 放大图像 -
-* @param[in] * pSrc 图像指针
+* @param[in] *pSrc 图像指针
 * @param[in] nWidth 图像宽度
 * @param[in] nHeight 图像高度
 * @param[in] nRowlen 图像每行字节数

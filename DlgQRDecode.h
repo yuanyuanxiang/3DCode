@@ -35,9 +35,6 @@ public:
 
 	// 编码颜色
 	COLORREF			m_BackgroundColor;		/**< 背景色 */
-	COLORREF			m_ForegroundColor;		/**< 前景色 */
-	COLORREF			m_QREncodeColor1;		/**< 码元一 */
-	COLORREF			m_QREncodeColor2;		/**< 码元二 */
 	vector<CPixelPoint>	m_ForegroundElemsIndex;	/**< 前景色的索引 */
 
 	// 解码参数
@@ -68,9 +65,6 @@ public:
 	afx_msg void OnPaint();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnBnClickedButtonSaveImage();
-	afx_msg void OnBnClickedBnForeground();
 	afx_msg void OnBnClickedBnBackground();
-	afx_msg void OnBnClickedBnEncodeColor1();
-	afx_msg void OnBnClickedBnEncodeColor2();
 	afx_msg void OnBnClickedButtonClear();
 };

@@ -35,9 +35,6 @@ CDlgQRDecode::CDlgQRDecode(CWnd* pParent) : CDialogEx(CDlgQRDecode::IDD, pParent
 
 	// 编码颜色
 	m_BackgroundColor = RGB(0, 0, 0);
-	m_ForegroundColor = RGB(255, 255, 255);
-	m_QREncodeColor1 = RGB(255, 0, 0);
-	m_QREncodeColor2 = RGB(0, 255, 0);
 	m_ncLength = 0;
 }
 
@@ -92,13 +89,11 @@ BOOL CDlgQRDecode::Decode()
 	BYTE *pHead = m_pImage->GetHeadAddress();
 
 	int strLen = 0, nInnerecLevel = 0, nInnerMask = 0;
-	char* pDst[2] = { 0 };
+	const char* pDst[2] = { 0 };
 	// 解码整幅图像
 	BOOL success = DecodeWholeImage(pDst, pHead, nWidth, nHeight, nChannel,
-		m_fPos, m_fModuleSize, m_nLevel, m_nVersion, m_nMaskingNo, 
-		m_bUseHybrid, m_bTryHarder, 
-		m_ForegroundColor, m_BackgroundColor, 
-		m_QREncodeColor1, m_QREncodeColor2, 
+		m_fModuleSize, m_nLevel, m_nVersion, m_nMaskingNo, 
+		m_bUseHybrid, m_bTryHarder, m_BackgroundColor, 
 		strLen, nInnerecLevel, nInnerMask, 
 		m_roi);
 	if (pDst[0] == NULL)
@@ -107,12 +102,10 @@ BOOL CDlgQRDecode::Decode()
 		return FALSE;
 	}
 	m_strPublicString = UTF8Convert2Unicode(pDst[0], m_ncLength);
-	SAFE_DELETE(pDst[0]);
 	UpdateDecodeInfo();
 	if (pDst[1] != NULL)
 	{
 		m_strPrivateString = UTF8Convert2Unicode(pDst[1], m_ncLength);
-		SAFE_DELETE(pDst[1]);
 		GetDlgItem(IDC_EDITSOURCEDATA_PRIVATE)->SetWindowText(m_strPrivateString);
 		SetWindowInt(GetDlgItem(IDC_EDIT_INNER_ECLEVEL), nInnerecLevel);
 		SetWindowInt(GetDlgItem(IDC_EDIT_INNER_MASK), nInnerMask);
@@ -152,10 +145,7 @@ BEGIN_MESSAGE_MAP(CDlgQRDecode, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
 	ON_BN_CLICKED(IDC_BUTTON_SAVE_IMAGE, &CDlgQRDecode::OnBnClickedButtonSaveImage)
-	ON_BN_CLICKED(IDC_BN_FOREGROUND, &CDlgQRDecode::OnBnClickedBnForeground)
 	ON_BN_CLICKED(IDC_BN_BACKGROUND, &CDlgQRDecode::OnBnClickedBnBackground)
-	ON_BN_CLICKED(IDC_BN_ENCODE_COLOR1, &CDlgQRDecode::OnBnClickedBnEncodeColor1)
-	ON_BN_CLICKED(IDC_BN_ENCODE_COLOR2, &CDlgQRDecode::OnBnClickedBnEncodeColor2)
 	ON_BN_CLICKED(IDC_BUTTON_CLEAR, &CDlgQRDecode::OnBnClickedButtonClear)
 END_MESSAGE_MAP()
 
@@ -191,10 +181,7 @@ BOOL CDlgQRDecode::OnInitDialog()
 	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_CLEAR), _T("清除解码结果"));
 	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_INNER_ECLEVEL), _T("密文的纠错等级"));
 	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_INNER_MASK), _T("密文的掩码版本"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BN_FOREGROUND), _T("设置前景色(默认白色)"));
 	m_ToolTip.AddTool(GetDlgItem(IDC_BN_BACKGROUND), _T("设置背景色(默认黑色)"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BN_ENCODE_COLOR1), _T("设置彩色1(默认红色)"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BN_ENCODE_COLOR2), _T("设置彩色2(默认绿色)"));
 
 	return TRUE;
 }
@@ -266,22 +253,6 @@ void CDlgQRDecode::Reset()
 }
 
 
-void CDlgQRDecode::OnBnClickedBnForeground()
-{
-	CColorDialog m_setClrDlg;
-	// CC_RGBINIT可以让上次选择的颜色作为初始颜色显示出来
-	m_setClrDlg.m_cc.Flags |= CC_FULLOPEN | CC_RGBINIT;
-	m_setClrDlg.m_cc.rgbResult = m_ForegroundColor;
-	if (IDOK == m_setClrDlg.DoModal())
-	{
-		if (m_ForegroundColor == m_setClrDlg.m_cc.rgbResult)
-			return;
-		// 保存用户选择的颜色
-		m_ForegroundColor = m_setClrDlg.m_cc.rgbResult;
-	}
-}
-
-
 void CDlgQRDecode::OnBnClickedBnBackground()
 {
 	CColorDialog m_setClrDlg;
@@ -292,34 +263,6 @@ void CDlgQRDecode::OnBnClickedBnBackground()
 		if (m_BackgroundColor == m_setClrDlg.m_cc.rgbResult)
 			return;
 		m_BackgroundColor = m_setClrDlg.m_cc.rgbResult;
-	}
-}
-
-
-void CDlgQRDecode::OnBnClickedBnEncodeColor1()
-{
-	CColorDialog m_setClrDlg;
-	m_setClrDlg.m_cc.Flags |= CC_FULLOPEN | CC_RGBINIT;
-	m_setClrDlg.m_cc.rgbResult = m_QREncodeColor1;
-	if (IDOK == m_setClrDlg.DoModal())
-	{
-		if (m_QREncodeColor1 == m_setClrDlg.m_cc.rgbResult)
-			return;
-		m_QREncodeColor1 = m_setClrDlg.m_cc.rgbResult;
-	}
-}
-
-
-void CDlgQRDecode::OnBnClickedBnEncodeColor2()
-{
-	CColorDialog m_setClrDlg;
-	m_setClrDlg.m_cc.Flags |= CC_FULLOPEN | CC_RGBINIT;
-	m_setClrDlg.m_cc.rgbResult = m_QREncodeColor2;
-	if (IDOK == m_setClrDlg.DoModal())
-	{
-		if (m_QREncodeColor2 == m_setClrDlg.m_cc.rgbResult)
-			return;
-		m_QREncodeColor2 = m_setClrDlg.m_cc.rgbResult;
 	}
 }
 

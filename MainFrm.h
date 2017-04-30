@@ -54,6 +54,8 @@ public:
 	CDlgQREncode* GetEncodeDlg() { return m_pQREncodeDlg; }
 	/// 获得解码对话框指针
 	CDlgQRDecode* GetDecodeDlg() { return m_pQRDecodeDlg; }
+	/// 获取状态栏
+	CMFCStatusBar& GetStatusBar() { return m_wndStatusBar; }
 
 // 生成的消息映射函数
 protected:

@@ -387,7 +387,7 @@ BOOL CyImage::Create(int nWidth, int nHeight, int nBPP, DWORD dwFlags) throw()
 
 
 /** - 从数据源创建图像 - 
-* @param[in] * pSrc 数据源
+* @param[in] *pSrc 数据源
 * @param[in] nWidth 图像宽度
 * @param[in] nHeight 图像高度
 * @param[in] nRowlen 数据源每行数据个数
@@ -560,6 +560,8 @@ void CyImage::Rotate(float degree)
 	int NewWidth = 0;
 	int NewHeight = 0;
 	int NewRowlen = 0;
+	InitFloatData();
+	MemcpyByteToFloat();
 	float *pDst = ImageRotate(m_pFloatData, GetWidth(), GetHeight(), 
 		GetFloatDataRowlen(), GetChannel(), angle,NewWidth, NewHeight, NewRowlen);
 	Create(pDst, NewWidth, NewHeight, NewRowlen);
@@ -840,6 +842,8 @@ void CyImage::Transpose()
 	int nHeight = GetHeight();
 	int nRowlen = GetRowlen();
 	int nChannel = GetChannel();
+	InitFloatData();
+	MemcpyByteToFloat();
 	int nFloatRowlen = GetFloatDataRowlen();
 
 	float* temp = new float[nHeight * nFloatRowlen];
@@ -1325,7 +1329,7 @@ CyImage* CyImage::GetBackground(float threahold, float3 background)
 	int nChannel = pBackground->GetChannel();
 	int nRowlen = pBackground->GetFloatDataRowlen();
 	float* pHead = pBackground->GetFloatDataHead();
-	float fGray = RgbColor2Gray(background);
+	float fGray = background.ToGray();
 	float fMAX = pBackground->GetMaximum();
 	switch (nChannel)
 	{

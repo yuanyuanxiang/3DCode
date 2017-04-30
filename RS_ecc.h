@@ -11,6 +11,9 @@
 * 2017/4/4		修改此文档，删除弃用项
 */
 
+// 将01比特流翻转
+void InverseBitsStream(int *pBits, int nLength);
+
 // 提取字符串中的bits流
 void GetBitsStream(const BYTE *pSrc, int *pDest, int nCount);
 
@@ -30,7 +33,7 @@ void SplitByteBy2Bits(const BYTE* dataPtr, int dataLen, int* dst, int dstLen);
 void MergedIntBy2Bits(int* dataSrc, int totalBits);
 
 // 获取RS4编码的比特总数
-int RS4BitsLen(int dataLen, int ecLevel);
+int RS4BitsLen(int dataLen, int ecLevel, int & bitsLen);
 
 // 4bit符号大小的RS纠错编码
 int* RS4Encode(const BYTE* dataPtr, int dataLen, int bitsLen, int ecLevel);
@@ -42,16 +45,4 @@ int* RS4Decode(int* dataSrc, int dataLen, int bitsLen, int ecLevel);
 void RS2Encode(const BYTE *dataPtr, int dataLen, int *result);
 
 // 2bit符号大小的RS纠错解码
-void RS2Decode(int *dataSrc, int dataLen, int *result);
-
-// 编码头：2bit符号大小的RS纠错编码
-void RS2Encode16Bits(const BYTE dataPtr[2], int result[48]);
-
-// 将48位进行RS解码，得到2字节
-bool RS2Decode16Bits(int dataSrc[48], int result[16]);
-
-// 编码头：4bit符号大小的RS纠错编码
-void RS2Encode14Bits(const BYTE dataPtr[2], int result[42]);
-
-// 将48位进行RS解码，得到14位
-bool RS2Decode14Bits(int dataSrc[42], int result[14]);
+bool RS2Decode(const int *dataSrc, int dataLen, int *result);

@@ -11,6 +11,9 @@
 #pragma once
 #include "ColorsEncode.h"
 
+/// 解码所用像素值类型
+typedef float3 pixel;
+
 /** 
 * @class ColorsDecode 
 * @brief 彩色解码模块
@@ -20,15 +23,20 @@ class ColorsDecode : public ColorsEncode
 {
 private:
 	// 图像信息
-	BYTE*			m_pHead;		/**< 图像头指针 */
+	const BYTE*		m_pHead;		/**< 图像头指针 */
 	int				m_nWidth;		/**< 图像宽度 */
 	int				m_nHeight;		/**< 图像高度 */
 	int				m_nRowlen;		/**< 图像每行字节数 */
 	int				m_nChannel;		/**< 图像每像素字节 */
 	int				m_nModuleSize;	/**< 二维码模块大小 */
+	static char		m_pData[MAX_CODEUTF8NUM];/**< 解码结果 */
 	// 编码颜色
-	float3			m_Foreground;	/**< 彩色前景 */
-	float3			m_Background;	/**< 彩色背景 */
+	pixel			m_Foreground;	/**< 彩色前景 */
+	pixel			m_Background;	/**< 彩色背景 */
+	// Color Infomation + Logo & Version
+	int				m_nHeaderBits[90];/**< 彩色编码的头 */
+	// 是否需要翻转比特流
+	bool			m_bInversed;	/**< 彩色前景背景搞反了 */
 	
 public:
 	/** 
@@ -38,35 +46,19 @@ public:
 	* @param[in] nModuleSize								模块大小
 	* @note 函数将初始化本类的7个变量
 	*/
-	ColorsDecode(BYTE bMatrix[MAX_MODULESIZE][MAX_MODULESIZE], int nSymbolSize, int nModuleSize)
+	ColorsDecode(qrMat bMatrix[MAX_MODULESIZE], int nSymbolSize, int nModuleSize)
 		: ColorsEncode(bMatrix, nSymbolSize, 0)
 	{
 		m_nModuleSize = nModuleSize;
 		m_Foreground = 0;
 		m_Background = 0;
+		m_bInversed = false;
 	}
 
 	~ColorsDecode() { }
 
-	/** 
-	* @brief 初始化彩色解码器
-	* @param[in] * pHead	二维码图像指针
-	* @param[in] nWidth		图像宽度
-	* @param[in] nHeight	图像高度
-	* @param[in] nChannel	图像通道数
-	* @note 函数将初始化本类的5个变量
-	*/
-	void Init(BYTE* pHead, int nWidth, int nHeight, int nChannel)
-	{
-		m_pHead = pHead;
-		m_nWidth = nWidth;
-		m_nHeight = nHeight;
-		m_nChannel = nChannel;
-		m_nRowlen = WIDTHBYTES(nChannel * 8 * nWidth);
-	}
-
 	// RS4方法解码彩色
-	char* DecodeColors(COLORREF QREncodeColor1, COLORREF QREncodeColor2);
+	const char* DecodeColors(const BYTE* pHead, int nWidth, int nHeight, int nChannel);
 
 	/** 
 	* @brief 获取彩色数据头信息
@@ -75,7 +67,7 @@ public:
 	* @param[out] &nInnerMask		掩码版本
 	* @note 解码之后调用此函数获取解码结果
 	*/
-	void GetHeaderInfo(int &strLen, int &nInnerecLevel, int &nInnerMask) const 
+	inline void GetHeaderInfo(int &strLen, int &nInnerecLevel, int &nInnerMask) const 
 	{
 		strLen = m_strLen;
 		nInnerecLevel = m_ecLevel;
@@ -83,6 +75,10 @@ public:
 	}
 
 private:
+	// 获取数据头
+	void GetHeaderBits(int nMaxepoches = 10);
 	// 解码数据头
-	BOOL DecodeHeader();
+	BOOL DecodeHeader(bool bInverse = false);
+	// K均值二值化
+	void K_means(const pixel *pArray, int *Cluster, int nNum, int nMaxepoches);
 };

@@ -9,13 +9,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-#ifndef MAX_CODEUTF8NUM
-#define MAX_CODEUTF8NUM		1000	/**< 最多编码utf8文字字数 */
-#endif
-
 /** - 编码数据 -
 * @param[in] strEncodeData		编码数据
-* @param[in] * pQR_Encode		编码类
+* @param[in] *pQR_Encode		编码类
 * @param[in] nLevel				纠错率
 * @param[in] nVersion			版本号
 * @param[in] bAutoExtent		自动扩展
@@ -44,12 +40,12 @@ BOOL EncodeData(CString strEncodeData, CQR_Encode* pQR_Encode, int nLevel, int n
 
 
 /* - 转化图像 -
-* @param[in] * pImage					二维码图像
+* @param[in] *pImage					二维码图像
 * @param[in] nPixelSize					像素大小
 * @param[in] ForegroundColor			前景色
 * @param[in] BackgroundColor			背景色
 * @param[in] LogoRect					LOGO区
-* @param[in] * pQR_Encode				QR码
+* @param[in] *pQR_Encode				QR码
 * @param[in] bForegroundColorReturned	返回前景色索引
 * @note 将二维码转换为图像进行显示，默认返回前景色索引。
 */

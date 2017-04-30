@@ -7,8 +7,6 @@ using namespace std;
 * @brief 彩色二维码解码函数，ANDROID可用
 */
 
-/* 缩放图像到该尺寸进行解码 */
-#define IMAGE_ZOOM_TO 320
 
 #ifndef NEW_VERSION /// 开启这个宏，表示采用新版的编码解码函数
 
@@ -27,25 +25,19 @@ BYTE* DecodePrivateData(const BYTE *pHead, int nRowlen, int nChannel, int nPixel
 #endif
 
 /// 解码彩色图像
-BOOL DecodeWholeImage(char* pDst[2], const BYTE *pHead, int nWidth, int nHeight, int nChannel, 
-					  float2 m_fPos[4], float &m_fModuleSize, int &nLevel, int &nVersion, int &nMaskingNo, 
-					  BOOL bUseHybrid, BOOL bTryHarder, 
-					  COLORREF Foreground, COLORREF Background, 
-					  COLORREF QREncodeColor1, COLORREF QREncodeColor2, 
+BOOL DecodeWholeImage(const char* pDst[2], const BYTE *pHead, int nWidth, int nHeight, int nChannel, 
+					  float &m_fModuleSize, int &nLevel, int &nVersion, int &nMaskingNo, 
+					  BOOL bUseHybrid, BOOL bTryHarder, COLORREF Background, 
 					  int &strLen, int &nInnerecLevel, int &nInnerMask, 
-					  const RoiRect roi = RoiRect(0, 0, 0, 0));
+					  const RoiRect &roi = RoiRect(0, 0, 0, 0));
 
 /// 解码彩色图像
-void DecodeWholeImage(char* pDst[2], const int *pIntHead, int nWidth, int nHeight, 
-					  float2 m_fPos[4], float &m_fModuleSize, int &nLevel, int &nVersion, int &nMaskingNo, 
-					  BOOL bUseHybrid, BOOL bTryHarder, 
-					  COLORREF Foreground, COLORREF Background, 
-					  COLORREF QREncodeColor1, COLORREF QREncodeColor2, 
+void DecodeWholeImage(const char* pDst[2], const int *pIntHead, int nWidth, int nHeight, 
+					  float &m_fModuleSize, int &nLevel, int &nVersion, int &nMaskingNo, 
+					  BOOL bUseHybrid, BOOL bTryHarder, COLORREF Background, 
 					  int &strLen, int &nInnerecLevel, int &nInnerMask, 
-					  const RoiRect roi = RoiRect(0, 0, 0, 0));
+					  const RoiRect &roi = RoiRect(0, 0, 0, 0));
 
 /// 解码彩色图像
-void EasyDecode(char* pDst[2], const BYTE *pHead, int nWidth, int nHeight, int nChannel, 
-				COLORREF Foreground, COLORREF Background, 
-				COLORREF QREncodeColor1, COLORREF QREncodeColor2, 
-				const RoiRect roi = RoiRect(0, 0, 0, 0));
+void EasyDecode(const char* pDst[2], const BYTE *pHead, int nWidth, int nHeight, int nChannel, 
+				COLORREF Background, const RoiRect &roi = RoiRect(0, 0, 0, 0));

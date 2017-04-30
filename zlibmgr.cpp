@@ -15,9 +15,9 @@ CZlibMgr::~CZlibMgr()
 
 /** 
 * @brief 压缩字符串
-* @param[in] * pcContentBuf		待压缩字符串
-* @param[in] * pcCompBuf		压缩后字符串
-* @param[in] & ulCompLen		压缩后字符串长度
+* @param[in] *pcContentBuf	待压缩字符串
+* @param[in] *pcCompBuf		压缩后字符串
+* @param[in] &ulCompLen		压缩后字符串长度
 * @return 成功与否
 */
 bool CZlibMgr::Compress(const char* pcContentBuf, char* pcCompBuf, unsigned long& ulCompLen)
@@ -54,9 +54,9 @@ bool CZlibMgr::Compress(const char* pcContentBuf, char* pcCompBuf, unsigned long
 
 /**
 * @brief 解压缩字符串
-* @param[in] * pcCompBuf		待解压字符串
-* @param[in] * pcUnCompBuf		解压后字符串
-* @param[in] & ulCompLen		解压后字符串长度
+* @param[in] *pcCompBuf		待解压字符串
+* @param[in] *pcUnCompBuf	解压后字符串
+* @param[in] &ulCompLen		解压后字符串长度
 * @return 返回解压后字符串长度
 */
 uLong CZlibMgr::UnCompress(const char* pcCompBuf, char* pcUnCompBuf, unsigned long ulCompLen)

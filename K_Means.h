@@ -18,13 +18,13 @@
 #pragma once
 
 // 计算组间差异(2016/9/19)
-template <typename Type> float Difference(Type *Center, int K);
+template <typename Type> Type Difference(const Type *Center, int K);
 
 // 初始化聚类中心(2016/9/19)
-template <typename Type> void InitializeClusterCenters(float *Center, int K, const Type* pHead, int nRowBytes, RoiRect roi);
+template <typename T1, typename T2> void InitializeClusterCenters(T1 *Center, int K, const T2* pHead, int nRowBytes, RoiRect roi);
 
 // 初始化聚类中心(random随机)
-template <typename Type> void RandomClusterCenters(float *Center, int K, const Type* pHead, int nRowBytes, RoiRect roi);
+template <typename T1, typename T2> void RandomClusterCenters(T1 *Center, int K, const T2* pHead, int nRowBytes, RoiRect roi);
 
 // 对图像进行用K_means聚类作分割
 template <typename Type> void K_means(Type* pHead, int nRowBytes, RoiRect roi, int K, float fBackground, int nMaxepoches);
@@ -37,14 +37,14 @@ template <typename Type> void K_means(Type* pHead, int nRowBytes, RoiRect roi, i
 * @param[in] *Center 数组
 * @param[in] K 元素数
 */
-template <typename Type> float Difference(Type *Center, int K)
+template <typename Type> Type Difference(const Type *Center, int K)
 {
-	float sum = 0.0f;
+	Type sum(0);
 	for (int i = 0; i < K; ++i)
 	{
 		for (int j = i; j < K; ++j)
 		{
-			sum += fabs(Center[j] - Center[i]);
+			sum += abs(Center[j] - Center[i]);
 		}
 	}
 	return sum;
@@ -60,7 +60,7 @@ template <typename Type> float Difference(Type *Center, int K)
 * @param[in] roi 图像感兴趣区域
 * @note 函数计算图像直方图，取峰值处的灰度为中心.
 */
-template <typename Type> void InitializeClusterCenters(float *Center, int K, const Type* pHead, int nRowBytes, RoiRect roi)
+template <typename T1, typename T2> void InitializeClusterCenters(T1 *Center, int K, const T2* pHead, int nRowBytes, RoiRect roi)
 {
 #ifdef _DEBUG
 	TRACE(" * 正在初始化聚类中心...\n");
@@ -81,30 +81,29 @@ template <typename Type> void InitializeClusterCenters(float *Center, int K, con
 	{
 		for (int j = i; j > 0 && nHist[j] > nHist[j - 1]; --j)
 		{
-			int t;
-			t = nHist[j]; nHist[j] = nHist[j - 1]; nHist[j - 1] = t;
-			t = index[j]; index[j] = index[j - 1]; index[j - 1] = t;
+			SWAP(nHist[j], nHist[j-1]);
+			SWAP(index[j], index[j-1]);
 		}
 	}
 	// 寻找K个中心，这些中心的间距不得小于min_diff
 	int count = 0, num;
-	float min_diff = 64.0f;
+	T1 min_diff = (T1)64;
 	do
 	{
 		count++;
 		num = 0;
-		Center[0] = (float)index[num]; //第1个中心
+		Center[0] = (T1)index[num]; //第1个中心
 		for (int i = 0; i < K; ++i)
 		{
 			// 生成后续K个中心，确保中心差距较大
 			while(num < 256)// 确保能生成一个
 			{
-				Center[i] = (float)index[num++];
+				Center[i] = (T1)index[num++];
 				int j = 0;
 				for (; j < i; ++j)
 				{
 					// 到某个聚类中心的间距过小
-					if (fabs(Center[i] - Center[j]) < min_diff)
+					if (abs(Center[i] - Center[j]) < min_diff)
 						break;
 				}
 				// Cj到全部Ci的距离较大，退出while循环，接着生成下一个
@@ -115,15 +114,17 @@ template <typename Type> void InitializeClusterCenters(float *Center, int K, con
 			if (num == 256)
 				break;
 #ifdef _DEBUG
-			TRACE("C[%d] = %.6f\t", i, Center[i]);
+			TRACE("C[%d] = %.6f\t", i, (float)Center[i]);
 #endif // _DEBUG
 		}
 #ifdef _DEBUG
 		TRACE("\n");
 #endif // _DEBUG
-		min_diff -= 1.0f;
+		min_diff -= (T1)1;
 	} while (num == 256);
-	TRACE(" * [%d]轮搜索聚类中心，类间距不小于%.2f.\n", count, min_diff);
+#ifdef _DEBUG
+	TRACE(" * [%d]轮搜索聚类中心，类间距不小于%.2f.\n", count, (float)min_diff);
+#endif
 }
 
 
@@ -135,7 +136,7 @@ template <typename Type> void InitializeClusterCenters(float *Center, int K, con
 * @param[in] nRowBytes 图像每行元素个数
 * @param[in] roi 图像感兴趣区域
 */
-template <typename Type> void RandomClusterCenters(float *Center, int K, const Type* pHead, int nRowBytes, RoiRect roi)
+template <typename T1, typename T2> void RandomClusterCenters(T1 *Center, int K, const T2* pHead, int nRowBytes, RoiRect roi)
 {
 #ifdef _DEBUG
 	TRACE(" * 正在初始化聚类中心...\n");
@@ -150,7 +151,7 @@ template <typename Type> void RandomClusterCenters(float *Center, int K, const T
 		// BYTE 强制转换是必须的，下同(2016/9/12)
 		Center[i] = (BYTE)pHead[w + h * nRowBytes];
 #ifdef _DEBUG
-		TRACE("C[%d] = %.6f\t", i, Center[i]);
+		TRACE("C[%d] = %.6f\t", i, (float)Center[i]);
 #endif // _DEBUG
 		seed = rand();
 	}
@@ -172,9 +173,9 @@ template <typename Type> void RandomClusterCenters(float *Center, int K, const T
 template <typename Type> void K_means(Type* pHead, int nRowBytes, RoiRect roi, int K, float fBackground, int nMaxepoches)
 {
 	// 聚类区域的尺寸
-	int nWidth = roi.Width();
-	int nHeight = roi.Height();
-	int nRowlen = nWidth;// 聚类标记每行元素个数
+	const int nWidth = roi.Width();
+	const int nHeight = roi.Height();
+	const int nRowlen = nWidth;// 聚类标记每行元素个数
 	Type* Cluster = new Type[nHeight * nRowlen];// 聚类标记TAG
 												// 聚类中心
 	float *Center = new float[K];
@@ -192,6 +193,7 @@ template <typename Type> void K_means(Type* pHead, int nRowBytes, RoiRect roi, i
 		for (int j = roi.top; j < roi.bottom; ++j)
 		{
 			Type *pRowj = pHead + j * nRowBytes;
+			int y = (j - roi.top) * nRowlen;
 			for (int i = roi.left; i < roi.right; ++i)
 			{
 				/* 当前像素的浮点值 */
@@ -211,7 +213,7 @@ template <typename Type> void K_means(Type* pHead, int nRowBytes, RoiRect roi, i
 					}
 				}
 				// 将(i, j)标记为tag
-				Cluster[(i - roi.left) + (j - roi.top) * nRowlen] = (Type)tag;
+				Cluster[(i - roi.left) + y] = (Type)tag;
 				sumCenter[tag] += curPixel;
 				++sum[tag];
 			}
@@ -257,9 +259,11 @@ template <typename Type> void K_means(Type* pHead, int nRowBytes, RoiRect roi, i
 	// 对原始图像进行分割
 	for (int j = 0; j < nHeight; ++j)
 	{
+		int y0 = j * nRowlen;
+		int y = (j + roi.top) * nRowBytes;
 		for (int i = 0; i < nWidth; ++i)
 		{
-			pHead[i + roi.left + (j + roi.top) * nRowBytes] = (Cluster[i + j * nRowlen] == backValIdx) ? 0 : 255;
+			pHead[i + roi.left + y] = (Cluster[i + y0] == backValIdx) ? 0 : 255;
 		}
 	}
 	delete[] Center;

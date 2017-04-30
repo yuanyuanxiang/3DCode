@@ -13,6 +13,23 @@ typedef unsigned char BYTE;
 typedef unsigned char uchar;
 typedef BYTE *LPBYTE;
 typedef unsigned int uint;
+#define MAX_MODULESIZE		177		// QR码最大尺寸
+typedef BYTE qrMat[MAX_MODULESIZE];	// QR码比特矩阵
+
+#if defined(ANDROID_CPP)
+
+#include <stdio.h>
+
+#ifndef NO_ICONV
+#define NO_ICONV
+#endif
+
+#ifndef ASSERT 
+#include <assert.h>
+#define ASSERT assert
+#endif
+
+#endif
 
 #define TRUE 1
 #define FALSE 0
@@ -28,6 +45,8 @@ typedef unsigned int uint;
 #ifndef min
 #define min(a,b)            (((a) < (b)) ? (a) : (b))					/**< 最小值 */
 #endif
+
+#define MAX_CODEUTF8NUM		1024										/**< 最多编码utf8文字字数 */
 
 #define WIDTHBYTES(bits)    (((bits) + 31) / 32 * 4)					/**< 计算每行字节数(4字节对齐) */
 
@@ -79,9 +98,13 @@ public:
 	float2() : x(0), y(0)
 	{
 	}
+	float2(float a) : x(a), y(a)
+	{
+	}
 	float2(float a, float b) : x(a), y(b)
 	{
 	}
+	inline operator float() { return sqrt(x * x + y * y); }
 	// =
 	float2 operator = (const float2& point)
 	{
@@ -245,6 +268,13 @@ public:
 	float3(const float3 & other) : x(other.x), y(other.y), z(other.z)
 	{
 	}
+	float3(COLORREF ref) : x(GetRValue(ref)), y(GetGValue(ref)), z(GetBValue(ref))
+	{
+	}
+	// 转化为灰度值
+	inline float ToGray() { return 0.299f * x + 0.587f * y + 0.114f * z; }
+	// 强制转换函数,同ToGray
+	inline operator float() { return 0.299f * x + 0.587f * y + 0.114f * z; }
 	// =
 	float3 operator = (const float3& other)
 	{
@@ -406,25 +436,36 @@ public:
 /// RGB宏：COLORREF转为灰度值
 #define RgbColorRef2Gray(ref)			( (GetRValue(ref)*38 + GetGValue(ref)*75 + GetBValue(ref)*15) >> 7 )
 
-/// RGB宏：rgb转为float3数据
-#define RgbColor2Float3(r, g, b)		float3(r, g, b)
-
-/// 将COLORREF转为float3数据
-#define RgbColorRef2Float3(ref)			float3(GetRValue(ref), GetGValue(ref), GetBValue(ref))
-
-/// float3数据转灰度
-#define RgbColor2Gray(rgbc)				(0.299f * rgbc.x + 0.587f * rgbc.y + 0.114f * rgbc.z)
-
 #define BIT_SET(a, b) ((a) |= (1<<(b)))			/**< 设置a第b位为1 */
 #define BIT_CLEAR(a, b) ((a) &= ~(1<<(b)))		/**< 设置a第b位为0 */
 #define BIT_FLIP(a, b) ((a) ^= (1<<(b)))		/**< 开关a的b位 */
 #define BIT_CHECK(a, b) ((a) & (1<<(b)))		/**< 检查a的b位 */
 
+/** 
+* @brief 交换两个整数
+* @note 采用异或速度慢
+* @see http://blog.csdn.net/anchor89/article/details/5979290
+*/
+inline void SWAP(int a, int b)
+{
+	int c = a; a = b; b = c;
+}
+
+/**
+* @brief 交换两个4字节数
+* @note 支持单精度浮点
+*/
+inline void SWAP(void *a, void *b)
+{
+	int *ia = (int*)a, *ib = (int*)b;
+	int c = *ia; *ia = *ib; *ib = c;
+}
+
 /// 如果a的i位为1，则设置b的j位为1
 #define BIT_CHECK_SET(a, i, b, j) if(BIT_CHECK(a, i)) BIT_SET(b, j)
 
 /// 随机设置b的j位为1，使1以概率p出现
-#define BIT_RANDOM_SET(p, b, j) if(1.0F * rand() / RAND_MAX <= p) BIT_SET(b, j)
+#define BIT_RANDOM_SET(p, b, j) if(rand() <= p * RAND_MAX) BIT_SET(b, j)
 
 /** 
 * @class CMyRect
@@ -445,11 +486,11 @@ public:
 	~CMyRect()
 	{
 	}
-	int Width() const 
+	inline int Width() const 
 	{
 		return right - left;
 	}
-	int Height() const 
+	inline int Height() const 
 	{
 		return bottom - top;
 	}
@@ -458,7 +499,7 @@ public:
 		return (left == rect.left && right == rect.right
 			&& top == rect.top && bottom == rect.bottom);
 	}
-	bool IsEmpty() const 
+	inline bool IsEmpty() const 
 	{
 		return (left == 0 && right == 0 && top == 0 && bottom == 0);
 	}
@@ -498,9 +539,6 @@ public:
 	int x, y;
 };
 
-/// rgb(r, g, b, a)转int，用于比较大小
-#define RGB2INT(rgba) (299 * BYTE((rgba).r) + 587 * BYTE((rgba).g) + 114 * BYTE((rgba).b))
-
 /** 
 * @class rgb
 * @brief 彩色(r, g, b)
@@ -510,44 +548,47 @@ class rgb
 {
 public:
 	Type r, g, b, a; // a保留，使4字节对齐
-	rgb() : r(0), g(0), b(0), a(0)
+	rgb() : r(0), g(0), b(0), a(0), v(0)
 	{
 	}
 	rgb(Type R, Type G, Type B) : r(R), g(G), b(B), a(0)
 	{
+		v = ToInt();
 	}
 	rgb(const rgb & in) : r(in.r), g(in.g), b(in.b)
 	{
+		v = ToInt();
 	}
-	// 比较两个rgb像素的大小(C1<C2)
-	friend bool operator < (const rgb<Type> & C1, const rgb<Type> & C2)
+	// 初始化大小度量值(3个乘法)
+	inline void Init() { v = ToInt(); }
+	// 交换两个rgb像素
+	inline void Swap(rgb<Type> & other) 
 	{
-		return RGB2INT(C1) < RGB2INT(C2);
+		SWAP(r, other.r);
+		SWAP(g, other.g);
+		SWAP(b, other.b);
+		SWAP(v, other.v);
 	}
-	// 交换两个rgb结构体
-	friend void Swap(rgb<Type> & C1, rgb<Type> & C2)
+	// 比较两个rgb像素的大小
+	bool operator < (const rgb<Type> & other)
 	{
-		Type t;				
-		t = C1.r; C1.r = C2.r; C2.r = t;
-		t = C1.g; C1.g = C2.g; C2.g = t;
-		t = C1.b; C1.b = C2.b; C2.b = t;
+		return v < other.v;
 	}
+private:
+	int v; // 用于度量大小的值
+	// 转换为Int用于比较大小(3个乘法)
+	inline int ToInt() const { return 299 * BYTE(r) + 587 * BYTE(g) + 114 * BYTE(b); }
+
+	//////////////////////////////////////////////////////////////////////////
+	// friend
 	// 对rgb结构进行插入排序
 	friend void Sort(rgb<Type> *pArray, int Num)
 	{
 		for (int i = 1; i < Num; ++i)
 		{
-			int Aj = RGB2INT(pArray[i]);// A[j]
-			int Aj_1 = RGB2INT(pArray[i - 1]);// A[j-1]
-			for (int j = i; j > 0 && Aj < Aj_1; )
+			for (int j = i; j > 0 && pArray[j] < pArray[j-1]; --j)
 			{
-				Type t;
-				t = pArray[j].r; pArray[j].r = pArray[j - 1].r; pArray[j - 1].r = t;
-				t = pArray[j].g; pArray[j].g = pArray[j - 1].g; pArray[j - 1].g = t;
-				t = pArray[j].b; pArray[j].b = pArray[j - 1].b; pArray[j - 1].b = t;
-				--j;
-				Aj = Aj_1;
-				Aj_1 = RGB2INT(pArray[j - 1]);
+				pArray[j].Swap(pArray[j-1]);
 			}
 		}
 	}
@@ -582,20 +623,68 @@ struct ImageHeader
 	int		m_nChannel;
 };
 
-// 判断索引(i行, j列)不在矩形内
-BOOL IndexNotInRect(int i, int j, const CLogoRect &rect);
+/// 判断索引(i, j)不在矩形内
+inline BOOL IndexNotInRect(int i, int j, const CLogoRect &rect)
+{
+	if (rect.top <= i && i < rect.bottom && rect.left <= j && j < rect.right)
+		return FALSE;
+	return TRUE;
+}
 
-// 二维，两点间的距离
-float Distance(const float2 & P, const float2 & Q);
 
-// 二维，两点间的距离平方
-float _Distance(const float2 & P, const float2 & Q);
+/// 两点间的距离
+inline float Distance(const float2 & P, const float2 & Q)
+{
+	float dx = (P.x - Q.x);
+	float dy = (P.y - Q.y);
+	return sqrtf(dx * dx + dy * dy);
+}
 
-// 三维，两点间的距离
-float Distance(const float3 & P, const float3 & Q);
 
-// 三维，两点间的距离平方
-float _Distance(const float3 & P, const float3 & Q);
+/// 两点间的距离
+inline float Distance(const float3 & P, const float3 & Q)
+{
+	float dx = (P.x - Q.x);
+	float dy = (P.y - Q.y);
+	float dz = (P.z - Q.z);
+	return sqrtf(dx * dx + dy * dy + dz * dz);
+}
+
+
+/// 两点间的距离平方
+inline float _Distance(const float2 & P, const float2 & Q)
+{
+	float dx = (P.x - Q.x);
+	float dy = (P.y - Q.y);
+	return dx * dx + dy * dy;
+}
+
+
+/// 两点间的距离平方
+inline float _Distance(const float3 & P, const float3 & Q)
+{
+	float dx = (P.x - Q.x);
+	float dy = (P.y - Q.y);
+	float dz = (P.z - Q.z);
+	return dx * dx + dy * dy + dz * dz;
+}
+
+inline float _Distance(const float & P, const float & Q)
+{
+	return abs(P - Q);
+}
+
+/// 模
+inline float fabs(const float2 & pos)
+{
+	return sqrt(pos.x * pos.x + pos.y * pos.y);
+}
+
+/// 模
+inline float fabs(const float3 & pos)
+{
+	return sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z);
+}
 
 // 将矩形按倍数放大
 void ZoomRect(CLogoRect &rect, float rate = 1.f);
@@ -606,11 +695,49 @@ void MoveRect(CLogoRect &rect, float dx = 0.f, float dy = 0.f);
 // 对数据进行掩码操作
 void XOR(int *nCodes, const int *nMaskingNo, int nLength);
 
-// 判断图像是否4字节对齐
-BOOL IsAligned(int nWidth, int nChannel);
+#define INV_SIGN_BIT	0x7fffffff // 用来反转符号位
 
-// 计算2D坐标的模
-float fabs(const float2 & pos);
+#define USE_ASM			0			// 是否使用汇编代码
 
-// 计算3D坐标的模
-float fabs(const float3 & pos);
+// float快速求绝对值
+inline float FastAbs(float fNum)
+{
+#if USE_ASM
+	float fOut;
+	__asm
+	{
+		MOV EAX, fNum;
+		AND EAX, INV_SIGN_BIT;
+		MOV fOut, EAX;
+	}
+	return fOut;
+#else
+	int *temp = (int*)&fNum;
+	int out = *temp & INV_SIGN_BIT;
+	return *((float*)&out);
+#endif
+}
+
+// int快速求绝对值
+inline int FastAbs(int iNum)
+{
+#if USE_ASM
+	int iOut = 0;
+	__asm  
+	{  
+		MOV EAX, iNum;
+		MOV EDX, EAX;
+		SAR EDX, 31;
+		XOR EAX, EDX;
+		SUB EAX, EDX;
+		MOV iOut, EAX;
+	}  
+#else
+	int iOut = iNum;
+	int temp = iNum;
+	temp = temp >> 31;
+	iOut = iOut ^ temp;
+	iOut = iOut - temp;
+#endif
+	return iOut;
+}

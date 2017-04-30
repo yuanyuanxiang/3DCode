@@ -18,7 +18,7 @@ CString ANSIConvert2Unicode(char *strANSI, int &ncLength);
 char* UnicodeConvert2UTF8(LPCWCH strUnicode, int &ncLength);
 
 // 将utf-8编码转换成Unicode编码
-CString UTF8Convert2Unicode(char* strUtf8, int &ncLength);
+CString UTF8Convert2Unicode(const char* strUtf8, int &ncLength);
 
 // 将ANSI编码转换成UTF-8编码
 char* ANSIConvert2UTF8(char* strANSI, int &ncLength);

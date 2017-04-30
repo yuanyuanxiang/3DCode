@@ -18,7 +18,7 @@ template <typename Type> float biLinearInterp(const Type *pSrc, int nWidth, int 
 											  int nCurChannel, float x, float y);
 
 // 从图像获取数据流用于解码
-template <typename Type> char* GetDecodeString(const Type* pHead, const int nWidth, const int nHeight, const int nRowlen);
+template <typename Type> Type* GetDecodeString(const Type* pHead, const int nWidth, const int nHeight, const int nRowlen);
 
 // 将Byte(uchar)数据拷贝到浮点数
 template <typename Type> void MemcpyByte2Float(float* pDst, const Type* pSrc, int nWidth, int nHeight, int nChannel);
@@ -62,7 +62,7 @@ template <typename Type> inline float GetPositionValue(const Type *pSrc, int nWi
 * @param[in] x				插值坐标
 * @param[in] y				插值坐标
 */
-template <typename Type> float biLinearInterp(const Type *pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, 
+template <typename Type> inline float biLinearInterp(const Type *pSrc, int nWidth, int nHeight, int nRowlen, int nChannel, 
 											  int nCurChannel, float x, float y)
 {
 	/** 
@@ -71,19 +71,13 @@ template <typename Type> float biLinearInterp(const Type *pSrc, int nWidth, int 
 	//							(x, y)
 	// Ans1：		(x1, y1)				(x2, y2)
 	*/
-	int x1, x3, y1, y3;
-	x1 = int(x);	y1 = int(y);
-	x3 = x1 + 1;	y3 = y1 + 1;
-	// 对越界的处理
-	if (x1 < 0 || x3 >= nWidth || y1 < 0 || y3 >= nHeight)
-		return 0.0F;
-
-	float Ans1, Ans2;
+	int x1 = int(x), y1 = int(y), x3 = x1 + 1, y3 = y1 + 1;
 	// 左下角的点
 	const Type* pLB = pSrc + nCurChannel + x1 * nChannel + y1 * nRowlen;
-	Ans1 = * pLB * (x3 - x) + *(pLB + nChannel) * (x - x1);
-	Ans2 = *(pLB + nRowlen) * (x3 - x) + *(pLB + nChannel + nRowlen) * (x - x1);
-	return (Ans1 * (y3 - y) + Ans2 * (y - y1));
+	// 对越界的处理
+	return (x1 < 0 || x3 >= nWidth || y1 < 0 || y3 >= nHeight) ? 0 : 
+		(*pLB * (x3 - x) + *(pLB + nChannel) * (x - x1)) * (y3 - y) 
+		+ (*(pLB + nRowlen) * (x3 - x) + *(pLB + nChannel + nRowlen) * (x - x1)) * (y - y1);
 }
 
 
@@ -93,10 +87,10 @@ template <typename Type> float biLinearInterp(const Type *pSrc, int nWidth, int 
 * @param[in] nWidth			图像宽度
 * @param[in] nHeight		图像高度
 * @param[in] nRowlen		图像每行字节数
-@return 4通道的图像数据(char)
+@return 4通道的图像数据(请将其转为char再用于解码)
 @note Type可以为char或BYTE
 */
-template <typename Type> char* GetDecodeString(const Type* pHead, const int nWidth, const int nHeight, const int nRowlen)
+template <typename Type> Type* GetDecodeString(const Type* pHead, const int nWidth, const int nHeight, const int nRowlen)
 {
 	ASSERT(sizeof(Type) == 1);
 	// 输入图像的像素位数
@@ -104,7 +98,7 @@ template <typename Type> char* GetDecodeString(const Type* pHead, const int nWid
 	// 4通道图像的每行字节数
 	const int NewRowlen = nWidth * 4;
 	// 为返回值分配内存
-	char *pDst = new char[nHeight * NewRowlen];
+	Type *pDst = new Type[nHeight * NewRowlen];
 	switch (nBPP)
 	{
 	case 8:// GRAY
@@ -112,11 +106,11 @@ template <typename Type> char* GetDecodeString(const Type* pHead, const int nWid
 		for (int i = 0; i < nHeight; i++)
 		{
 			const Type* y1 = pHead + i * nRowlen;
-			char* y2 = pDst + i * NewRowlen;
+			Type* y2 = pDst + i * NewRowlen;
 			for (int j = 0; j < nWidth; j++)
 			{
 				const Type* pSrc = y1 + j;
-				char* pCur = y2 + 4 * j;
+				Type* pCur = y2 + 4 * j;
 				* pCur = *(pCur+1) = *(pCur+2) = *pSrc;
 				*(pCur+3) = 0;// Alpha
 			}
@@ -127,11 +121,11 @@ template <typename Type> char* GetDecodeString(const Type* pHead, const int nWid
 		for (int i = 0; i < nHeight; i++)
 		{
 			const Type* y1 = pHead + i * nRowlen;
-			char* y2 = pDst + i * NewRowlen;
+			Type* y2 = pDst + i * NewRowlen;
 			for (int j = 0; j < nWidth; j++)
 			{
 				const Type* pSrc = y1 + 3 * j;
-				char* pCur = y2 + 4 * j;
+				Type* pCur = y2 + 4 * j;
 				* pCur = *pSrc;
 				*(pCur+1) = *(pSrc+1);
 				*(pCur+2) = *(pSrc+2);
@@ -140,7 +134,7 @@ template <typename Type> char* GetDecodeString(const Type* pHead, const int nWid
 		}
 		break;
 	case 32:// RGBA
-		memcpy(pDst, pHead, nHeight * NewRowlen * sizeof(char));
+		memcpy(pDst, pHead, nHeight * NewRowlen * sizeof(Type));
 		break;
 	default:
 		SAFE_DELETE(pDst);
@@ -220,7 +214,7 @@ template <typename Type> void MemcpyByte2Float(float* pDst, const Type* pSrc, in
 template <typename Type> void MinMax(const Type* pSrc, int nWidth, int nHeight, Type &Min, Type &Max)
 {
 	// 寻找最大最小值
-	pair<Type*, Type*> minmax_pair = minmax_element(pSrc, pSrc + nWidth * nHeight);
+	pair<Type*, Type*> minmax_pair = minmax_element(pSrc, pSrc + nWidth * nHeight - 1);
 	Min = *minmax_pair.first;
 	Max = *minmax_pair.second;
 }

@@ -15,9 +15,9 @@ int FindMinValueIndex(COLORREF x, COLORREF y, COLORREF z, COLORREF w)
 
 
 /** - 转化图像 -
-* @param[in] * bDMatrix				01矩阵
+* @param[in] *bDMatrix				01矩阵
 * @param[in] nSymbleSize			二维码尺寸
-* @param[in] * pImage				二维码图像
+* @param[in] *pImage				二维码图像
 * @param[in] nPixelSize				像素大小
 * @param[in] ForegroundColor		前景色
 * @param[in] BackgroundColor		背景色
@@ -67,7 +67,7 @@ BOOL Matrix2Image(BYTE* bDMatrix, int nSymbleSize, CImage* pImage, int nPixelSiz
 /** 将二维码矩阵转换为彩色图像. 
 * @param[in] bMatrix 二维码数据
 * @param[in] nSymbleSize 二维码尺寸
-* @param[in] * pImage 目标图像
+* @param[in] *pImage 目标图像
 * @param[in] nPixelSize 像素大小
 * @param[in] ForegroundColor 前景色
 * @param[in] BackgroundColor 背景色

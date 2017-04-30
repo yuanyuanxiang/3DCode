@@ -171,7 +171,7 @@ void CPaneScrollView::Dump(CDumpContext& dc) const
 
 /**
 * @brief 为面板滚动视图添加一个子窗口
-* @param[in] * pChild 子窗口指针
+* @param[in] *pChild 子窗口指针
 * @param[in] nWidth 窗口宽度
 * @param[in] nHeight 窗口高度
 */

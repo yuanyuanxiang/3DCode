@@ -35,7 +35,7 @@ public:
 	* @param[in] nSymbolSize								¶þÎ¬Âë³ß´ç
 	* @param[in] LogoRect									¶þÎ¬ÂëLOGO
 	*/
-	ColorsEncode(BYTE bMatrix[MAX_MODULESIZE][MAX_MODULESIZE], int nSymbolSize, CLogoRect LogoRect = 0)
+	ColorsEncode(qrMat bMatrix[MAX_MODULESIZE], int nSymbolSize, CLogoRect LogoRect = 0)
 		: ColorsBase(bMatrix, nSymbolSize)
 	{
 		// ÉèÖÃLOGO

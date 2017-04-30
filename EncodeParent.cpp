@@ -133,6 +133,9 @@ BOOL CEncodeParent::Encode()
 	CString strPublicEncodeData;
 	m_editSourceDataPublic.GetWindowText(strPublicEncodeData);
 
+	if (strPublicEncodeData.IsEmpty())
+		return TRUE;
+
 	int nLevel = m_comboLevel.GetCurSel();
 	int nVersion = m_comboVersion.GetCurSel();
 	BOOL bAutoExtent = (m_checkAutoExtent.GetCheck() != 0);

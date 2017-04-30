@@ -25,6 +25,17 @@ enum EncodeModule
 	WhiteModule = 1,		/**< 在背景色编码（白色） */
 };
 
+/// 掩码操作
+const static int HEADER_MASK[90] = {
+	// 16 x 3 前48位为 Color Infomation
+	0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 
+	0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 
+	0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+	// 14 x 3 后42位为 Logo & Version
+	0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 
+	0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+	0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
+
 /** 
 * @class ColorsBase 
 * @brief 彩色二维码编码解码基类
@@ -46,10 +57,10 @@ public:
 	* @param[in] bMatrix 									二维码数据
 	* @param[in] nSymbolSize								二维码尺寸
 	*/
-	ColorsBase(BYTE bMatrix[MAX_MODULESIZE][MAX_MODULESIZE], int nSymbolSize)
+	ColorsBase(qrMat bMatrix[MAX_MODULESIZE], int nSymbolSize)
 	{
 		/// 采用for循环，将bMatrix的每行拷贝给m_pBitMatrix
-		/// @note 只能采用循环，不能使用memset
+		/// @note 只能采用循环，不能使用memcpy
 		for (int i = 0; i < nSymbolSize; ++i)
 		{
 			m_pBitMatrix[i] = bMatrix[i];
@@ -65,43 +76,43 @@ public:
 	~ColorsBase() { }
 
 	/// 设置编码模块
-	void SetEncodeModule(EncodeModule Module)
+	inline void SetEncodeModule(EncodeModule Module)
 	{
 		m_EncodeModule = Module;
 	}
 
 	/// 获取编码模块
-	EncodeModule GetEncodeModule() const 
+	inline EncodeModule GetEncodeModule() const 
 	{
 		return m_EncodeModule;
 	}
 
 	/// 设置二维码LOGO
-	void SetLogoRect(CMyRect logo)
+	inline void SetLogoRect(CMyRect logo)
 	{
 		m_LogoRect = logo;
 	}
 
 	/// 获取二维码LOGO
-	CMyRect GetLogoRect() const 
+	inline CMyRect GetLogoRect() const 
 	{
 		return m_LogoRect;
 	}
 
 	/// 获取模块总数
-	int GetModulesCount()
+	inline int GetModulesCount() const 
 	{
 		return m_nSymbolSize * m_nSymbolSize - m_LogoRect.Width() * m_LogoRect.Height();
 	}
 
 	// 获取编码模块总数
-	int GetColorsMoudlesCount(BOOL bFore = TRUE);
+	int GetColorsMoudlesCount(BOOL bFore = TRUE) const;
 
 	// 获取编码模块的索引
-	vector<CPixelPoint> GetColorsModuleIndex(BOOL bFore = TRUE);
+	vector<CPixelPoint> GetColorsModuleIndex(BOOL bFore = TRUE) const;
 
 	// (row, col)非数据头索引
-	BOOL NotHeaderIndex(int row, int col);
+	BOOL NotHeaderIndex(int row, int col) const;
 
 	// 获取彩色数据头的索引
 	virtual void GetDataHeaderIndex() = 0;

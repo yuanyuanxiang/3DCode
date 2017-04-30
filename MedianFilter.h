@@ -9,31 +9,24 @@
 * @see http://blog.csdn.net/mfcing/article/details/43817715
 */
 
-// 插入排序
-template <typename Type> void InsertionSort(Type *pArray, int Num);
-
 // 中值滤波
 template <typename Type> BOOL MedianFilter(Type* pData, int nWidth, int nHeight, int nRowlen, int nSize = 3);
 
 // 快速中值滤波
-template <typename Type> BOOL FastMedianFilter(Type* pData, int nWidth, int nHeight, int nRowlen);
+template <typename Type> BOOL FastMedianFilter(Type* pData, int nWidth, int nHeight, int nRowlen, int nSize = 3);
 
 // 自适应中值滤波
 template <typename Type> BOOL SapMedianFilter(Type* pData, int nWidth, int nHeight, int nRowlen, int nMaxSize = 7);
 
-template <typename Type> void SapGetMinMedMax(Type* pData, int nWidth, int nHeight, int nRowlen, int nChannel,
+template <typename Type> int SapGetMinMedMax(Type* pData, int nWidth, int nHeight, int nRowlen, int nChannel,
 	Type *pCopy, int r, int c, rgb<Type> *temp, int nSize, int nMaxSize);
 
 //////////////////////////////////////////////////////////////////////////
 
-
-/// 设置为1，来启用快速排序
-#define QUICK_SORT 1
-
 /** 
 * @brief 中值滤波.
 * @details 中值滤波比较耗时.
-* @param[in] * pData 图像数据
+* @param[in] *pData 图像数据
 * @param[in] nWidth 图像宽度
 * @param[in] nHeight 图像高度
 * @param[in] nRowlen 图像每行字节数
@@ -46,11 +39,13 @@ template <typename Type> BOOL MedianFilter(Type* pData, int nWidth, int nHeight,
 	ASSERT(nSize & 0x00000001);
 	Type *pCopy = new Type[nHeight * nRowlen];
 	memcpy(pCopy, pData, nHeight * nRowlen * sizeof(Type));
-	int nChannel = nRowlen / nWidth;
+	const int nChannel = nRowlen / nWidth;
 	ASSERT(nChannel >= 3);
-	int K = nSize >> 1;// 滤波核半径
+	const int K = nSize >> 1;// 滤波核半径
 	rgb<Type> *temp = new rgb<Type>[nSize * nSize];// 存放领域像素
-												   // 逐个像素进行滤波(边界不处理，这样便不需要作越界判断)
+	
+	// 逐个像素进行滤波(边界不处理，这样便不需要作越界判断)
+	// 对于滤波核为3的滤波器，循环体乘法个数不少于27
 	for (int r = K; r < nHeight - K; ++r)
 	{
 		for (int c = K; c < nWidth - K; ++c)
@@ -58,53 +53,27 @@ template <typename Type> BOOL MedianFilter(Type* pData, int nWidth, int nHeight,
 			int rgbCount = 0;// 当前像素(r, c)的领域像素个数
 			for (int r0 = r - K; r0 <= r + K; ++r0)
 			{
+				int y = r0 * nRowlen;
 				for (int c0 = c - K; c0 <= c + K; ++c0)
 				{
 					// (r0, c0)像素
-					Type* Pixel = pData + r0*nRowlen + c0*nChannel;
+					Type* Pixel = pData + y + c0 * nChannel;
 					temp[rgbCount].b = *Pixel++;
 					temp[rgbCount].g = *Pixel++;
 					temp[rgbCount].r = *Pixel++;
-#if QUICK_SORT
+					temp[rgbCount].Init();
 					if (rgbCount > 0)
 					{
 						// 从小到大插入排序
-						int Aj = RGB2INT(temp[rgbCount]);// A[j]
-						int Aj_1 = RGB2INT(temp[rgbCount - 1]);// A[j-1]
-						for (int j = rgbCount; j > 0 && Aj < Aj_1; )
+						for (int j = rgbCount; j > 0 && temp[j] < temp[j-1]; --j)
 						{
-							Type t;
-							t = temp[j].r; temp[j].r = temp[j - 1].r; temp[j - 1].r = t;
-							t = temp[j].g; temp[j].g = temp[j - 1].g; temp[j - 1].g = t;
-							t = temp[j].b; temp[j].b = temp[j - 1].b; temp[j - 1].b = t;
-							--j;
-							Aj = Aj_1;
-							Aj_1 = RGB2INT(temp[j - 1]);
+							temp[j].Swap(temp[j-1]);
 						}
 					}
-#endif
 					++rgbCount;
 				}
 			}
 			ASSERT(rgbCount == nSize * nSize);
-#if !(QUICK_SORT)
-			for (int i = 0; i < (rgbCount >> 1); ++i)
-			{
-				int Ai = RGB2INT(temp[i]);
-				for (int j = i + 1; j < rgbCount; ++j)
-				{
-					int Aj = RGB2INT(temp[j]);
-					if (Aj < Ai)
-					{
-						Type t;
-						t = temp[j].r; temp[j].r = temp[i].r; temp[i].r = t;
-						t = temp[j].g; temp[j].g = temp[i].g; temp[i].g = t;
-						t = temp[j].b; temp[j].b = temp[i].b; temp[i].b = t;
-						Ai = Aj;
-					}
-				}
-			}
-#endif
 			rgbCount >>= 1;// 除2,取中值
 			Type* Pixel = pCopy + r*nRowlen + c*nChannel;
 			*Pixel++ = temp[rgbCount].b;
@@ -118,72 +87,68 @@ template <typename Type> BOOL MedianFilter(Type* pData, int nWidth, int nHeight,
 	return TRUE;
 }
 
-/// 像素指针(3bytes)的度量值
-#define PIXEL2INT(p) ( 299 * p[0] + 587 * p[1] + 114 * p[2] )
-
-/// 将像素指针a,b排序为 a < b (ia, ib为像素度量值)
-#define Minmax(ia, ib, a, b) if( ia > ib ) { BYTE *t = a; a = b; b = t; int it = ia; ia = ib; ib = it; }
-
-/// 将像素指针a,b排序为 a > b (ia, ib为像素度量值)
-#define Maxmin(ia, ib, a, b) if( ia < ib ) { BYTE *t = a; a = b; b = t; int it = ia; ia = ib; ib = it; }
 
 /** 
 * @brief 快速中值滤波.
 * @details 中值滤波比较耗时.
-* @param[in] * pData 图像数据
+* @param[in] *pData 图像数据
 * @param[in] nWidth 图像宽度
 * @param[in] nHeight 图像高度
 * @param[in] nRowlen 图像每行字节数
-* @warning 仅限彩色图像
+* @param[in] nSize 滤波核尺寸
+* @warning 仅限彩色图像. 当图像通道不等于4或滤波核尺寸大于3时调用MedianFilter.
 * @see http://wenda.chinabaike.com/z/shenghuo/20131226/725816.html
 */
-template <typename Type> BOOL FastMedianFilter(Type* pData, int nWidth, int nHeight, int nRowlen)
+template <typename Type> BOOL FastMedianFilter(Type* pData, int nWidth, int nHeight, int nRowlen, int nSize)
 {
+	const int nChannel = nRowlen / nWidth;
+	ASSERT(nChannel >= 3);
+	if (nChannel == 3 || nSize > 3)
+		return MedianFilter(pData, nWidth, nHeight, nRowlen, nSize);
+	// 针对4通道图像进行快速滤波
+	const int C = 4; // 通道数
 	Type *pCopy = new Type[nHeight * nRowlen];
 	memcpy(pCopy, pData, nHeight * nRowlen * sizeof(Type));
-	int nChannel = nRowlen / nWidth;
-	ASSERT(nChannel >= 3);
-	int K = 1;// 滤波核半径
-	BYTE // 滤波核
-		*p0 = new BYTE[3], *p1 = new BYTE[3], *p2 = new BYTE[3],
-		*p3 = new BYTE[3], *p4 = new BYTE[3], *p5 = new BYTE[3],
-		*p6 = new BYTE[3], *p7 = new BYTE[3], *p8 = new BYTE[3];
+	const int K = 1; // 滤波核半径
+
+	// 指向整型数据的指针
+	typedef unsigned* pINT;
+
+	// 将ia,ib排序为 ia < ib
+#define Minmax(ia, ib) if( ia > ib ) SWAP(ia, ib)
+
+	// 将ia,ib排序为 ia > ib
+#define Maxmin(ia, ib) if( ia < ib ) SWAP(ia, ib)
+
 	// 逐个像素进行滤波(边界不处理，这样便不需要作越界判断)
-	for (int r = K; r < nHeight - K; ++r)
+	for (int row = K; row < nHeight - K; ++row)
 	{
-		for (int c = K; c < nWidth - K; ++c)
+		// 循环内只用到了2个整数乘法
+		int y = row * nRowlen;
+		for (int col = K; col < nWidth - K; ++col)
 		{
-			int r0 = r - K;
-			int c0 = c - K;
+			int offset = y + col * C;
+			Type *pCenter = pData + offset;
+			unsigned int p0, p1, p2, p3, p4, p5, p6, p7, p8;
 
-			memcpy(p0, pData + r0*nRowlen + c0*nChannel, 3);
-			memcpy(p1, pData + r0*nRowlen + (c0 + 1)*nChannel, 3);
-			memcpy(p2, pData + r0*nRowlen + (c0 + 2)*nChannel, 3);
-			memcpy(p3, pData + (r0 + 1)*nRowlen + c0*nChannel, 3);
-			memcpy(p4, pData + (r0 + 1)*nRowlen + (c0 + 1)*nChannel, 3);
-			memcpy(p5, pData + (r0 + 1)*nRowlen + (c0 + 2)*nChannel, 3);
-			memcpy(p6, pData + (r0 + 2)*nRowlen + c0*nChannel, 3);
-			memcpy(p7, pData + (r0 + 2)*nRowlen + (c0 + 1)*nChannel, 3);
-			memcpy(p8, pData + (r0 + 2)*nRowlen + (c0 + 2)*nChannel, 3);
+			pCenter -= nRowlen; // 移动指针
+			p0 = *(pINT(pCenter-C)); p1 = *(pINT(pCenter)); p2 = *(pINT(pCenter+C));
+			pCenter += nRowlen;
+			p3 = *(pINT(pCenter-C)); p4 = *(pINT(pCenter)); p5 = *(pINT(pCenter+C));
+			pCenter += nRowlen;
+			p6 = *(pINT(pCenter-C)); p7 = *(pINT(pCenter)); p8 = *(pINT(pCenter+C));
 
-			int ip0 = PIXEL2INT(p0), ip1 = PIXEL2INT(p1), ip2 = PIXEL2INT(p2);
-			int ip3 = PIXEL2INT(p3), ip4 = PIXEL2INT(p4), ip5 = PIXEL2INT(p5);
-			int ip6 = PIXEL2INT(p6), ip7 = PIXEL2INT(p7), ip8 = PIXEL2INT(p8);
+			Minmax(p0, p1); Minmax(p1, p2); // p0<p1 p0<p2 p1<p2：p0<p1<p2
+			Minmax(p3, p4); Minmax(p4, p5); // p3<p4 p3<p5 p4<p5：p3<p4<p5
+			Minmax(p6, p7); Minmax(p7, p8); // p6<p7 p6<p8 p7<p8：p6<p7<p8
+			Maxmin(p6, p0); Maxmin(p6, p3); // p6>p0 p6>p3, 排除p0,p3
+			Minmax(p2, p5); Minmax(p2, p8); // p2<p5 p2<p8, 排除p5,p8
+			Minmax(p1, p4); Minmax(p4, p7); // p1<p4 p1<p7 p4<p7：p1<p4<p7, 排除p1,p7
+			Minmax(p2, p4); Minmax(p4, p6); // p2<p4 p2<p6 p4<p6：p2<p4<p6, 排除p2,p6
 
-			Minmax(ip0, ip1, p0, p1); Minmax(ip0, ip2, p0, p2); Minmax(ip1, ip2, p1, p2);
-			Minmax(ip3, ip4, p3, p4); Minmax(ip3, ip5, p3, p5); Minmax(ip4, ip5, p4, p5);
-			Minmax(ip6, ip7, p6, p7); Minmax(ip6, ip8, p6, p8); Minmax(ip7, ip8, p7, p8);
-			Maxmin(ip6, ip0, p6, p0); Maxmin(ip6, ip3, p6, p3);
-			Minmax(ip2, ip5, p2, p5); Minmax(ip2, ip8, p2, p8);
-			Minmax(ip1, ip4, p1, p4); Minmax(ip1, ip7, p1, p7); Minmax(ip4, ip7, p4, p7);
-			Minmax(ip2, ip4, p2, p4); Minmax(ip2, ip6, p2, p6); Minmax(ip4, ip6, p4, p6);
-
-			memcpy(pCopy + r*nRowlen + c*nChannel, p4, 3);
+			memcpy(pCopy + offset, &p4, C);
 		}
 	}
-	delete[] p0; delete[] p1; delete[] p2;
-	delete[] p3; delete[] p4; delete[] p5;
-	delete[] p6; delete[] p7; delete[] p8;
 	memcpy(pData, pCopy, nHeight * nRowlen * sizeof(Type));
 	SAFE_DELETE(pCopy);
 	return TRUE;
@@ -193,7 +158,7 @@ template <typename Type> BOOL FastMedianFilter(Type* pData, int nWidth, int nHei
 /** 
 * @brief 自适应中值滤波.
 * @details 中值滤波比较耗时.
-* @param[in] * pData 图像数据
+* @param[in] *pData 图像数据
 * @param[in] nWidth 图像宽度
 * @param[in] nHeight 图像高度
 * @param[in] nRowlen 图像每行字节数
@@ -205,10 +170,10 @@ template <typename Type> BOOL SapMedianFilter(Type* pData, int nWidth, int nHeig
 {
 	Type *pCopy = new Type[nHeight * nRowlen];
 	memcpy(pCopy, pData, nHeight * nRowlen * sizeof(Type));
-	int nChannel = nRowlen / nWidth;
+	const int nChannel = nRowlen / nWidth;
 	ASSERT(nChannel >= 3);
 	// 逐个像素进行滤波
-	int nSize = 3;// 起始滤波核尺寸
+	const int nSize = 3;// 起始滤波核尺寸
 	rgb<Type> *temp = new rgb<Type>[nMaxSize * nMaxSize];// 存放领域像素
 														 // 逐个像素进行滤波处理
 	for (int r = 0; r < nHeight; ++r)
@@ -242,10 +207,10 @@ template <typename Type> BOOL SapMedianFilter(Type* pData, int nWidth, int nHeig
 * @param[in] nSize 当前滤波核尺寸
 * @param[in] nMaxSize 滤波核最大尺寸
 */
-template <typename Type> void SapGetMinMedMax(Type* pData, int nWidth, int nHeight, int nRowlen, int nChannel,
+template <typename Type> int SapGetMinMedMax(Type* pData, int nWidth, int nHeight, int nRowlen, int nChannel,
 	Type *pCopy, int r, int c, rgb<Type> *temp, int nSize, int nMaxSize)
 {
-	int K = nSize >> 1;// 滤波核半径
+	const int K = nSize >> 1;// 滤波核半径
 	int rgbCount = 0;  // 当前像素(r, c)的领域像素个数
 	for (int r0 = r - K; r0 <= r + K; ++r0)
 	{
@@ -261,6 +226,7 @@ template <typename Type> void SapGetMinMedMax(Type* pData, int nWidth, int nHeig
 					temp[rgbCount].b = *Pixel++;
 					temp[rgbCount].g = *Pixel++;
 					temp[rgbCount].r = *Pixel++;
+					temp[rgbCount].Init();
 					++rgbCount;
 				}
 			}
@@ -277,16 +243,16 @@ template <typename Type> void SapGetMinMedMax(Type* pData, int nWidth, int nHeig
 	}
 	Type* Pixel = pCopy + r*nRowlen + c*nChannel;
 	rgb<Type> cur(*Pixel, *(Pixel + 1), *(Pixel + 2));// 当前像素
-	int nMin = RGB2INT(*Min);
-	int nMed = RGB2INT(*Med);
-	int nMax = RGB2INT(*Max);
-	int nCur = RGB2INT(cur);
+	int nMin = Min->Init();
+	int nMed = Med->Init();
+	int nMax = Max->Init();
+	int nCur = cur.Init();
 	if (nMin < nMed && nMed < nMax)
 	{
 		if (nMin < nCur && nCur < nMax)
 		{
 			// 不修改pCopy
-			return;
+			return 1;
 		}
 		else
 		{
@@ -294,39 +260,13 @@ template <typename Type> void SapGetMinMedMax(Type* pData, int nWidth, int nHeig
 			*Pixel++ = Med->b;
 			*Pixel++ = Med->g;
 			*Pixel++ = Med->r;
-			return;
+			return 2;
 		}
 	}
 	else
 	{
-		if (nSize >= nMaxSize)
-		{
-			// 滤波核大小超界，退出
-			return;
-		}
-		else
-		{
-			// 增大滤波核进行处理
-			return SapGetMinMedMax(pData, nWidth, nHeight, nRowlen, nChannel, pCopy, r, c, temp, nSize + 2, nMaxSize);
-		}
-	}
-}
-
-
-/** 
-* @brief 插入排序.
-* @param[in] pArray 待排序数组
-* @param[in] Num 数据元素个数
-*/
-template <typename Type> void InsertionSort(Type *pArray, int Num)
-{
-	for (int i = 0; i < Num; ++i)
-	{
-		for (int j = i; (j > 0) && pArray[j] < pArray[j - 1]; --j)
-		{
-			Type temp = pArray[j];
-			pArray[j] = pArray[j - 1];
-			pArray[j - 1] = temp;
-		}
+		// 滤波核大小超界，退出; 或者增大滤波核进行处理
+		return nSize >= nMaxSize ? 0 : 
+			SapGetMinMedMax(pData, nWidth, nHeight, nRowlen, nChannel, pCopy, r, c, temp, nSize + 2, nMaxSize);
 	}
 }

@@ -550,15 +550,24 @@ void C3DCodeView::OnLButtonUp(UINT nFlags, CPoint point)
 
 void C3DCodeView::OnMouseMove(UINT nFlags, CPoint point)
 {
+	CClientDC dc(this);
+	OnPrepareDC(&dc);
+	dc.DPtoLP(&point);
 	if (m_bLeftButtonDown)
 	{
-		CClientDC dc(this);
-		OnPrepareDC(&dc);
-		dc.DPtoLP(&point);
 		m_RoiRect.right = point.x;
 		m_RoiRect.bottom = point.y;
 		CScrollView::Invalidate(TRUE);
 	}
+	CString str;
+	CDC* pDC = GetDC();
+	COLORREF ref = GetPixel(pDC->GetSafeHdc(), point.x, point.y);
+	int R = GetRValue(ref), G = GetGValue(ref), B = GetBValue(ref);
+	int Gray = RgbColorRef2Gray(ref);
+	str.Format(_T("x = %4d, y = %4d, g = %d, RGB(%3d, %3d, %3d)"), 
+		point.x, point.y, Gray, R, G, B);
+	CMainFrame* pMainFrm = (CMainFrame*) AfxGetApp()->GetMainWnd();
+	pMainFrm->GetStatusBar().SetWindowText(str);
 
 	CScrollView::OnMouseMove(nFlags, point);
 }

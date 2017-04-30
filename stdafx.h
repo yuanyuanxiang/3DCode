@@ -42,12 +42,6 @@
 
 #define WIDTHBYTES(bits)    (((bits) + 31) / 32 * 4)				/**< 计算每行字节数 */
 
-#define PI 3.141592653f				/**< PI */
-
-#define RAD(i) (PI * (i) / 180.0f)	/**< 角度转弧度 */
-
-#define MAX_CODEUTF8NUM		1000	/**< 最多编码utf8文字字数 */
-
 #undef ANDROID_CPP
 
 #ifdef _UNICODE
