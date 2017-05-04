@@ -12,6 +12,9 @@
 #include "CodeTransform.h"
 
 #include "DecodeFuncs.h"
+#include "DMDecoder.h"
+#include "PDF417Decoder.h"
+#include "AztecDecoder.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -96,6 +99,34 @@ BOOL CDlgQRDecode::Decode()
 		m_bUseHybrid, m_bTryHarder, m_BackgroundColor, 
 		strLen, nInnerecLevel, nInnerMask, 
 		m_roi);
+	if (pDst[0] == NULL)
+	{
+		// 尝试进行DM、PDF417、Aztec二维码解码
+		DMDecoder dm;
+		dm.Init(pHead, nWidth, nHeight, nChannel, m_roi);
+		if (dm.Decode(m_BackgroundColor))
+		{
+			pDst[0] = dm.GetData();
+		}
+		else
+		{
+			PDF417Decoder pdf417;
+			pdf417.CopyOf(dm);
+			if (pdf417.Decode(m_BackgroundColor))
+			{
+				pDst[0] = pdf417.GetData();
+			}
+			else
+			{
+				AztecDecoder az;
+				az.CopyOf(dm);
+				if (az.Decode(m_BackgroundColor))
+				{
+					pDst[0] = az.GetData();
+				}
+			}
+		}
+	}
 	if (pDst[0] == NULL)
 	{
 		GetDlgItem(IDC_EDITSOURCEDATA_PUBLIC)->SetWindowText(_T("*** Decode failed ***"));

@@ -446,19 +446,9 @@ public:
 * @note 采用异或速度慢
 * @see http://blog.csdn.net/anchor89/article/details/5979290
 */
-inline void SWAP(int a, int b)
+template <class T> inline void SWAP(T & a, T & b)
 {
-	int c = a; a = b; b = c;
-}
-
-/**
-* @brief 交换两个4字节数
-* @note 支持单精度浮点
-*/
-inline void SWAP(void *a, void *b)
-{
-	int *ia = (int*)a, *ib = (int*)b;
-	int c = *ia; *ia = *ib; *ib = c;
+	T c(a); a = b; b = c;
 }
 
 /// 如果a的i位为1，则设置b的j位为1

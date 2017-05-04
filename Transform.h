@@ -46,7 +46,10 @@ template <typename Type> BOOL ImageWrite(const char* fileName, const Type* pSrc,
 template <typename Type> Type* Rgb2Gray(const Type* pHead, int nWidth, int nHeight, int nRowBytes);
 
 // 统计灰度图像的直方图
-template <typename Type> void ImageHistogram(const Type* pHead, int nRowlen, int nHist[256], RoiRect roi);
+template <typename Type> void GrayHistogram(const Type* pHead, int nRowlen, int nHist[256], RoiRect roi);
+
+// 统计图像的直方图
+template <typename Type> void ImageHistogram(const Type* pHead, int nWidth, int nHeight, int nRowlen, int nHist[256]);
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -174,7 +177,6 @@ template <typename Type> Type* ImageROI(const Type* pHead, int &nWidth, int &nHe
 
 	Type* pDst = new Type[nNewHeight * nNewRowlen];
 
-#pragma omp parallel for
 	int x0 = roi.left * nChannel;
 	for (int i = 0; i < nNewHeight; ++i)
 	{
@@ -371,16 +373,44 @@ template <typename Type> Type* Rgb2Gray(const Type* pHead, int nWidth, int nHeig
 * @param[in] nHist 图像直方图
 * @param[in] roi 图像感兴趣区域
 */
-template <typename Type> void ImageHistogram(const Type* pHead, int nRowlen, int nHist[256], RoiRect roi)
+template <typename Type> void GrayHistogram(const Type* pHead, int nRowlen, int nHist[256], RoiRect roi)
 {
 	ASSERT(sizeof(Type) == 1);
 	memset(nHist, 0, 256 * sizeof(int));
 	for (int i = roi.top; i < roi.bottom; ++i)
 	{
-		int y = i * nRowlen;
+		const BYTE *pRow = (BYTE*)pHead + i * nRowlen;
 		for (int j = roi.left; j < roi.right; ++j)
 		{
-			int index = (BYTE)pHead[j + y];
+			int index = *(pRow + j);
+			++ nHist[index];
+		}
+	}
+}
+
+/** 
+* @brief 统计图像的直方图.
+* @param[in] *pHead 图像指针
+* @param[in] nWidth 图像宽度
+* @param[in] nHeight 图像高度
+* @param[in] nRowlen 图像每行字节数
+* @param[in] nHist 图像直方图
+*/
+template <typename Type> 
+void ImageHistogram(const Type* pHead, int nWidth, int nHeight, int nRowlen, int nHist[256])
+{
+	const int nChannel = nRowlen / nWidth;
+	if (1 == nChannel)
+		return GrayHistogram(pHead, nRowlen, nHist, RoiRect(0, 0, nWidth, nHeight));
+	ASSERT(sizeof(Type) == 1);
+	memset(nHist, 0, 256 * sizeof(int));
+	for (int i = 0; i < nHeight; ++i)
+	{
+		const BYTE *pRow = (BYTE*)pHead + i * nRowlen;
+		for (int j = 0; j < nWidth; ++j)
+		{
+			const BYTE *pCur = pRow + j * nChannel;
+			int index = RGB2GRAY(*(pCur+2), *(pCur+1), *pCur);
 			++ nHist[index];
 		}
 	}

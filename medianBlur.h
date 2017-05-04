@@ -196,7 +196,7 @@ struct HWFeatures
 static HWFeatures  featuresEnabled = HWFeatures::initialize(), featuresDisabled = HWFeatures();
 static HWFeatures* currentFeatures = &featuresEnabled;
 
-bool CheckHardwareSupport(int feature)
+inline bool CheckHardwareSupport(int feature)
 {
 	assert( 0 <= feature && feature <= CV_HARDWARE_MAX_FEATURE );
 	return currentFeatures->have[feature];

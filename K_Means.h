@@ -67,7 +67,7 @@ template <typename T1, typename T2> void InitializeClusterCenters(T1 *Center, in
 #endif // _DEBUG
 	// 获取直方图
 	int nHist[256];
-	ImageHistogram(pHead, nRowBytes, nHist, roi);
+	GrayHistogram(pHead, nRowBytes, nHist, roi);
 	int index[256];// 直方图的下标
 	for (int i = 0; i < 256; )
 	{

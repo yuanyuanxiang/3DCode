@@ -33,7 +33,7 @@
     <UseOfAtl>false</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -149,6 +149,7 @@
     <ClCompile Include="reedSolomon.cpp" />
     <ClCompile Include="RS_ecc.cpp" />
     <ClCompile Include="zlibmgr.cpp" />
+    <ClCompile Include="ZXingDecoder.cpp" />
     <ClCompile Include="ZXingTest.cpp" />
     <ClCompile Include="zxing\BarcodeFormat.cpp" />
     <ClCompile Include="zxing\Binarizer.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="RS_ecc.h" />
     <ClInclude Include="templateFuncs.h" />
     <ClInclude Include="zlibmgr.h" />
+    <ClInclude Include="ZXingDecoder.h" />
     <ClInclude Include="zxing\BarcodeFormat.h" />
     <ClInclude Include="zxing\Binarizer.h" />
     <ClInclude Include="zxing\BinaryBitmap.h" />
