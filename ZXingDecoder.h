@@ -145,7 +145,7 @@ private:
 	/// x到哪个中心更近，返回最近点的标号
 	inline int CLUSTER(int x, int c1, int c2, int c3) const
 	{
-		int d1 = FastAbs(x - c1), d2 = FastAbs(x - c2), d3 = FastAbs(x - c3);
+		int d1 = abs(x - c1), d2 = abs(x - c2), d3 = abs(x - c3);
 		return d1 < d2 ? (d1 < d3 ? 0 : 2) : (d2 < d3 ? 1 : 2);
 	}
 };
@@ -224,20 +224,23 @@ void ZXingDecoder<Type>::K_means(BYTE* pHead, int nRowBytes, RoiRect roi, int nM
 		sumCenter[0] = sumCenter[1] = sumCenter[2] = 0;
 		sum[0] = sum[1] = sum[2] = 0;
 		/* 求出每个样本点距应该属于哪一个聚类 */
+		BYTE *pLeftTop = pHead + roi.top * nRowBytes + roi.left;
+		int y = - roi.left;
 		for (int j = roi.top; j < roi.bottom; ++j)
 		{
-			BYTE *pRowj = pHead + j * nRowBytes;
-			int y = (j - roi.top) * nRowlen;
+			BYTE *pCur = pLeftTop;
 			for (int i = roi.left; i < roi.right; ++i)
 			{
 				/* 当前像素的浮点值 */
-				int curPixel = pRowj[i];
+				int curPixel = *pCur++;
 				int tag = CLUSTER(curPixel, Center[0], Center[1], Center[2]);
 				// 将(i, j)标记为tag
-				Cluster[(i - roi.left) + y] = tag;
+				Cluster[i + y] = tag;
 				sumCenter[tag] += curPixel;
 				++sum[tag];
 			}
+			pLeftTop += nRowBytes;
+			y += nRowlen;
 		}
 		/* 保存上一个结果，并更新聚类中心 */
 		oldCenter[0] = Center[0];
@@ -246,8 +249,8 @@ void ZXingDecoder<Type>::K_means(BYTE* pHead, int nRowBytes, RoiRect roi, int nM
 		if (sum[0]) Center[0] = sumCenter[0] / sum[0];
 		if (sum[1]) Center[1] = sumCenter[1] / sum[1];
 		if (sum[2]) Center[2] = sumCenter[2] / sum[2];
-		int diff = FastAbs(oldCenter[0] - Center[0]) + FastAbs(oldCenter[1] - Center[1])
-			+ FastAbs(oldCenter[2] - Center[2]);
+		int diff = abs(oldCenter[0] - Center[0]) + abs(oldCenter[1] - Center[1])
+			+ abs(oldCenter[2] - Center[2]);
 #ifdef _DEBUG
 		TRACE(" * 迭代次数 = %d：\n", it + 1);
 		for (int i = 0; i < 3; ++i)

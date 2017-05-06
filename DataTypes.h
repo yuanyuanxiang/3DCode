@@ -725,9 +725,9 @@ inline int FastAbs(int iNum)
 #else
 	int iOut = iNum;
 	int temp = iNum;
-	temp = temp >> 31;
-	iOut = iOut ^ temp;
-	iOut = iOut - temp;
+	temp >>= 31;
+	iOut ^= temp;
+	iOut -= temp;
 #endif
 	return iOut;
 }

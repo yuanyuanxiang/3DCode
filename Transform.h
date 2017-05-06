@@ -382,8 +382,8 @@ template <typename Type> void GrayHistogram(const Type* pHead, int nRowlen, int 
 		const BYTE *pRow = (BYTE*)pHead + i * nRowlen;
 		for (int j = roi.left; j < roi.right; ++j)
 		{
-			int index = *(pRow + j);
-			++ nHist[index];
+			BYTE cur = *(pRow + j);
+			++ nHist[cur];
 		}
 	}
 }

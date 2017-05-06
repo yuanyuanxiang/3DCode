@@ -79,7 +79,7 @@ template <typename T1, typename T2> void InitializeClusterCenters(T1 *Center, in
 	// 插入排序,使灰度值峰值排在前头
 	for (int i = 1; i < 256; ++i)
 	{
-		for (int j = i; j > 0 && nHist[j] > nHist[j - 1]; --j)
+		for (int j = i; nHist[j] > nHist[j - 1] && j > 0; --j)
 		{
 			SWAP(nHist[j], nHist[j-1]);
 			SWAP(index[j], index[j-1]);

@@ -115,28 +115,29 @@ template <typename Type> BOOL FastMedianFilter(Type* pData, int nWidth, int nHei
 	typedef unsigned* pINT;
 
 	// 将ia,ib排序为 ia < ib
-#define Minmax(ia, ib) if( ia > ib ) SWAP(ia, ib)
+#define Minmax(ia, ib) if( ia > ib ) {int ic(ia); ia = ib; ib = ic;}
 
 	// 将ia,ib排序为 ia > ib
-#define Maxmin(ia, ib) if( ia < ib ) SWAP(ia, ib)
+#define Maxmin(ia, ib) if( ia < ib ) {int ic(ia); ia = ib; ib = ic;}
 
 	// 逐个像素进行滤波(边界不处理，这样便不需要作越界判断)
+	int offsety = K * nRowlen + K * C;
+	Type *pLine = pData + offsety;
 	for (int row = K; row < nHeight - K; ++row)
 	{
-		// 循环内只用到了2个整数乘法
-		int y = row * nRowlen;
+		int offsetx = offsety; // 偏移量
+		Type *pCenter = pLine; // 中心像素
 		for (int col = K; col < nWidth - K; ++col)
 		{
-			int offset = y + col * C;
-			Type *pCenter = pData + offset;
+			Type *pCur = pCenter;
 			unsigned int p0, p1, p2, p3, p4, p5, p6, p7, p8;
 
-			pCenter -= nRowlen; // 移动指针
-			p0 = *(pINT(pCenter-C)); p1 = *(pINT(pCenter)); p2 = *(pINT(pCenter+C));
-			pCenter += nRowlen;
-			p3 = *(pINT(pCenter-C)); p4 = *(pINT(pCenter)); p5 = *(pINT(pCenter+C));
-			pCenter += nRowlen;
-			p6 = *(pINT(pCenter-C)); p7 = *(pINT(pCenter)); p8 = *(pINT(pCenter+C));
+			pCur -= nRowlen; // 移动指针
+			p0 = *(pINT(pCur - C)); p1 = *(pINT(pCur)); p2 = *(pINT(pCur + C));
+			pCur += nRowlen;
+			p3 = *(pINT(pCur - C)); p4 = *(pINT(pCur)); p5 = *(pINT(pCur + C));
+			pCur += nRowlen;
+			p6 = *(pINT(pCur - C)); p7 = *(pINT(pCur)); p8 = *(pINT(pCur + C));
 
 			Minmax(p0, p1); Minmax(p1, p2); // p0<p1 p0<p2 p1<p2：p0<p1<p2
 			Minmax(p3, p4); Minmax(p4, p5); // p3<p4 p3<p5 p4<p5：p3<p4<p5
@@ -146,8 +147,12 @@ template <typename Type> BOOL FastMedianFilter(Type* pData, int nWidth, int nHei
 			Minmax(p1, p4); Minmax(p4, p7); // p1<p4 p1<p7 p4<p7：p1<p4<p7, 排除p1,p7
 			Minmax(p2, p4); Minmax(p4, p6); // p2<p4 p2<p6 p4<p6：p2<p4<p6, 排除p2,p6
 
-			memcpy(pCopy + offset, &p4, C);
+			memcpy(pCopy + offsetx, &p4, C);
+			offsetx += C;
+			pCenter += C;
 		}
+		offsety += nRowlen;
+		pLine += nRowlen;
 	}
 	memcpy(pData, pCopy, nHeight * nRowlen * sizeof(Type));
 	SAFE_DELETE(pCopy);
