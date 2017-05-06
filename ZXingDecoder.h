@@ -286,47 +286,40 @@ template <class Type>
 bool ZXingDecoder<Type>::Decode(COLORREF Background)
 {
 	int W = m_nWidth, H = m_nHeight;
-	SetImage(m_pImage);
+	char* gray = Rgb2Gray(m_pImage, W, H, 4 * W);// 灰度图像
+	m_nBackground = RgbColorRef2Gray(Background);// 背景颜色
+	int nRowlenNew = WIDTHBYTES(W * 8);// 灰度图像每行字节数
+	BYTE *p = (BYTE*)gray;
+#ifdef _DEBUG
+	ImageWrite(".\\Rgb2Gray.txt", gray, W, H, nRowlenNew);
+#endif
+	// -------------------
+	// | a11 | a12 | a13 |
+	// | a21 | a22 | a23 |
+	// | a31 | a32 | a33 |
+	// -------------------
+	// 对角线
+	K_means(p, nRowlenNew, RoiRect(0, 0, W/3, H/3), 10);// a11
+	K_means(p, nRowlenNew, RoiRect(W / 3, H / 3, W * 2 / 3, H * 2 / 3), 10);// a22
+	K_means(p, nRowlenNew, RoiRect(W * 2 / 3, H * 2 / 3, W, H), 10);// a33
+	// 左下角
+	K_means(p, nRowlenNew, RoiRect(0, H / 3, W / 3, H * 2 / 3), 10);// a21
+	K_means(p, nRowlenNew, RoiRect(0, H * 2 / 3, W / 3, H), 10);// a31
+	K_means(p, nRowlenNew, RoiRect(W / 3, H * 2 / 3, W * 2 / 3, H), 10);// a32
+	// 右上角
+	K_means(p, nRowlenNew, RoiRect(W / 3, 0, W * 2 / 3, H / 3), 10);// a12
+	K_means(p, nRowlenNew, RoiRect(W * 2 / 3, 0, W, H / 3), 10);// a13
+	K_means(p, nRowlenNew, RoiRect(W * 2 / 3, H / 3, W, H * 2 / 3), 10);// a23
+#ifdef _DEBUG
+	ImageWrite(".\\K_means.txt", gray, W, H, nRowlenNew);
+#endif
+	char* gray_decstring = GetDecodeString(gray, W, H, nRowlenNew);
+	SetImage(gray_decstring);
 	if (!CallZXingDecode(false))
-	{
-		if (!CallZXingDecode(true))// 尝试提取背景进行解码
-		{
-			char* gray = Rgb2Gray(m_pImage, W, H, 4 * W);// 灰度图像
-			m_nBackground = RgbColorRef2Gray(Background);// 背景颜色
-			int nRowlenNew = WIDTHBYTES(W * 8);// 灰度图像每行字节数
-			BYTE *p = (BYTE*)gray;
-#ifdef _DEBUG
-			ImageWrite(".\\Rgb2Gray.txt", gray, W, H, nRowlenNew);
-#endif
-			// -------------------
-			// | a11 | a12 | a13 |
-			// | a21 | a22 | a23 |
-			// | a31 | a32 | a33 |
-			// -------------------
-			// 对角线
-			K_means(p, nRowlenNew, RoiRect(0, 0, W/3, H/3), 10);// a11
-			K_means(p, nRowlenNew, RoiRect(W / 3, H / 3, W * 2 / 3, H * 2 / 3), 10);// a22
-			K_means(p, nRowlenNew, RoiRect(W * 2 / 3, H * 2 / 3, W, H), 10);// a33
-			// 左下角
-			K_means(p, nRowlenNew, RoiRect(0, H / 3, W / 3, H * 2 / 3), 10);// a21
-			K_means(p, nRowlenNew, RoiRect(0, H * 2 / 3, W / 3, H), 10);// a31
-			K_means(p, nRowlenNew, RoiRect(W / 3, H * 2 / 3, W * 2 / 3, H), 10);// a32
-			// 右上角
-			K_means(p, nRowlenNew, RoiRect(W / 3, 0, W * 2 / 3, H / 3), 10);// a12
-			K_means(p, nRowlenNew, RoiRect(W * 2 / 3, 0, W, H / 3), 10);// a13
-			K_means(p, nRowlenNew, RoiRect(W * 2 / 3, H / 3, W, H * 2 / 3), 10);// a23
-#ifdef _DEBUG
-			ImageWrite(".\\K_means.txt", gray, W, H, nRowlenNew);
-#endif
-			char* gray_decstring = GetDecodeString(gray, W, H, nRowlenNew);
-			SetImage(gray_decstring);
-			if (!CallZXingDecode(false))
-				if (CallZXingDecode(true))
-					ImageFlipV(m_pImage, W, H, 4 * W);
-			SAFE_DELETE(gray_decstring);
-			SAFE_DELETE(gray);
-		}
-	}
+		if (CallZXingDecode(true))
+			ImageFlipV(m_pImage, W, H, 4 * W);
+	SAFE_DELETE(gray_decstring);
+	SAFE_DELETE(gray);
 	return m_nStrlen ? true : false;
 }
 
