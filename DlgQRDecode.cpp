@@ -11,7 +11,6 @@
 #include "FunctionsUsingMFC.h"
 #include "CodeTransform.h"
 
-#include "DecodeFuncs.h"
 #include "DMDecoder.h"
 #include "PDF417Decoder.h"
 #include "AztecDecoder.h"
@@ -30,15 +29,12 @@ CDlgQRDecode::CDlgQRDecode(CWnd* pParent) : CDialogEx(CDlgQRDecode::IDD, pParent
 	, m_bUseHybrid(TRUE)
 	, m_bTryHarder(TRUE)
 {
-	m_fModuleSize = 4.f;
-	m_nLevel = 0;
-	m_nVersion = 1;
-	m_nMaskingNo = 0;
 	m_pImage = NULL;
 
 	// 编码颜色
 	m_BackgroundColor = RGB(0, 0, 0);
-	m_ncLength = 0;
+
+	ImageSrc::Init("yuanyuanxiang");
 }
 
 CDlgQRDecode::~CDlgQRDecode()
@@ -91,22 +87,17 @@ BOOL CDlgQRDecode::Decode()
 	int nFloatRowlen = m_pImage->GetFloatDataRowlen();
 	BYTE *pHead = m_pImage->GetHeadAddress();
 
-	int strLen = 0, nInnerecLevel = 0, nInnerMask = 0;
-	const char* pDst[2] = { 0 };
 	// 解码整幅图像
-	BOOL success = DecodeWholeImage(pDst, pHead, nWidth, nHeight, nChannel,
-		m_fModuleSize, m_nLevel, m_nVersion, m_nMaskingNo, 
-		m_bUseHybrid, m_bTryHarder, m_BackgroundColor, 
-		strLen, nInnerecLevel, nInnerMask, 
-		m_roi);
-	if (pDst[0] == NULL)
+	ImageSrc pImage(pHead, nWidth, nHeight, nChannel, m_roi);
+	BOOL success = DecodeWholeImage(DecodeSrc(pImage, TRUE, TRUE), &qr, &inner);
+	if (qr.m_pData == NULL)
 	{
 		// 尝试进行DM、PDF417、Aztec二维码解码
 		DMDecoder dm;
 		dm.Init(pHead, nWidth, nHeight, nChannel, m_roi);
 		if (dm.Decode(m_BackgroundColor))
 		{
-			pDst[0] = dm.GetData();
+			qr.m_pData = dm.GetData();
 		}
 		else
 		{
@@ -114,7 +105,7 @@ BOOL CDlgQRDecode::Decode()
 			pdf417.CopyOf(dm);
 			if (pdf417.Decode(m_BackgroundColor))
 			{
-				pDst[0] = pdf417.GetData();
+				qr.m_pData = pdf417.GetData();
 			}
 			else
 			{
@@ -122,25 +113,26 @@ BOOL CDlgQRDecode::Decode()
 				az.CopyOf(dm);
 				if (az.Decode(m_BackgroundColor))
 				{
-					pDst[0] = az.GetData();
+					qr.m_pData = az.GetData();
 				}
 			}
 		}
 	}
-	if (pDst[0] == NULL)
+	if (qr.m_pData == NULL)
 	{
 		GetDlgItem(IDC_EDITSOURCEDATA_PUBLIC)->SetWindowText(_T("*** Decode failed ***"));
 		return FALSE;
 	}
-	m_strPublicString = UTF8Convert2Unicode(pDst[0], m_ncLength);
+	int m_ncLength = 0;
+	m_strPublicString = UTF8Convert2Unicode(qr.m_pData, m_ncLength);
 	UpdateDecodeInfo();
-	if (pDst[1] != NULL)
+	if (inner.m_pData != NULL)
 	{
-		m_strPrivateString = UTF8Convert2Unicode(pDst[1], m_ncLength);
+		m_strPrivateString = UTF8Convert2Unicode(inner.m_pData, m_ncLength);
 		GetDlgItem(IDC_EDITSOURCEDATA_PRIVATE)->SetWindowText(m_strPrivateString);
-		SetWindowInt(GetDlgItem(IDC_EDIT_INNER_ECLEVEL), nInnerecLevel);
-		SetWindowInt(GetDlgItem(IDC_EDIT_INNER_MASK), nInnerMask);
-		UpdateecLevelTipText(nInnerecLevel);
+		SetWindowInt(GetDlgItem(IDC_EDIT_INNER_ECLEVEL), inner.m_nEcLevel);
+		SetWindowInt(GetDlgItem(IDC_EDIT_INNER_MASK), inner.m_nMaskingNo);
+		UpdateecLevelTipText(inner.m_nEcLevel);
 		return TRUE;
 	}
 	else
@@ -155,7 +147,7 @@ void CDlgQRDecode::UpdateDecodeInfo()
 {
 	// 更新控件状态
 	CString ecLevel;
-	switch (m_nLevel)
+	switch (qr.m_nEcLevel)
 	{
 	case 0:ecLevel = _T("L(7%)"); break;
 	case 1:ecLevel = _T("M(15%)"); break;
@@ -164,9 +156,9 @@ void CDlgQRDecode::UpdateDecodeInfo()
 	default:break;
 	}
 	GetDlgItem(IDC_EDIT_EC_LEVEL)->SetWindowText(ecLevel);
-	SetWindowInt(GetDlgItem(IDC_EDIT_QR_VERSION), m_nVersion);
-	SetWindowInt(GetDlgItem(IDC_EDIT_MASK_VERSION), m_nMaskingNo);
-	SetWindowFloat(GetDlgItem(IDC_EDIT_MODULESIZE), m_fModuleSize);
+	SetWindowInt(GetDlgItem(IDC_EDIT_QR_VERSION), qr.m_nVersion);
+	SetWindowInt(GetDlgItem(IDC_EDIT_MASK_VERSION), qr.m_nMaskingNo);
+	SetWindowFloat(GetDlgItem(IDC_EDIT_MODULESIZE), qr.m_fModuleSize);
 	GetDlgItem(IDC_EDITSOURCEDATA_PUBLIC)->SetWindowText(m_strPublicString);
 }
 
@@ -249,6 +241,12 @@ BOOL CDlgQRDecode::OnEraseBkgnd(CDC* pDC)
 
 void CDlgQRDecode::OnBnClickedButtonSaveImage()
 {
+	if (!m_pImage->IsNull())
+	{
+		CyImage *roi = m_pImage->ROI(m_roi);
+		roi->Save(this);
+		delete roi;
+	}
 }
 
 

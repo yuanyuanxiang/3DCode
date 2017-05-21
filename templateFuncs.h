@@ -26,9 +26,6 @@ template <typename Type> void MemcpyByte2Float(float* pDst, const Type* pSrc, in
 // 将浮点数据拷贝到BYTE(uchar)
 template <typename Type> void MemcpyFloat2Byte(Type* pDst, const float* pSrc, int nWidth, int nHeight, int nChannel);
 
-// 计算数据块的最大最小值
-template <typename Type> void MinMax(const Type* pSrc, int nWidth, int nHeight, Type &Min, Type &Max);
-
 
 /** 
 * @brief 获取整点(x, y)处的函数值
@@ -102,34 +99,44 @@ template <typename Type> Type* GetDecodeString(const Type* pHead, const int nWid
 	switch (nBPP)
 	{
 	case 8:// GRAY
-#pragma omp parallel for
-		for (int i = 0; i < nHeight; i++)
 		{
-			const Type* y1 = pHead + i * nRowlen;
-			Type* y2 = pDst + i * NewRowlen;
-			for (int j = 0; j < nWidth; j++)
+			const Type* pSrc0 = pHead;
+			Type* pCur0 = pDst;
+			for (int i = 0; i < nHeight; i++)
 			{
-				const Type* pSrc = y1 + j;
-				Type* pCur = y2 + 4 * j;
-				* pCur = *(pCur+1) = *(pCur+2) = *pSrc;
-				*(pCur+3) = 0;// Alpha
+				const Type* pSrc = pSrc0;
+				Type* pCur = pCur0;
+				for (int j = 0; j < nWidth; j++)
+				{
+					* pCur = *(pCur+1) = *(pCur+2) = *pSrc;
+					*(pCur+3) = 0;// Alpha
+					pSrc ++;
+					pCur += 4;
+				}
+				pSrc0 += nRowlen;
+				pCur0 += NewRowlen;
 			}
 		}
 		break;
 	case 24:// RGB
-#pragma omp parallel for
-		for (int i = 0; i < nHeight; i++)
 		{
-			const Type* y1 = pHead + i * nRowlen;
-			Type* y2 = pDst + i * NewRowlen;
-			for (int j = 0; j < nWidth; j++)
+			const Type* pSrc0 = pHead;
+			Type* pCur0 = pDst;
+			for (int i = 0; i < nHeight; i++)
 			{
-				const Type* pSrc = y1 + 3 * j;
-				Type* pCur = y2 + 4 * j;
-				* pCur = *pSrc;
-				*(pCur+1) = *(pSrc+1);
-				*(pCur+2) = *(pSrc+2);
-				*(pCur+3) = 0;// Alpha
+				const Type* pSrc = pSrc0;
+				Type* pCur = pCur0;
+				for (int j = 0; j < nWidth; j++)
+				{
+					* pCur = *pSrc;
+					*(pCur+1) = *(pSrc+1);
+					*(pCur+2) = *(pSrc+2);
+					*(pCur+3) = 0;// Alpha
+					pSrc += 3;
+					pCur += 4;
+				}
+				pSrc0 += nRowlen;
+				pCur0 += NewRowlen;
 			}
 		}
 		break;
@@ -159,7 +166,6 @@ template <typename Type> void MemcpyFloat2Byte(Type* pDst, const float* pSrc, in
 	// 浮点数据每行个数
 	const int nFloatRowlen = nWidth * nChannel;
 
-#pragma omp parallel for
 	for (int i = 0; i < nWidth; ++i)
 	{
 		int x = i * nChannel;
@@ -188,7 +194,6 @@ template <typename Type> void MemcpyByte2Float(float* pDst, const Type* pSrc, in
 	// 浮点数据每行个数
 	const int nFloatRowlen = nWidth * nChannel;
 
-#pragma omp parallel for
 	for (int i = 0; i < nWidth; ++i)
 	{
 		int x = i * nChannel;
@@ -199,22 +204,4 @@ template <typename Type> void MemcpyByte2Float(float* pDst, const Type* pSrc, in
 				pDst[k + x + y2] = (float)pSrc[k + x + y1];
 		}
 	}
-}
-
-
-/** 
-* @brief 计算数据块的最大最小值
-* @param[in] *pSrc			图像数据
-* @param[in] nWidth			图像宽度
-* @param[in] nHeight		图像高度
-* @param[in] &Min			最小值
-* @param[in] &Max			最大值
-* @return 通过Min、Max输出最小最大值
-*/
-template <typename Type> void MinMax(const Type* pSrc, int nWidth, int nHeight, Type &Min, Type &Max)
-{
-	// 寻找最大最小值
-	pair<Type*, Type*> minmax_pair = minmax_element(pSrc, pSrc + nWidth * nHeight - 1);
-	Min = *minmax_pair.first;
-	Max = *minmax_pair.second;
 }

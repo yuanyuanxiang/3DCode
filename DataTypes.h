@@ -584,41 +584,36 @@ private:
 	}
 };
 
-/** 
-* @struct ImageHeader
-* @brief 图像的信息头
-* @details 该数据结构存放了图像的重要信息, 图像的注释性信息.
-* @var ImageHeader::m_sTag - 图像标识
-* @var ImageHeader::m_nWidth - 图像宽度
-* @var ImageHeader::m_nHeight - 图像高度
-* @var ImageHeader::m_nRowlen - 图像每行元素个数
-* @var ImageHeader::m_nChannel - 图像每像素元素数
-* 
-* @author yuanyuanxiang
-* @version 1.0
-* @date 2016/9/12
-* 
+
+/**
+* @struct BarCodeInfo
+* @brief 二维码信息结构体(6个成员)
+* details 纠错等级,二维码版本,掩码版本,字符、字符长度,每模块大小.
 */
-struct ImageHeader
+struct BarCodeInfo
 {
-	/// 文件头标识
-	char	m_sTag[32];
-	/// 图像宽度
-	int		m_nWidth;
-	/// 图像高度
-	int		m_nHeight;
-	/// 图像每行元素个数
-	int		m_nRowlen;
-	/// 图像每像素元素个数
-	int		m_nChannel;
+	int m_nEcLevel;				/**< 纠错等级 */
+	int m_nVersion;				/**< 二维码版本 */
+	int m_nMaskingNo;			/**< 掩码版本 */
+	int m_nStrLen;				/**< 字符长度 */
+	float m_fModuleSize;		/**< 每模块大小 */
+	const char* m_pData;		/**< 二维码数据 */
+
+	BarCodeInfo()
+	{
+		memset(this, 0, sizeof(BarCodeInfo));
+	}
 };
 
-/// 判断索引(i, j)不在矩形内
+
+/** 
+* @brief 判断索引(i, j)不在矩形内
+* @see http://www.cnblogs.com/archimedes/p/writing-efficient-c-and-code-optimization.html
+*/
 inline BOOL IndexNotInRect(int i, int j, const CLogoRect &rect)
 {
-	if (rect.top <= i && i < rect.bottom && rect.left <= j && j < rect.right)
-		return FALSE;
-	return TRUE;
+	return ( (unsigned(i - rect.top) < (unsigned)rect.Height()) 
+		&&   (unsigned(j - rect.left) < (unsigned)rect.Width()) ) ? FALSE : TRUE;
 }
 
 

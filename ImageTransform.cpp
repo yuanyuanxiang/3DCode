@@ -58,7 +58,6 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 	float *pDst = new float[NewRowlen * NewHeight];
 	memset(pDst, 0, NewRowlen * NewHeight * sizeof(float));
 
-#pragma omp parallel for
 	for (int i = 0; i < NewWidth; ++i)
 	{
 		int w = i * nChannel;
@@ -107,11 +106,13 @@ float* ImageCut(float* pSrc, int &nWidth, int &nHeight, int &nRowlen, int nChann
 	int nNewRowlen = nNewWidth * nChannel;
 	float* pDst = new float[nNewHeight * nNewRowlen];
 
-	int x = cutRect.left * nChannel;
-#pragma omp parallel for
+	float *pSrcLine = pSrc + cutRect.left * nChannel + (nHeight - cutRect.bottom) * nRowlen;
+	float *pDstLine = pDst;
 	for (int i = 0; i < nNewHeight; ++i)
 	{
-		memcpy(pDst + i * nNewRowlen, pSrc + x + (i + cutRect.top) * nRowlen, nNewRowlen * sizeof(float));
+		memcpy(pDstLine, pSrcLine, nNewRowlen * sizeof(float));
+		pSrcLine += nRowlen;
+		pDstLine += nNewRowlen;
 	}
 	// 更新图像信息
 	nWidth = nNewWidth;
@@ -243,7 +244,6 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 	float *pDst = new float[NewRowlen * NewHeight];
 	memset(pDst, 0, NewRowlen * NewHeight * sizeof(float));
 
-#pragma omp parallel for
 	for (int i = 0; i < NewWidth; ++i)
 	{
 		int w = i * nChannel;
@@ -304,7 +304,6 @@ float* ImageRotate(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChann
 	float *pDst = new float[NewRowlen * NewHeight];
 	memset(pDst, 0, NewRowlen * NewHeight * sizeof(float));
 
-#pragma omp parallel for
 	for (int i = 0; i < NewWidth; ++i)
 	{
 		int w = i * nChannel;
@@ -339,7 +338,6 @@ float* ImageZoom(float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel
 	float wRatio = 1.f * nWidth / NewWidth;
 	float hRatio = 1.f * nHeight / NewHeight;
 
-#pragma omp parallel for
 	for (int i = 0; i < NewWidth; ++i)
 	{
 		int w = i * nChannel;

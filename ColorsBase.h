@@ -36,6 +36,9 @@ const static int HEADER_MASK[90] = {
 	0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
 	0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
 
+/// 采用新版
+#define NEW_VERSION 1
+
 /** 
 * @class ColorsBase 
 * @brief 彩色二维码编码解码基类

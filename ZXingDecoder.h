@@ -37,6 +37,8 @@
 using namespace std;
 using namespace zxing;
 
+#pragma warning(disable : 4101 4996)
+
 /* 缩放图像到该尺寸进行解码 */
 #define IMAGE_ZOOM_TO 320
 
@@ -145,7 +147,7 @@ private:
 	/// x到哪个中心更近，返回最近点的标号
 	inline int CLUSTER(int x, int c1, int c2, int c3) const
 	{
-		int d1 = abs(x - c1), d2 = abs(x - c2), d3 = abs(x - c3);
+		register int d1 = abs(x - c1), d2 = abs(x - c2), d3 = abs(x - c3);
 		return d1 < d2 ? (d1 < d3 ? 0 : 2) : (d2 < d3 ? 1 : 2);
 	}
 };
@@ -232,8 +234,8 @@ void ZXingDecoder<Type>::K_means(BYTE* pHead, int nRowBytes, RoiRect roi, int nM
 			for (int i = roi.left; i < roi.right; ++i)
 			{
 				/* 当前像素的浮点值 */
-				int curPixel = *pCur++;
-				int tag = CLUSTER(curPixel, Center[0], Center[1], Center[2]);
+				register int curPixel = *pCur++;
+				register int tag = CLUSTER(curPixel, Center[0], Center[1], Center[2]);
 				// 将(i, j)标记为tag
 				Cluster[i + y] = tag;
 				sumCenter[tag] += curPixel;
@@ -268,14 +270,18 @@ void ZXingDecoder<Type>::K_means(BYTE* pHead, int nRowBytes, RoiRect roi, int nM
 	int backValIdx = CLUSTER(m_nBackground, Center[0], Center[1], Center[2]);
 
 	// 对原始图像进行分割
+	BYTE *pSrc0 = Cluster;
+	BYTE *pDst0 = pHead + roi.left + roi.top * nRowBytes;
 	for (int j = 0; j < nHeight; ++j)
 	{
-		int y0 = j * nRowlen;
-		int y = (j + roi.top) * nRowBytes;
+		BYTE *pSrc = pSrc0;
+		BYTE *pDst = pDst0;
 		for (int i = 0; i < nWidth; ++i)
 		{
-			pHead[i + roi.left + y] = (Cluster[i + y0] == backValIdx) ? 0 : 255;
+			*pDst ++ = (*pSrc++ == backValIdx) ? 0 : 255;
 		}
+		pSrc0 += nRowlen;
+		pDst0 += nRowBytes;
 	}
 	delete [] Cluster;
 }

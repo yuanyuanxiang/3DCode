@@ -37,6 +37,7 @@ private:
 	int				m_nHeaderBits[90];/**< 彩色编码的头 */
 	// 是否需要翻转比特流
 	bool			m_bInversed;	/**< 彩色前景背景搞反了 */
+	const char*		m_strErrorMsg;	/**< 错误信息 */
 	
 public:
 	/** 
@@ -53,12 +54,16 @@ public:
 		m_Foreground = 0;
 		m_Background = 0;
 		m_bInversed = false;
+		m_strErrorMsg = NULL;
 	}
 
 	~ColorsDecode() { }
 
 	// RS4方法解码彩色
-	const char* DecodeColors(const BYTE* pHead, int nWidth, int nHeight, int nChannel);
+	BOOL DecodeColors(const BYTE* pHead, int nWidth, int nHeight, int nChannel);
+
+	/// 获取上一个错误
+	const char* GetLastError() const { return m_strErrorMsg ? m_strErrorMsg : "No error"; }
 
 	/** 
 	* @brief 获取彩色数据头信息
@@ -74,6 +79,17 @@ public:
 		nInnerMask = m_nMaskingNo;
 	}
 
+	/// 获取解码信息
+	inline void GetBarCodeInfo(BarCodeInfo & inner) const 
+	{
+		inner.m_fModuleSize = m_nModuleSize;
+		inner.m_nEcLevel = m_ecLevel;
+		inner.m_nVersion = m_nVersion;
+		inner.m_nMaskingNo = m_nMaskingNo;
+		inner.m_nStrLen = m_strLen;
+		inner.m_pData = strlen(m_pData) ? m_pData : GetLastError();
+	}
+
 private:
 	// 获取数据头
 	void GetHeaderBits(int nMaxepoches = 10);
@@ -81,4 +97,10 @@ private:
 	BOOL DecodeHeader(bool bInverse = false);
 	// K均值二值化
 	void K_means(const pixel *pArray, int *Cluster, int nNum, int nMaxepoches);
+
+	// 获取(nRow, nCol)行列处的像素值索引
+	int GetPixelRef(int nRow, int nCol);
+
+	/// 是否SUPER扩容
+	inline bool IsSuper() const { return 30 == m_nVersion; }
 };

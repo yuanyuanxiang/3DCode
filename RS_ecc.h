@@ -1,5 +1,6 @@
 #pragma once
 
+
 /**
 * @file			RS_ecc.h
 * @brief		RS 纠错编码
@@ -33,13 +34,13 @@ void SplitByteBy2Bits(const BYTE* dataPtr, int dataLen, int* dst, int dstLen);
 void MergedIntBy2Bits(int* dataSrc, int totalBits);
 
 // 获取RS4编码的比特总数
-int RS4BitsLen(int dataLen, int ecLevel, int & bitsLen);
+int RS4BitsLen(int dataLen, int ecLevel, int & bitsLen, bool SUPER_QR = false);
 
 // 4bit符号大小的RS纠错编码
-int* RS4Encode(const BYTE* dataPtr, int dataLen, int bitsLen, int ecLevel);
+int* RS4Encode(const BYTE* dataPtr, int dataLen, int bitsLen, int ecLevel, bool SUPER_QR = false);
 
 // 4bit符号大小的RS纠错解码
-int* RS4Decode(int* dataSrc, int dataLen, int bitsLen, int ecLevel);
+int* RS4Decode(int* dataSrc, int dataLen, int bitsLen, int ecLevel, bool SUPER_QR = false);
 
 // 2bit符号大小的RS纠错编码
 void RS2Encode(const BYTE *dataPtr, int dataLen, int *result);

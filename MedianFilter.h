@@ -130,7 +130,7 @@ template <typename Type> BOOL FastMedianFilter(Type* pData, int nWidth, int nHei
 		for (int col = K; col < nWidth - K; ++col)
 		{
 			Type *pCur = pCenter;
-			unsigned int p0, p1, p2, p3, p4, p5, p6, p7, p8;
+			register unsigned int p0, p1, p2, p3, p4, p5, p6, p7, p8;
 
 			pCur -= nRowlen; // ÒÆ¶¯Ö¸Õë
 			p0 = *(pINT(pCur - C)); p1 = *(pINT(pCur)); p2 = *(pINT(pCur + C));

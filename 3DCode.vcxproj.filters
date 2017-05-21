@@ -99,15 +99,6 @@
     <ClInclude Include="primitives.h">
       <Filter>ReedSolomon</Filter>
     </ClInclude>
-    <ClInclude Include="DMDecoder.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="PDF417Decoder.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AztecDecoder.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -169,15 +160,6 @@
     </ClCompile>
     <ClCompile Include="reedSolomon.cpp">
       <Filter>ReedSolomon</Filter>
-    </ClCompile>
-    <ClCompile Include="DMDecoder.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="AztecDecoder.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="PDF417Decoder.cpp">
-      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

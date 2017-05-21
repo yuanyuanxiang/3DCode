@@ -18,6 +18,8 @@ using namespace std;
 
 #pragma once
 
+#pragma warning(disable : 4244)
+
 // 将图像写入文件的文件头大小（字节）
 #define HEADER_SIZE 1024
 
@@ -37,7 +39,7 @@ template <typename Type> void ImageFlipH(Type* pHead, const int nWidth, const in
 template <typename Type> void ImageTranspose(Type** pHead, const int nWidth, const int nHeight, const int nRowlen);
 
 // 提取图像感兴趣区域
-template <typename Type> Type* ImageROI(const Type* pHead, int &nWidth, int &nHeight, int &nRowlen, RoiRect roi = RoiRect(0, 0, 0, 0));
+template <typename Type> Type* ImageROI(const Type* pHead, int &nWidth, int &nHeight, int &nRowlen, const RoiRect &roi = 0);
 
 // 将图像以二进制形式写入文件
 template <typename Type> BOOL ImageWrite(const char* fileName, const Type* pSrc, int nWidth, int nHeight, int nRowlen);
@@ -46,7 +48,7 @@ template <typename Type> BOOL ImageWrite(const char* fileName, const Type* pSrc,
 template <typename Type> Type* Rgb2Gray(const Type* pHead, int nWidth, int nHeight, int nRowBytes);
 
 // 统计灰度图像的直方图
-template <typename Type> void GrayHistogram(const Type* pHead, int nRowlen, int nHist[256], RoiRect roi);
+template <typename Type> void GrayHistogram(const Type* pHead, int nRowlen, int nHist[256], const RoiRect &roi);
 
 // 统计图像的直方图
 template <typename Type> void ImageHistogram(const Type* pHead, int nWidth, int nHeight, int nRowlen, int nHist[256]);
@@ -68,10 +70,13 @@ template <typename Type> void ImageFlipV(Type* pHead, const int nWidth, const in
 	Type* temp = new Type[nHeight * nRowlen * sizeof(Type)];
 	memcpy(temp, pHead, nHeight * nRowlen * sizeof(Type));
 
-#pragma omp parallel for
+	const Type *pSrc = temp + (nHeight - 1) * nRowlen;
+	Type *pDst = pHead;
 	for (int r = 0; r < nHeight; ++r)
 	{
-		memcpy(pHead + r * nRowlen, temp + (nHeight - 1 - r) * nRowlen, nRowlen * sizeof(Type));
+		memcpy(pDst, pSrc, nRowlen * sizeof(Type));
+		pSrc -= nRowlen;
+		pDst += nRowlen;
 	}
 	SAFE_DELETE(temp);
 }
@@ -89,16 +94,21 @@ template <typename Type> void ImageFlipH(Type* pHead, const int nWidth, const in
 	Type* temp = new Type[nHeight * nRowlen];
 	memcpy(temp, pHead, nHeight * nRowlen * sizeof(Type));
 
-	int nChannel = nRowlen / nWidth;
-
-#pragma omp parallel for
+	const int nChannel = nRowlen / nWidth;
+	const Type *pSrc = temp + (nWidth - 1) * nChannel;
+	Type *pDst = pHead;
 	for (int r = 0; r < nHeight; ++r)
 	{
-		int y = r * nRowlen;
+		const Type *pSrcLine = pSrc;// 行指针
+		Type *pDstLine = pDst;
 		for (int c = 0; c < nWidth; ++c)
 		{
-			memcpy(pHead + c *nChannel + y, temp + (nWidth - 1 - c) * nChannel + y, nChannel * sizeof(Type));
+			memcpy(pDstLine, pSrcLine, nChannel * sizeof(Type));
+			pSrcLine -= nChannel;
+			pDstLine += nChannel;
 		}
+		pSrc += nRowlen;
+		pDst += nRowlen;
 	}
 	SAFE_DELETE(temp);
 }
@@ -126,17 +136,20 @@ template <typename Type> void ImageTranspose(Type** pHead, const int nWidth, con
 
 	Type *pSrc = *pHead;
 	Type *temp = new Type[nWidth * nNewRowlen];
-#pragma omp parallel for
-	for (int i = 0; i < nWidth; ++i)
+	for (int k = 0; k < nChannel; ++k)
 	{
-		int x = i * nChannel, y1 = i * nNewRowlen;
-		for (int j = 0; j < nHeight; ++j)
+		int x = 0, y1 = 0;
+		for (int i = 0; i < nWidth; ++i)
 		{
-			int y = j * nRowlen, x1 = j * nChannel;
-			for (int k = 0; k < nChannel; ++k)
+			int y = 0, x1 = 0;
+			for (int j = 0; j < nHeight; ++j)
 			{
 				temp[k + x1 + y1] = pSrc[k + x + y];
+				y += nRowlen;
+				x1 += nChannel;
 			}
+			x += nChannel;
+			y1 += nNewRowlen;
 		}
 	}
 	delete[] * pHead;
@@ -151,11 +164,11 @@ template <typename Type> void ImageTranspose(Type** pHead, const int nWidth, con
 * @param[in] &nWidth 宽度
 * @param[in] &nHeight 高度
 * @param[in] &nRowlen 每行个数
-* @param[in] roi 图像感兴趣区域
+* @param[in] &roi 图像感兴趣区域
 * @return 函数返回图像感兴趣区域(指针，需要SAFE_DELETE)
 * @note 函数传入图像宽度、高度等信息，输出ROI的宽度、高度等信息
 */
-template <typename Type> Type* ImageROI(const Type* pHead, int &nWidth, int &nHeight, int &nRowlen, RoiRect roi)
+template <typename Type> Type* ImageROI(const Type* pHead, int &nWidth, int &nHeight, int &nRowlen, const RoiRect &roi)
 {
 	/// 如果roi非法
 	if (roi.Width() <= 0 || roi.Height() <= 0 || roi.right > nWidth || roi.bottom > nHeight)
@@ -177,11 +190,13 @@ template <typename Type> Type* ImageROI(const Type* pHead, int &nWidth, int &nHe
 
 	Type* pDst = new Type[nNewHeight * nNewRowlen];
 
-	int x0 = roi.left * nChannel;
+	Type *pDstLine = pDst;
+	const Type *pSrcLine = pHead + roi.left * nChannel + (nHeight - roi.top - 1) * nRowlen;
 	for (int i = 0; i < nNewHeight; ++i)
 	{
-		int nLine = nHeight - roi.top - i - 1;
-		memcpy(pDst + i * nNewRowlen, pHead + x0 + nLine * nRowlen, nNewRowlen * sizeof(Type));
+		memcpy(pDstLine, pSrcLine, nNewRowlen * sizeof(Type));
+		pSrcLine -= nRowlen;
+		pDstLine += nNewRowlen;
 	}
 
 	// 更新图像信息
@@ -261,16 +276,28 @@ template <typename Type> void ZoomImage(Type** pfHead, int &nWidth, int &nHeight
 	float wRatio = 1.f * nWidth / NewWidth;
 	float hRatio = 1.f * nHeight / NewHeight;
 
-#pragma omp parallel for
-	for (int i = 0; i < NewWidth; ++i)
+	for (int nCurChannel = 0; nCurChannel < nChannel; ++nCurChannel)
 	{
-		int x = i * nChannel;
-		for (int j = 0; j < NewHeight; ++j)
+		int x = 0;
+		float s = 0;
+		for (int i = 0; i < NewWidth; ++i)
 		{
-			int y = j * NewRowlen;
-			for (int nCurChannel = 0; nCurChannel < nChannel; ++nCurChannel)
-				pDst[nCurChannel + x + y] =
-				(Type)biLinearInterp(*pfHead, nWidth, nHeight, nRowlen, nChannel, nCurChannel, i * wRatio, j * hRatio);
+			int y = 0;
+			float t = 0;
+			for (int j = 0; j < NewHeight; ++j)
+			{
+				int x1 = int(s), y1 = int(t), x3 = x1 + 1, y3 = y1 + 1;
+				// 左下角的点
+				const Type* pLB = *pfHead + nCurChannel + x1 * nChannel + y1 * nRowlen;
+				// 对越界的处理
+				pDst[nCurChannel + x + y] = (x1 < 0 || x3 >= nWidth || y1 < 0 || y3 >= nHeight) ? 0 : 
+					(*pLB * (x3 - s) + *(pLB + nChannel) * (s - x1)) * (y3 - t) 
+					+ (*(pLB + nRowlen) * (x3 - s) + *(pLB + nChannel + nRowlen) * (s - x1)) * (t - y1);
+				y += NewRowlen;
+				t += hRatio;
+			}
+			x += nChannel;
+			s += wRatio;
 		}
 	}
 
@@ -342,19 +369,25 @@ template <typename Type> Type* Rgb2Gray(const Type* pHead, int nWidth, int nHeig
 		break;
 	case 3:
 	case 4:// 3、4通道处理是一样的
-#pragma omp parallel for
-		for (int i = 0; i < nHeight; i++)
 		{
-			int y1 = i * nRowBytes, y2 = i * nRowLenNew;
-			for (int j = 0; j < nWidth; j++)
+			const Type *pSrcTemp0 = pHead;
+			Type *pDstTemp0 = pDst;
+			for (int i = 0; i < nHeight; i++)
 			{
-				const Type *pSrcTemp = pHead + nChannel * j + y1;
-				Type *pDstTemp = pDst + nChannelNew * j + y2;
-				// 必须强制转换为无符号字符型数据(2016/9/12 注)
-				BYTE R = *(pSrcTemp + 2);
-				BYTE G = *(pSrcTemp + 1);
-				BYTE B = *pSrcTemp;
-				*pDstTemp = BYTE(RGB2GRAY(R, G, B));
+				const Type *pSrcTemp = pSrcTemp0;
+				Type *pDstTemp = pDstTemp0;
+				for (int j = 0; j < nWidth; j++)
+				{
+					// 必须强制转换为无符号字符型数据(2016/9/12 注)
+					BYTE R = *(pSrcTemp + 2);
+					BYTE G = *(pSrcTemp + 1);
+					BYTE B = *pSrcTemp;
+					*pDstTemp = BYTE(RGB2GRAY(R, G, B));
+					pSrcTemp += nChannel;
+					pDstTemp += nChannelNew;
+				}
+				pSrcTemp0 += nRowBytes;
+				pDstTemp0 += nRowLenNew;
 			}
 		}
 		break;
@@ -371,20 +404,22 @@ template <typename Type> Type* Rgb2Gray(const Type* pHead, int nWidth, int nHeig
 * @param[in] *pHead 图像指针
 * @param[in] nRowlen 图像每行字节数
 * @param[in] nHist 图像直方图
-* @param[in] roi 图像感兴趣区域
+* @param[in] &roi 图像感兴趣区域
 */
-template <typename Type> void GrayHistogram(const Type* pHead, int nRowlen, int nHist[256], RoiRect roi)
+template <typename Type> void GrayHistogram(const Type* pHead, int nRowlen, int nHist[256], const RoiRect &roi)
 {
 	ASSERT(sizeof(Type) == 1);
 	memset(nHist, 0, 256 * sizeof(int));
+	const BYTE *pSrcLine = (const BYTE*)pHead + roi.left + roi.top * nRowlen;
 	for (int i = roi.top; i < roi.bottom; ++i)
 	{
-		const BYTE *pRow = (BYTE*)pHead + i * nRowlen;
+		const BYTE *pCur = pSrcLine;
 		for (int j = roi.left; j < roi.right; ++j)
 		{
-			BYTE cur = *(pRow + j);
+			BYTE cur = *pCur ++;
 			++ nHist[cur];
 		}
+		pSrcLine += nRowlen;
 	}
 }
 
@@ -404,14 +439,16 @@ void ImageHistogram(const Type* pHead, int nWidth, int nHeight, int nRowlen, int
 		return GrayHistogram(pHead, nRowlen, nHist, RoiRect(0, 0, nWidth, nHeight));
 	ASSERT(sizeof(Type) == 1);
 	memset(nHist, 0, 256 * sizeof(int));
+	const BYTE *pSrcLine = (const BYTE*) pHead;
 	for (int i = 0; i < nHeight; ++i)
 	{
-		const BYTE *pRow = (BYTE*)pHead + i * nRowlen;
+		const BYTE *pCur = pSrcLine;
 		for (int j = 0; j < nWidth; ++j)
 		{
-			const BYTE *pCur = pRow + j * nChannel;
 			int index = RGB2GRAY(*(pCur+2), *(pCur+1), *pCur);
 			++ nHist[index];
+			pCur += nChannel;
 		}
+		pSrcLine += nRowlen;
 	}
 }

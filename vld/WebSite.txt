@@ -1,0 +1,16 @@
+
+Visual Leak Detector for Visual C++ 2008-2015
+=============================================
+
+see http://vld.codeplex.com/
+
+[v2.5.1]
+
+Average user rating: No reviews yet
+Reviewed: 0 reviews
+Downloads: 10823
+Dev status: Jan 30, 2017, Stable
+RECOMMENDED DOWNLOAD
+
+Application vld-2.5.1-setup.exe
+application, 2886K, uploaded Jan 31 - 10823 downloads

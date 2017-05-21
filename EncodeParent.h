@@ -90,7 +90,7 @@ public:
 	CStatic							m_staticQRCodeSize;		/**< 现实二维码大小 */
 	CComboBox						m_comboInnerEcLevel;	/**< 内层纠错等级 */
 	CComboBox						m_comboInnerMaskNo;		/**< 内层掩码版本 */
-	CButton							m_BnCompress;			/**< 采用压缩编码 */
+	CComboBox						m_comboInnerVersion;	/**< 内存二维码版本 */
 
 	void ShowImageSize();									// 显示当前图像大小
 	BOOL IsColorsEncodeAble();								// 彩色是否可以编码
@@ -142,5 +142,5 @@ public:
 	afx_msg void OnBnClickedButtonEncode();
 	afx_msg void OnBnClickedButtonSave();
 	afx_msg void OnCbnSelchangeCombomaskingno2();
-	afx_msg void OnBnClickedCheckCompress();
+	afx_msg void OnCbnSelchangeComboVersion2();
 };

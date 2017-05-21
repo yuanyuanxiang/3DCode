@@ -210,6 +210,12 @@
     <ClCompile Include="ZXingDecoder.cpp">
       <Filter>ColoredQR</Filter>
     </ClCompile>
+    <ClCompile Include="OldMask.cpp">
+      <Filter>ColoredQR</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageSrc.cpp">
+      <Filter>ColoredQR</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zxing\qrcode\ErrorCorrectionLevel.h">
@@ -435,6 +441,12 @@
       <Filter>ColoredQR</Filter>
     </ClInclude>
     <ClInclude Include="ZXingDecoder.h">
+      <Filter>ColoredQR</Filter>
+    </ClInclude>
+    <ClInclude Include="OldMask.h">
+      <Filter>ColoredQR</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageSrc.h">
       <Filter>ColoredQR</Filter>
     </ClInclude>
   </ItemGroup>

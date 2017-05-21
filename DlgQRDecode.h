@@ -6,8 +6,7 @@
 #pragma once
 #include "afxwin.h"
 #include "CyImage.h"
-#include <vector>
-using namespace std;
+#include "DecodeFuncs.h"
 
 /**
 * @class CDlgQRDecode
@@ -25,17 +24,12 @@ public:
 	RoiRect				m_roi;				/**<  感兴趣区域 */
 	CString				m_strPublicString;	/**<  解码信息 */
 	CString				m_strPrivateString; /**<  加密信息 */
-	int					m_ncLength;			/**<  数据长度 */
-	float				m_fModuleSize;		/**<  模块尺寸 */
-	int					m_nLevel;			/**<  纠错率 */
-	int					m_nVersion;			/**<  编码版本 */
-	int					m_nMaskingNo;		/**<  掩码版本 */
-	float2				m_fPos[4];			/**<  位置信息 */
+	BarCodeInfo			qr;
+	BarCodeInfo			inner;
 	CToolTipCtrl		m_ToolTip;			/**<  工具提示 */
 
 	// 编码颜色
 	COLORREF			m_BackgroundColor;		/**< 背景色 */
-	vector<CPixelPoint>	m_ForegroundElemsIndex;	/**< 前景色的索引 */
 
 	// 解码参数
 	BOOL				m_bUseHybrid;			/**< 交叉二值化 */

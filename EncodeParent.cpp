@@ -69,7 +69,8 @@ void CEncodeParent::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATICQRCODESIZE, m_staticQRCodeSize);
 	DDX_Control(pDX, IDC_COMBOLEVEL2, m_comboInnerEcLevel);
 	DDX_Control(pDX, IDC_COMBOMASKINGNO2, m_comboInnerMaskNo);
-	DDX_Control(pDX, IDC_CHECK_COMPRESS, m_BnCompress);
+	DDX_Control(pDX, IDC_COMBO_VERSION2, m_comboInnerVersion);
+	DDX_CBIndex(pDX, IDC_COMBO_VERSION2, m_nInnerVersion);
 }
 
 
@@ -109,7 +110,7 @@ BEGIN_MESSAGE_MAP(CEncodeParent, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_SAVE, &CEncodeParent::OnBnClickedButtonSave)
 	ON_CBN_SELCHANGE(IDC_COMBOLEVEL2, &CEncodeParent::OnCbnSelchangeCombolevel2)
 	ON_CBN_SELCHANGE(IDC_COMBOMASKINGNO2, &CEncodeParent::OnCbnSelchangeCombomaskingno2)
-	ON_BN_CLICKED(IDC_CHECK_COMPRESS, &CEncodeParent::OnBnClickedCheckCompress)
+	ON_CBN_SELCHANGE(IDC_COMBO_VERSION2, &CEncodeParent::OnCbnSelchangeComboVersion2)
 END_MESSAGE_MAP()
 
 /// 获取活动文档，设置当前的图像
@@ -192,24 +193,26 @@ BOOL CEncodeParent::EncodePrivateData(CQR_Encode* pQR_Encode)
 	int strLen = 0;
 	char *temp = UnicodeConvert2UTF8(strPrivateEncodeData, strLen);
 	ColorsEncode ce(pQR_Encode->m_byModuleData, pQR_Encode->m_nSymbleSize, m_LogoRect);
-	BOOL bEncodeSucess = ce.EncodeColors(temp, strLen, m_nInnerEcLevel, m_nInnerMaskNo, m_nInnerVersion);
+	int bEncodeSucess = ce.EncodeColors(temp, strLen, m_nInnerEcLevel, m_nInnerMaskNo, m_nInnerVersion);
 	SAFE_DELETE(temp);
 	// 判断彩色编码是否成功
 	if (bEncodeSucess)
 	{
-		m_ToolTip.UpdateTipText(_T(""), &m_editSourceDataPrivate);
+		CString err;
+		err.Format(_T("编码失败,错误码:%d"), bEncodeSucess);
+		m_ToolTip.UpdateTipText(err, &m_editSourceDataPrivate);
 	}
 	else
 	{
-		m_ToolTip.UpdateTipText(_T("密文数据太长"), &m_editSourceDataPrivate);
+		m_ToolTip.UpdateTipText(_T(""), &m_editSourceDataPrivate);
 	}
 
 	// 获取符号大小然后将符号转换为图像
 	m_nSymbleSize = pQR_Encode->m_nSymbleSize;
-	Matrix2ColorImage(pQR_Encode->m_byModuleData, m_nSymbleSize, m_pImage, m_nPixelSize, 
-		m_ForegroundColor, m_BackgroundColor, m_QREncodeColor1, m_QREncodeColor2);
+	CMatrix2Image m2i(pQR_Encode->m_byModuleData, m_nSymbleSize, m_pImage, m_nPixelSize);
+	m2i.Matrix2ColorImage(m_ForegroundColor, m_BackgroundColor, m_QREncodeColor1, m_QREncodeColor2);
 
-	return bEncodeSucess;
+	return SUCCESS == bEncodeSucess;
 }
 
 /// 添加标识
@@ -445,7 +448,6 @@ BOOL CEncodeParent::OnInitDialog()
 	m_ToolTip.AddTool(&m_sliderHeight, _T("调整LOGO的高度"));
 	m_ToolTip.AddTool(&m_buttonEnableMixed, _T("LOGO与二维码混合"));
 	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_ENCODE), _T("对信息进行编码"));
-	m_ToolTip.AddTool(&m_BnCompress, _T("用zlib压缩编码"));
 	m_ToolTip.AddTool(&m_editSourceDataPublic, _T(""));
 	m_ToolTip.AddTool(&m_editSourceDataPrivate, _T(""));
 
@@ -472,9 +474,15 @@ void CEncodeParent::InitInnerEncodingParameters()
 	{
 		m_comboInnerEcLevel.InsertString(i - 1, Num2String(i));
 	}
+	// 掩码模式
 	for (int i = 0; i < 8; ++i)
 	{
 		m_comboInnerMaskNo.InsertString(i, Num2String(i));
+	}
+	// 版本号
+	for (int i = 0; i < 32; ++i)
+	{
+		m_comboInnerVersion.InsertString(i, _T("Ver ") + Num2String(i));
 	}
 	m_nInnerEcLevel = 3;
 	m_nInnerMaskNo = 1;
@@ -482,8 +490,10 @@ void CEncodeParent::InitInnerEncodingParameters()
 	m_QREncodeColor2 = RGB(0, 255, 0);
 	m_comboInnerEcLevel.SetCurSel(2);
 	m_comboInnerMaskNo.SetCurSel(1);
+	m_comboInnerVersion.SetCurSel(0);
 	m_ToolTip.AddTool(&m_comboInnerEcLevel, _T("选择错误纠正率"));
 	m_ToolTip.AddTool(&m_comboInnerMaskNo, _T("选择掩码版本号"));
+	m_ToolTip.AddTool(&m_comboInnerVersion, _T("选择版本号"));
 }
 
 
@@ -843,25 +853,15 @@ void CEncodeParent::OnCbnSelchangeCombomaskingno2()
 }
 
 
-void CEncodeParent::OnBnClickedCheckCompress()
-{
-	int nSel = m_BnCompress.GetCheck();
-	if (nSel)
-	{
-		// 启用ZLIB压缩
-		m_nInnerVersion = 31;
-	}
-	else
-	{
-		// 不用Zlib压缩
-		m_nInnerVersion = 0;
-	}
-	Encode();
-	ShowImageSize();
-}
-
-
 // 通知主窗口刷新图像
 void CEncodeParent::Repaint() 
 {
+}
+
+
+void CEncodeParent::OnCbnSelchangeComboVersion2()
+{
+	m_nInnerVersion = m_comboInnerVersion.GetCurSel();
+	Encode();
+	ShowImageSize();
 }

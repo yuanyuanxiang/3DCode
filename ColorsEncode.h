@@ -20,7 +20,30 @@
 
 #define COLOR_QRCOLOR1		2			/**< 彩色一(前景) */
 
-#define COLOR_QRCOLOR2		3			/**< 彩色二(背景) */
+#define COLOR_QRCOLOR2		17			/**< 彩色二(背景) */
+
+#define SUCCESS				0			/**< 成功 */
+
+#define ERROR_ZCOMPRESS		1			/**< 压缩出错 */
+
+#define ERROR_UNSURPORT		2			/**< 不支持 */
+
+#define ERROR_LONGSTRING	3			/**< 字符太长 */
+
+/**
+
+	00		01		10		11
+	00		00		00		00
+
+	00		01		10		11
+	10		10		10		10
+
+	00		01		10		11
+	01		01		01		01
+
+	00		01		10		11
+	11		11		11		11
+*/
 
 /** 
 * @class ColorsEncode 
@@ -59,14 +82,17 @@ public:
 	~ColorsEncode() { }
 
 	// 为原二维码着色
-	BOOL EncodeColors(char *pUtf8, int nStrLen, int nInnerEcLevel, int nInnerMaskNo, int nInnerVersion);
+	int EncodeColors(char *pUtf8, int nStrLen, int nInnerEcLevel, int nInnerMaskNo, int nInnerVersion);
 
 protected:
 	// 彩色编码及数据格式
 	int				m_strLen;		/**< 数据长度 */
 	int				m_ecLevel;		/**< 纠错等级 */
 	int				m_nMaskingNo;	/**< 掩码版本 */
-	int				m_nVersion;		/**< 编码版本 */
+	int				m_nVersion;		/**< 编码版本 - 
+									0版本采用旧的掩码，非0采用新的掩码
+									30版本SUPER_QR用来开关是否强势扩容
+									31版本采用Zlib对数据进行压缩编码 */
 
 #if (ENCODE_MOUDLE)
 	// 获取位置识别区的16个模块的索引
@@ -81,5 +107,5 @@ protected:
 
 private:
 	// 编码数据头
-	BOOL EncodeHeader();
+	int EncodeHeader();
 };

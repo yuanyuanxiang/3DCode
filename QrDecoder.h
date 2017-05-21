@@ -54,11 +54,17 @@ public:
 		return m_qr->m_byModuleData;
 	}
 
+	/// 获得QR码指针
+	inline CQR_Encode* GetQrPointer() const { return m_qr; }
+
 	/// 获得QR码版本
 	inline int GetQrVersion() const { return m_READER->getDecoder().GetQRCodeVersion(); }
 
 	/// 获得QR码大小
 	inline int GetQrSize() const { return 17 + 4 * GetQrVersion(); }
+
+	/// 获得QR码每模块大小
+	inline int GetQrModuleSize() const { return m_READER->m_fModuleSize; }
 
 	/// 获取解码信息
 	inline void GetQrInfo(float &fModuleSize, int &nLevel, int &nVersion, int &nMaskingNo) const 
@@ -68,5 +74,17 @@ public:
 		nLevel = QRDecoder.GetErrorCorrectLevel();
 		nVersion = QRDecoder.GetQRCodeVersion();
 		nMaskingNo = QRDecoder.GetMaskingNo();
+	}
+
+	/// 获取解码信息
+	inline void GetBarCodeInfo(BarCodeInfo & qr) const 
+	{
+		Decoder QRDecoder = m_READER->getDecoder();
+		qr.m_fModuleSize = m_READER->m_fModuleSize;
+		qr.m_nEcLevel = QRDecoder.GetErrorCorrectLevel();
+		qr.m_nVersion = QRDecoder.GetQRCodeVersion();
+		qr.m_nMaskingNo = QRDecoder.GetMaskingNo();
+		qr.m_nStrLen = m_nStrlen;
+		qr.m_pData = m_pData;
 	}
 };

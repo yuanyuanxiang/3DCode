@@ -461,7 +461,6 @@ void CyImage::MemcpyByteToFloat()
 	{
 		m_pFloatData = new float[nHeight * nFloatRowlen];
 	}
-#pragma omp parallel for
 	for (int i = 0; i < nWidth; ++i)
 	{
 		int x = i * nChannel;
@@ -502,7 +501,6 @@ void CyImage::MemcpyFloatToByte()
 	int nRowlen = GetRowlen();
 	int nFloatRowlen = GetFloatDataRowlen();
 
-#pragma omp parallel for
 	for (int i = 0; i < nWidth; ++i)
 	{
 		int x = i * nChannel;
@@ -532,7 +530,6 @@ void CyImage::MemcpyFloatToByteBounded(float lower, float upper)
 	int nRowlen = GetRowlen();
 	int nFloatRowlen = GetFloatDataRowlen();
 
-#pragma omp parallel for
 	for (int i = 0; i < nWidth; ++i)
 	{
 		int x = i * nChannel;
@@ -802,7 +799,6 @@ void CyImage::FlipH()
 	BYTE* head = GetHeadAddress();
 	memcpy(temp, head, nHeight * nRowlen * sizeof(BYTE));
 
-#pragma omp parallel for
 	for (int r = 0; r < nHeight; ++r)
 	{
 		int y = r * nRowlen;
@@ -826,7 +822,6 @@ void CyImage::FlipV()
 	BYTE* head = GetHeadAddress();
 	memcpy(temp, head, nHeight * nRowlen * sizeof(BYTE));
 
-#pragma omp parallel for
 	for (int r = 0; r < nHeight; ++r)
 	{
 		memcpy(head + r * nRowlen, temp + (nHeight - 1 - r) * nRowlen, nRowlen * sizeof(BYTE));
@@ -857,7 +852,6 @@ void CyImage::Transpose()
 	int nNewFloatRowlen = GetFloatDataRowlen();
 	BYTE *pHead = GetHeadAddress();
 	int nNewRowlen = GetRowlen();
-#pragma omp parallel for
 	for (int i = 0; i < nNewHeight; ++i)
 	{
 		int y = i * nNewRowlen, z = i * nNewFloatRowlen;
