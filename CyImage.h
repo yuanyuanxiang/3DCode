@@ -4,6 +4,7 @@
 
 #include "atlimage.h"
 #include "DataTypes.h"
+#include "ImageSrc.h"
 
 /** 
 * @file CyImage.h
@@ -95,12 +96,14 @@ public:
 	float* Zoom(int NewWidth, int NewHeight, int bNeededReturn);
 	//
 
+	// 创建图像
+	BOOL Create(const BYTE* pSrc, int nWidth, int nHeight, int nBPP) throw();
+	BOOL Create(const float* pSrc, int nWidth, int nHeight, int nRowlen) throw();
+	BOOL Create(const ImageSrc *pSrc) throw();
 	// 重载函数
-	BOOL Create(BYTE* pSrc, int nWidth, int nHeight, int nBPP) throw();
 	BOOL Create(int nWidth, int nHeight, int nBPP, DWORD dwFlags = 0) throw();
 	HRESULT Load(LPCTSTR pszFileName) throw();
 	HRESULT Save(LPCTSTR pszFileName, REFGUID guidFileType = GUID_NULL) const throw();
-	BOOL Create(float* pSrc, int nWidth, int nHeight, int nRowlen) throw();
 	void Destroy() throw();
 
 #ifdef _AFX // MFC

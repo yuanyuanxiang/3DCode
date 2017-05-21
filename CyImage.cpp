@@ -352,7 +352,7 @@ BOOL CyImage::InitFloatData()
 * @note pSrc的数据长度务必与所创建图像字节数一致，即:
 		length(pSrc) = 所创建的图像总的字节数
 */
-BOOL CyImage::Create(BYTE* pSrc, int nWidth, int nHeight, int nBPP) throw()
+BOOL CyImage::Create(const BYTE* pSrc, int nWidth, int nHeight, int nBPP) throw()
 {
 	Destroy();// 先销毁图像数据
 	if (FALSE == CImage::Create(nWidth, nHeight, nBPP, 0UL))
@@ -393,7 +393,7 @@ BOOL CyImage::Create(int nWidth, int nHeight, int nBPP, DWORD dwFlags) throw()
 * @param[in] nRowlen 数据源每行数据个数
 * @return 成功或失败
 */
-BOOL CyImage::Create(float* pSrc, int nWidth, int nHeight, int nRowlen) throw()
+BOOL CyImage::Create(const float* pSrc, int nWidth, int nHeight, int nRowlen) throw()
 {
 	Destroy();
 	int nBPP = 8 * nRowlen / nWidth;
@@ -404,6 +404,21 @@ BOOL CyImage::Create(float* pSrc, int nWidth, int nHeight, int nRowlen) throw()
 	InitFloatData();
 	memcpy(m_pFloatData, pSrc, nHeight * nRowlen * sizeof(float));
 	MemcpyFloatToByte();
+	return TRUE;
+}
+
+
+/** - 从ImageSrc创建图像 - */
+BOOL CyImage::Create(const ImageSrc *pSrc) throw()
+{
+	Destroy();// 先销毁图像数据
+	if (FALSE == CImage::Create(pSrc->GetWidth(), pSrc->GetHeight(), pSrc->GetBPP(), 0UL))
+		return FALSE;
+	if (pSrc->GetBPP() == 8)
+		SetColorTabFor8BitImage(this);
+	memcpy(GetHeadAddress(), pSrc->GetHeadAddress(), GetLength() * sizeof(BYTE));
+	InitFloatData();
+	MemcpyByteToFloat();
 	return TRUE;
 }
 

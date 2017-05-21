@@ -83,8 +83,8 @@ int DecodeTest(const char *test)
 		return 0;
 
 	BarCodeInfo qr, inner;
-	ImageSrc pImage(pSrc, nWidth, nHeight, nChannel);
-	BOOL success = DecodeWholeImage(DecodeSrc(pImage, TRUE, TRUE), &qr, &inner);
+	ImageInfo pImage(pSrc, nWidth, nHeight, nChannel);
+	BOOL success = DecodeWholeImage(DecodeSrcInfo(pImage, TRUE, TRUE), &qr, &inner);
 
 	SAFE_DELETE(pSrc);
 	wchar_t *pOuter = UTF8Convert2UnicodeEx(qr.m_pData, ncLength);

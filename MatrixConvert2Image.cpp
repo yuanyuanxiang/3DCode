@@ -14,7 +14,8 @@ int CMatrix2Image::FindMinValueIndex(COLORREF x, COLORREF y, COLORREF z, COLORRE
 }
 
 
-/** 将二维码矩阵转换为彩色图像. 
+/** 
+* @brief 将二维码矩阵转换为彩色图像. 
 * @param[in] bMatrix 二维码数据
 * @param[in] nSymbleSize 二维码尺寸
 * @param[in] *pImage 目标图像
@@ -24,7 +25,7 @@ int CMatrix2Image::FindMinValueIndex(COLORREF x, COLORREF y, COLORREF z, COLORRE
 * @param[in] QREncodeColor1 彩色一
 * @param[in] QREncodeColor2 彩色二
 */
-BOOL CMatrix2Image::Matrix2ColorImage(COLORREF ForegroundColor, COLORREF BackgroundColor, 
+BOOL CMatrix2Image::CreateColorImage(COLORREF ForegroundColor, COLORREF BackgroundColor, 
 									  COLORREF QREncodeColor1, COLORREF QREncodeColor2)
 {
 	// 背景模块的灰度值必须最小
@@ -34,6 +35,9 @@ BOOL CMatrix2Image::Matrix2ColorImage(COLORREF ForegroundColor, COLORREF Backgro
 		TRACE(" * 警告：背景模块的灰度值不是最小，不利于解码!\n");
 	}
 
+	BYTE *m_pHead = m_Src.GetImage();
+	int m_nRowlen = m_Src.GetRowlen();
+	int m_nChannel = m_Src.GetChannel();
 	for (int i = 0; i < m_nQrSize; ++i)
 	{
 		int nRow = i * m_nPixelSize;
@@ -82,19 +86,19 @@ void CMatrix2Image::SetColorPixel(int nRow, int nCol, int nMatVal, COLORREF QREn
 	for (int i = 0; i < nHalfPixel; ++i)
 	{
 		// 行指针
-		BYTE *pRow = m_pHead + (nRow + i + QR_MARGIN) * m_nRowlen;
-		for (int j = 0; j < nHalfPixel; ++j)
+		BYTE *pRow = m_Src.GetImage() + (nRow + i + m_nQRMargin) * m_Src.GetRowlen();
+		for (int j = 0; j < nHalfPixel; ++j)//a1
 		{
 			// 像素指针
-			BYTE *Pixel = pRow + m_nChannel * (j + nCol + QR_MARGIN);
+			BYTE *Pixel = pRow + m_Src.GetChannel() * (j + nCol + m_nQRMargin);
 			Pixel[0] = B[b[0]];
 			Pixel[1] = G[b[0]];
 			Pixel[2] = R[b[0]];
 		}
-		for (int j = nHalfPixel; j < m_nPixelSize; ++j)
+		for (int j = nHalfPixel; j < m_nPixelSize; ++j)//a2
 		{
 			// 像素指针
-			BYTE *Pixel = pRow + m_nChannel * (j + nCol + QR_MARGIN);
+			BYTE *Pixel = pRow + m_Src.GetChannel() * (j + nCol + m_nQRMargin);
 			Pixel[0] = B[b[1]];
 			Pixel[1] = G[b[1]];
 			Pixel[2] = R[b[1]];
@@ -103,19 +107,19 @@ void CMatrix2Image::SetColorPixel(int nRow, int nCol, int nMatVal, COLORREF QREn
 	for (int i = nHalfPixel; i < m_nPixelSize; ++i)
 	{
 		// 行指针
-		BYTE *pRow = m_pHead + (nRow + i + QR_MARGIN) * m_nRowlen;
-		for (int j = 0; j < nHalfPixel; ++j)
+		BYTE *pRow = m_Src.GetImage() + (nRow + i + m_nQRMargin) * m_Src.GetRowlen();
+		for (int j = 0; j < nHalfPixel; ++j)//a3
 		{
 			// 像素指针
-			BYTE *Pixel = pRow + m_nChannel * (j + nCol + QR_MARGIN);
+			BYTE *Pixel = pRow + m_Src.GetChannel() * (j + nCol + m_nQRMargin);
 			Pixel[0] = B[b[2]];
 			Pixel[1] = G[b[2]];
 			Pixel[2] = R[b[2]];
 		}
-		for (int j = nHalfPixel; j < m_nPixelSize; ++j)
+		for (int j = nHalfPixel; j < m_nPixelSize; ++j)//a4
 		{
 			// 像素指针
-			BYTE *Pixel = pRow + m_nChannel * (j + nCol + QR_MARGIN);
+			BYTE *Pixel = pRow + m_Src.GetChannel() * (j + nCol + m_nQRMargin);
 			Pixel[0] = B[b[3]];
 			Pixel[1] = G[b[3]];
 			Pixel[2] = R[b[3]];

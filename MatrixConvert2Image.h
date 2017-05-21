@@ -3,11 +3,11 @@
 * @brief 矩阵转图像
 */
 
-#ifdef WIN32
 
 #include "DataTypes.h"
 
 #pragma once
+#include "ImageSrc.h"
 
 #define COLOR_FOREGROUND	0		//前景色
 #define COLOR_BACKGROUND	1		//背景色
@@ -20,34 +20,25 @@ class CMatrix2Image
 public:
 	/**
 	* @brief 
-	* @param[in] bMatrix 二维码数据
+	* @param[in] *mat 二维码矩阵
 	* @param[in] nSymbleSize 二维码尺寸
-	* @param[in] *pImage 目标图像
 	* @param[in] nPixelSize 像素大小
+	* @param[in] nQRMargin QR边界
 	*/
-	CMatrix2Image(qrMat *mat, int nSymbleSize, CImage* pImage, int nPixelSize) 
-	{
-		m_qrMat = mat;
-		m_nQrSize = nSymbleSize;
-		m_pImage = pImage;
-		m_nPixelSize = nPixelSize;
-		m_nWidth = m_nPixelSize * m_nQrSize + QR_MARGIN * 2;
-		m_nHeight = m_nPixelSize * m_nQrSize + QR_MARGIN * 2;
-		m_nChannel = 3;
+	CMatrix2Image(qrMat *mat, int nSymbleSize, int nPixelSize, int nQRMargin = QR_MARGIN) :
+		m_qrMat (mat),
+		m_nQrSize (nSymbleSize),
+		m_nPixelSize (nPixelSize),
+		m_nQRMargin (nQRMargin), 
+		m_Src(m_nPixelSize * m_nQrSize + m_nQRMargin * 2, m_nPixelSize * m_nQrSize + m_nQRMargin * 2, 4) { }
 
-		if (!m_pImage->IsNull())
-			m_pImage->Destroy();
-		m_pImage->Create(m_nWidth, m_nHeight, 8 * m_nChannel, 0UL);
-
-		m_pHead = (BYTE*) m_pImage->GetBits() + m_pImage->GetPitch() * (m_pImage->GetHeight() - 1);
-		m_nRowlen = abs(m_pImage->GetPitch());
-		memset(m_pHead, 255, m_nHeight * m_nRowlen * sizeof(BYTE));
-	}
 	~CMatrix2Image(){ }
 
 	// 将二维码矩阵转换为彩色图像
-	BOOL Matrix2ColorImage(COLORREF ForegroundColor, COLORREF BackgroundColor, 
+	BOOL CreateColorImage(COLORREF ForegroundColor, COLORREF BackgroundColor, 
 		COLORREF QREncodeColor1, COLORREF QREncodeColor2);
+
+	const ImageSrc* GetImageSrc() const { return &m_Src; }
 
 private:
 	// 寻找四个元素之间最小的，返回其标号
@@ -56,15 +47,9 @@ private:
 	// 为(nRow, nCol)行列处设置颜色
 	void SetColorPixel(int nRow, int nCol, int nMatVal, COLORREF QREncodeColor1, COLORREF QREncodeColor2);
 
-	qrMat *m_qrMat;
-	int m_nQrSize;
-	CImage* m_pImage;
-	BYTE* m_pHead;
-	int m_nWidth;
-	int m_nHeight;
-	int m_nRowlen;
-	int m_nChannel;
-	int m_nPixelSize;
+	qrMat*		m_qrMat;		/**< QR矩阵 */
+	int			m_nQrSize;		/**< QR尺寸 */
+	int			m_nPixelSize;	/**< 像素大小 */
+	int			m_nQRMargin;	/**< QR边界 */
+	ImageSrc	m_Src;			/**< 图像数据 */
 };
-
-#endif // WIN32

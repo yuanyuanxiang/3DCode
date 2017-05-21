@@ -34,7 +34,7 @@ CDlgQRDecode::CDlgQRDecode(CWnd* pParent) : CDialogEx(CDlgQRDecode::IDD, pParent
 	// 编码颜色
 	m_BackgroundColor = RGB(0, 0, 0);
 
-	ImageSrc::Init("yuanyuanxiang");
+	ImageInfo::Init("yuanyuanxiang");
 }
 
 CDlgQRDecode::~CDlgQRDecode()
@@ -88,8 +88,8 @@ BOOL CDlgQRDecode::Decode()
 	BYTE *pHead = m_pImage->GetHeadAddress();
 
 	// 解码整幅图像
-	ImageSrc pImage(pHead, nWidth, nHeight, nChannel, m_roi);
-	BOOL success = DecodeWholeImage(DecodeSrc(pImage, TRUE, TRUE), &qr, &inner);
+	ImageInfo pImage(pHead, nWidth, nHeight, nChannel, m_roi);
+	BOOL success = DecodeWholeImage(DecodeSrcInfo(pImage, TRUE, TRUE), &qr, &inner);
 	if (qr.m_pData == NULL)
 	{
 		// 尝试进行DM、PDF417、Aztec二维码解码

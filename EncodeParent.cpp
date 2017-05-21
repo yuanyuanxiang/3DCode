@@ -209,8 +209,9 @@ BOOL CEncodeParent::EncodePrivateData(CQR_Encode* pQR_Encode)
 
 	// 获取符号大小然后将符号转换为图像
 	m_nSymbleSize = pQR_Encode->m_nSymbleSize;
-	CMatrix2Image m2i(pQR_Encode->m_byModuleData, m_nSymbleSize, m_pImage, m_nPixelSize);
-	m2i.Matrix2ColorImage(m_ForegroundColor, m_BackgroundColor, m_QREncodeColor1, m_QREncodeColor2);
+	CMatrix2Image m2i(pQR_Encode->m_byModuleData, m_nSymbleSize, m_nPixelSize);
+	m2i.CreateColorImage(m_ForegroundColor, m_BackgroundColor, m_QREncodeColor1, m_QREncodeColor2);
+	m_pImage->Create(m2i.GetImageSrc());
 
 	return SUCCESS == bEncodeSucess;
 }
