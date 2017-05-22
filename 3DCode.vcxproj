@@ -162,8 +162,6 @@
     <ClCompile Include="3DCodePane.cpp" />
     <ClCompile Include="MatrixConvert2Image.cpp" />
     <ClCompile Include="QrEncodeFuncs.cpp" />
-    <ClCompile Include="QR_Encode.cpp" />
-    <ClCompile Include="reedSolomon.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
