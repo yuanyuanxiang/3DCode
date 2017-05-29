@@ -199,7 +199,7 @@ BOOL CEncodeParent::EncodePrivateData(CQR_Encode* pQR_Encode)
 	if (bEncodeSucess)
 	{
 		CString err;
-		err.Format(_T("±àÂëÊ§°Ü,´íÎóÂë:%d"), bEncodeSucess);
+		err.Format(CString(ce.GetLastError()));
 		m_ToolTip.UpdateTipText(err, &m_editSourceDataPrivate);
 	}
 	else

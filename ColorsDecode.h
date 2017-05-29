@@ -37,8 +37,7 @@ private:
 	int				m_nHeaderBits[90];/**< 彩色编码的头 */
 	// 是否需要翻转比特流
 	bool			m_bInversed;	/**< 彩色前景背景搞反了 */
-	const char*		m_strErrorMsg;	/**< 错误信息 */
-	
+
 public:
 	/** 
 	* @brief 创建一个彩色编码器
@@ -54,16 +53,13 @@ public:
 		m_Foreground = 0;
 		m_Background = 0;
 		m_bInversed = false;
-		m_strErrorMsg = NULL;
+		*m_pData = 0;
 	}
 
 	~ColorsDecode() { }
 
 	// RS4方法解码彩色
 	BOOL DecodeColors(const BYTE* pHead, int nWidth, int nHeight, int nChannel);
-
-	/// 获取上一个错误
-	const char* GetLastError() const { return m_strErrorMsg ? m_strErrorMsg : "No error"; }
 
 	/** 
 	* @brief 获取彩色数据头信息
@@ -82,7 +78,7 @@ public:
 	/// 获取解码信息
 	inline void GetBarCodeInfo(BarCodeInfo & inner) const 
 	{
-		inner.m_fModuleSize = m_nModuleSize;
+		inner.m_fModuleSize = (float)m_nModuleSize;
 		inner.m_nEcLevel = m_ecLevel;
 		inner.m_nVersion = m_nVersion;
 		inner.m_nMaskingNo = m_nMaskingNo;

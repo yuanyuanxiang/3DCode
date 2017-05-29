@@ -3,8 +3,8 @@
 #pragma once
 
 #include "atlimage.h"
-#include "DataTypes.h"
 #include "ImageSrc.h"
+#include "ImageTransform.h"
 
 /** 
 * @file CyImage.h
@@ -49,7 +49,7 @@ public:
 	void FlipH();															//水平翻转图像
 	void FlipV();															//垂直翻转图像
 	void Transpose();														//转置图像
-	void Rotate(float degree = 90.f);										//图像按角度旋转
+	void Rotate(float degree = 90);										//图像按角度旋转
 	void Zoom(float rate = 2.f);											//图像按倍数缩放
 	void Zoom(int nNewWidth, int nNewHeight);								//图像按像素缩放
 	void Cut(CLogoRect rect = CLogoRect(0, 0, 0, 0));						//图像裁剪
@@ -78,22 +78,19 @@ public:
 	// 
 
 	/* 制作备份图像，需要delete方法 */
-	CyImage* MakeCopy();
+	CyImage* MakeCopy() const;
 
 	/* 获取背景图像，需要delete方法 */
-	CyImage* GetBackground(float threahold, float3 background);
+	CyImage* GetBackground(float threahold, float3 background) const;
 
 	/* 提取感兴趣区域，需要delete方法 */
-	CyImage* ROI(CLogoRect rect = CLogoRect(0, 0, 0, 0));
+	CyImage* ROI(CLogoRect rect = CLogoRect(0, 0, 0, 0)) const;
 
 	/* 对图像旋转，返回新图像的数据，宽度、高度和每行浮点数，需要delete方法 */
-	float* Rotate(float angle, int &NewWidth, int &NewHeight, int &NewRowlen);
-	float* Rotate(float angle, float x0, float y0, int &NewWidth, int &NewHeight, int &NewRowlen);
-	float* Rotate(float angle, float x0, float y0, int &Xmin, int &Ymin, int &Xmax, int &Ymax, 
-		int &NewWidth, int &NewHeight, int &NewRowlen);
+	float* Rotate(const PositionTransform &pt, int &NewWidth, int &NewHeight, CLogoRect &dstArea) const;
 
 	/* 根据参数放大图像，返回浮点数据，需要delete方法 */
-	float* Zoom(int NewWidth, int NewHeight, int bNeededReturn);
+	float* Zoom(int NewWidth, int NewHeight, int bNeededReturn) const;
 	//
 
 	// 创建图像
@@ -129,9 +126,6 @@ private:
 	void	Bpp1To24();														// 掩码转24位
 	void	Bpp1To32();														// 掩码转32位
 };
-
-// swap 交换int型元素的次序
-void swap(int &nElem1, int &nElem2);
 
 // 为8位色图像设置颜色表
 void SetColorTabFor8BitImage(CImage *pImage);

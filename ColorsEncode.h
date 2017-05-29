@@ -76,6 +76,7 @@ public:
 		m_ecLevel = 0;
 		m_nMaskingNo = 0;
 		m_nVersion = 0;
+		m_strErrorMsg = NULL;
 	}
 
 	/// 默认的析构函数
@@ -83,6 +84,9 @@ public:
 
 	// 为原二维码着色
 	int EncodeColors(char *pUtf8, int nStrLen, int nInnerEcLevel, int nInnerMaskNo, int nInnerVersion);
+
+	/// 获取上一个错误
+	const char* GetLastError() const { return m_strErrorMsg ? m_strErrorMsg : "No error"; }
 
 protected:
 	// 彩色编码及数据格式
@@ -93,6 +97,7 @@ protected:
 									0版本采用旧的掩码，非0采用新的掩码
 									30版本SUPER_QR用来开关是否强势扩容
 									31版本采用Zlib对数据进行压缩编码 */
+	const char*		m_strErrorMsg;	/**< 错误信息 */
 
 #if (ENCODE_MOUDLE)
 	// 获取位置识别区的16个模块的索引

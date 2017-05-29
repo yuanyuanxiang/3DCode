@@ -86,7 +86,8 @@ BOOL CDlgQRDecode::Decode()
 	int nChannel = m_pImage->GetChannel();
 	int nFloatRowlen = m_pImage->GetFloatDataRowlen();
 	BYTE *pHead = m_pImage->GetHeadAddress();
-
+	memset(&qr, 0, sizeof(BarCodeInfo));
+	memset(&inner, 0, sizeof(BarCodeInfo));
 	// ½âÂëÕû·ùÍ¼Ïñ
 	ImageInfo pImage(pHead, nWidth, nHeight, nChannel, m_roi);
 	BOOL success = DecodeWholeImage(DecodeSrcInfo(pImage, TRUE, TRUE), &qr, &inner);

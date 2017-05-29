@@ -80,6 +80,7 @@ public:
 		m_hint = h;
 		m_hint.setTryHarder(TRUE == bTryHarder);
 		m_bUseHybrid = bUseHybrid;
+		*m_pData = 0;
 	}
 
 	~ZXingDecoder()

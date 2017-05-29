@@ -53,6 +53,7 @@ protected:
 
 private:
 	EncodeModule		m_EncodeModule;/**< 彩色编码模块（1，默认为白色） */
+	vector<CPixelPoint> m_vColorsModuleIndex;			/**< 彩色模块索引 */
 
 public:
 	/** 
@@ -109,10 +110,19 @@ public:
 	}
 
 	// 获取编码模块总数
-	int GetColorsMoudlesCount(BOOL bFore = TRUE) const;
+	int GetColorsMoudlesCount() const 
+	{
+		return m_vColorsModuleIndex.size();
+	}
 
 	// 获取编码模块的索引
-	vector<CPixelPoint> GetColorsModuleIndex(BOOL bFore = TRUE) const;
+	const vector<CPixelPoint>& GetColorsModuleIndex() const 
+	{
+		return m_vColorsModuleIndex;
+	}
+
+	//  初始化编码模块的索引
+	void InitColorsModuleIndex(BOOL bFore = TRUE);
 
 	// (row, col)非数据头索引
 	BOOL NotHeaderIndex(int row, int col) const;
