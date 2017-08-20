@@ -86,24 +86,24 @@ void MixedLogo(CyImage* pDstImage, CyImage* pSrcImage, CLogoRect LogoRect, float
 	int nDstChannel = pDstImage->GetChannel();
 	int nLogoWidth = LogoRect.Width();
 	int nLogoHeight = LogoRect.Height();
-	float *pSrc = pSrcImage->Zoom(nLogoWidth, nLogoHeight, TRUE);
+	ImageTransform pSrc = pSrcImage->Zoom(nLogoWidth, nLogoHeight, TRUE);
 	int nSrcChannel = pSrcImage->GetChannel();
 	int nSrcRowlen = nLogoWidth * nSrcChannel;
 	float *pDst = pDstImage->GetFloatDataHead();
 	for (int i = 0; i < nLogoHeight; ++i)
 	{
 		float* pRow = pDst + LogoRect.left * nDstChannel + (i + LogoRect.top) * nDstRowlen;
-		float* pBits = pSrc + i * nSrcRowlen;
+		const float* pBits = pSrc.GetImage() + i * nSrcRowlen;
 		for (int j = 0; j < nLogoWidth; ++j)
 		{
 			float* pCur = pRow + j * nDstChannel;
-			float* p = pBits + j * nSrcChannel;
+			const float* p = pBits + j * nSrcChannel;
 			pCur[0] = dst_rate * pCur[0] + (1 - dst_rate) * p[0];
 			pCur[1] = dst_rate * pCur[1] + (1 - dst_rate) * p[1];
 			pCur[2] = dst_rate * pCur[2] + (1 - dst_rate) * p[2];
 		}
 	}
-	SAFE_DELETE(pSrc);
+
 	pDstImage->MemcpyFloatToByte();
 }
 
@@ -390,11 +390,29 @@ BOOL CyImage::Create(const ImageSrc *pSrc) throw()
 	Destroy();// 先销毁图像数据
 	if (FALSE == CImage::Create(pSrc->GetWidth(), pSrc->GetHeight(), pSrc->GetBPP(), 0UL))
 		return FALSE;
-	if (pSrc->GetBPP() == 8)
+	if (GetBPP() == 8)
 		SetColorTabFor8BitImage(this);
 	memcpy(GetHeadAddress(), pSrc->GetHeadAddress(), GetLength() * sizeof(BYTE));
 	InitFloatData();
 	MemcpyByteToFloat();
+	return TRUE;
+}
+
+
+/** - 从ImageTransform创建图像 - */
+BOOL CyImage::Create(const ImageTransform *pSrc) throw()
+{
+	if(NULL == pSrc)
+		return FALSE;
+	Destroy();
+	int nBPP = 8 * pSrc->GetRowlen() / pSrc->GetWidth();
+	if (FALSE == CImage::Create(pSrc->GetWidth(), pSrc->GetHeight(), nBPP))
+		return FALSE;
+	if (nBPP == 8)
+		SetColorTabFor8BitImage(this);
+	InitFloatData();
+	memcpy(m_pFloatData, pSrc, pSrc->GetHeight() * pSrc->GetRowlen() * sizeof(float));
+	MemcpyFloatToByte();
 	return TRUE;
 }
 
@@ -541,27 +559,22 @@ void CyImage::MemcpyFloatToByteBounded(float lower, float upper)
 void CyImage::Rotate(float degree)
 {
 	float angle = RAD(degree);
-	int NewWidth = 0;
-	int NewHeight = 0;
 	InitFloatData();
 	MemcpyByteToFloat();
-	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetFloatDataRowlen(), GetChannel());
-	float *pDst = it.ImageRotate(PositionTransform(angle, 0, 0), NewWidth, NewHeight, CLogoRect());
-	Create(pDst, NewWidth, NewHeight, NewWidth * GetChannel());
-	SAFE_DELETE(pDst);
+	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
+	ImageTransform pDst = it.ImageRotate(PositionTransform(angle, 0, 0), CLogoRect());
+	Create(pDst, pDst.GetWidth(), pDst.GetHeight(), pDst.GetRowlen());
 }
 
 
 /** - 旋转图像，并返回旋转得到的图像数据 - 
 * @param[in] angle 旋转角度
-* @param[out] &NewWidth 新图像宽度
-* @param[out] &NewHeight 新图像高度
-* @return 新图像数据块头指针
+* @return 新图像数据块
 */
-float* CyImage::Rotate(const PositionTransform &pt, int &NewWidth, int &NewHeight, CLogoRect &dstArea) const
+ImageTransform CyImage::Rotate(const PositionTransform &pt, CLogoRect &dstArea) const
 {
-	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetFloatDataRowlen(), GetChannel());
-	return it.ImageRotate(pt, NewWidth, NewHeight, dstArea);
+	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
+	return it.ImageRotate(pt, dstArea);
 }
 
 
@@ -569,11 +582,11 @@ float* CyImage::Rotate(const PositionTransform &pt, int &NewWidth, int &NewHeigh
 * @param[in] NewWidth 新图像宽度
 * @param[in] NewHeight 新图像高度
 * @param[in] bNeededReturn 需要返回新图像数据块头指针
-* @return 新图像数据块头指针
+* @return 新图像数据块
 */
-float* CyImage::Zoom(int NewWidth, int NewHeight, int bNeededReturn) const
+ImageTransform CyImage::Zoom(int NewWidth, int NewHeight, int bNeededReturn) const
 {
-	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetFloatDataRowlen(), GetChannel());
+	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
 	return it.ImageZoom(NewWidth, NewHeight);
 }
 
@@ -599,11 +612,9 @@ void CyImage::Zoom(int nNewWidth, int nNewHeight)
 {
 	if (nNewWidth == GetWidth() && nNewHeight == GetHeight())
 		return;
-	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), 
-		GetFloatDataRowlen(), GetChannel());
-	float *pDst = it.ImageZoom(nNewWidth, nNewHeight);
+	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
+	ImageTransform pDst = it.ImageZoom(nNewWidth, nNewHeight);
 	Create(pDst, nNewWidth, nNewHeight, nNewWidth * GetChannel());
-	SAFE_DELETE(pDst);
 }
 
 
@@ -1323,8 +1334,8 @@ CyImage* CyImage::ROI(CLogoRect rect) const
 {
 	if (rect == CLogoRect(0, 0, 0, 0))
 		return MakeCopy();
-	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetRowlen(), GetChannel());
-	float *pDst = it.ImageRoi(rect);
+	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
+	ImageTransform pDst = it.ImageRoi(rect);
 	CyImage *pImage = NULL;
 	try
 	{
@@ -1332,11 +1343,9 @@ CyImage* CyImage::ROI(CLogoRect rect) const
 	}
 	catch (const std::bad_alloc)
 	{
-		SAFE_DELETE(pDst);
 		return pImage;
 	}
 	pImage->Create(pDst, rect.Width(), rect.Height(), rect.Width() * GetChannel());
-	SAFE_DELETE(pDst);
 	return pImage;
 }
 
@@ -1350,8 +1359,7 @@ void CyImage::Cut(CLogoRect rect)
 	if (rect.left == 0 && rect.top == 0 && rect.right == GetWidth() && rect.bottom == GetHeight())
 		return;
 	/// 其他情况，获得感兴趣区域，并赋值给当前图像
-	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetRowlen(), GetChannel());
-	float *pDst = it.ImageRoi(rect);
+	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
+	ImageTransform pDst = it.ImageRoi(rect);
 	Create(pDst, rect.Width(), rect.Height(), rect.Width() * GetChannel());
-	SAFE_DELETE(pDst);
 }

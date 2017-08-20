@@ -155,12 +155,6 @@
     <ClCompile Include="MainFrm.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="QR_Encode.cpp">
-      <Filter>QR_Maker</Filter>
-    </ClCompile>
-    <ClCompile Include="reedSolomon.cpp">
-      <Filter>ReedSolomon</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3DCode.rc">
