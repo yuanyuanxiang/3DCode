@@ -38,6 +38,7 @@ BOOL CMatrix2Image::CreateColorImage(COLORREF ForegroundColor, COLORREF Backgrou
 	BYTE *m_pHead = m_Src.GetImage();
 	int m_nRowlen = m_Src.GetRowlen();
 	int m_nChannel = m_Src.GetChannel();
+	memset(m_pHead, 255, m_Src.GetHeight() * m_nRowlen * sizeof(BYTE));
 	for (int i = 0; i < m_nQrSize; ++i)
 	{
 		int nRow = i * m_nPixelSize;

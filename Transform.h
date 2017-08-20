@@ -29,6 +29,9 @@ template <typename Type> void ZoomImage(Type** pfHead, int &nWidth, int &nHeight
 // 限制图像最大边长，当超出时修改大小
 template <typename Type> void LimitImage(Type** pfHead, int &nWidth, int &nHeight, int &nRowlen, int nChannel, int nMaxSize = 320);
 
+// 获取截屏图像中的QR码矩形
+template <typename Type> void GetQrRect(const Type* pHead, int nWidth, int nHeight, int nChannel, int nRowlen, RoiRect &cutAero);
+
 // 上下翻转图像
 template <typename Type> void ImageFlipV(Type* pHead, const int nWidth, const int nHeight, const int nRowlen);
 
@@ -136,6 +139,7 @@ template <typename Type> void ImageTranspose(Type** pHead, const int nWidth, con
 
 	Type *pSrc = *pHead;
 	Type *temp = new Type[nWidth * nNewRowlen];
+	memset(temp, 0, nWidth * nNewRowlen * sizeof(Type));
 	for (int k = 0; k < nChannel; ++k)
 	{
 		int x = 0, y1 = 0;
@@ -191,7 +195,7 @@ template <typename Type> Type* ImageROI(const Type* pHead, int &nWidth, int &nHe
 	Type* pDst = new Type[nNewHeight * nNewRowlen];
 
 	Type *pDstLine = pDst;
-	const Type *pSrcLine = pHead + roi.left * nChannel + (nHeight - roi.top - 1) * nRowlen;
+	const Type *pSrcLine = pHead + roi.left * nChannel + (nHeight - 1 - roi.top) * nRowlen;
 	for (int i = 0; i < nNewHeight; ++i)
 	{
 		memcpy(pDstLine, pSrcLine, nNewRowlen * sizeof(Type));
@@ -288,7 +292,7 @@ template <typename Type> void ZoomImage(Type** pfHead, int &nWidth, int &nHeight
 			{
 				int x1 = int(s), y1 = int(t), x3 = x1 + 1, y3 = y1 + 1;
 				// 左下角的点
-				const Type* pLB = *pfHead + nCurChannel + x1 * nChannel + y1 * nRowlen;
+				const BYTE* pLB = *pfHead + nCurChannel + x1 * nChannel + y1 * nRowlen;//必须转换为BYTE*
 				// 对越界的处理
 				pDst[nCurChannel + x + y] = (x1 < 0 || x3 >= nWidth || y1 < 0 || y3 >= nHeight) ? 0 : 
 					(*pLB * (x3 - s) + *(pLB + nChannel) * (s - x1)) * (y3 - t) 
@@ -321,7 +325,7 @@ template <typename Type> void ZoomImage(Type** pfHead, int &nWidth, int &nHeight
 * @param[in] nChannel 图像通道
 * @param[in] nMaxSize 最大边长320
 * @note 当图像有一边长度超过限制时进行缩放并更新信息
-* @warning 宽度、高度、每行字节数会被修改
+* @warning 输入图像需为字节类型，宽度、高度、每行字节数会被修改
 */
 template <typename Type> void LimitImage(Type** pfHead, int &nWidth, int &nHeight, int &nRowlen, int nChannel, int nMaxSize)
 {
@@ -343,6 +347,124 @@ template <typename Type> void LimitImage(Type** pfHead, int &nWidth, int &nHeigh
 		}
 	}
 }
+
+
+// 获取图像行的梯度和[不计算边缘，计算中间1/3]
+template <typename Type>
+inline int RowProject(const Type* pHead, int nWidth, int nHeight, int nChannel, int nRowlen, int *row)
+{
+	memset(row, 0, nHeight * sizeof(int));
+	const int nHalfW = nWidth / 2;
+	const int R = nWidth / 6;
+	const BYTE *p = (const BYTE*) pHead;
+	int avg = 0;
+	for (int r = 0; r < nHeight; ++r)
+	{
+		for (int i = nHalfW - R, y = r * nRowlen; i < nHalfW + R; ++i) 
+			row[r] += abs(*(p + i * nChannel + y) - *(p + (i-1) * nChannel + y));
+		if (nHeight/3 <= r && r < nHeight * 2/3)
+			avg += row[r];
+	}
+	int f_avg = avg / nHeight;
+	return f_avg;
+}
+
+
+// 获取图像列的梯度和[不计算边缘，计算中间1/3]
+template <typename Type>
+inline int ColProject(const Type* pHead, int nWidth, int nHeight, int nChannel, int nRowlen, int *col)
+{
+	memset(col, 0, nWidth * sizeof(int));
+	const int nHalfH = nHeight / 2;
+	const int R = nHeight / 6;
+	const BYTE *p = (const BYTE*) pHead;
+	int avg = 0;
+	for (int c = 0; c < nWidth; ++c)
+	{
+		for (int j = nHalfH - R, x = c * nChannel; j < nHalfH + R; ++j)
+			col[c] += abs(*(p + x + j * nRowlen) - *(p + x + (j+1) * nRowlen));
+		if (nWidth/3 <= c && c < nWidth * 2/3)
+			avg += col[c];
+	}
+	int f_avg = avg / nWidth;
+	return f_avg;
+}
+
+/* - 提取截屏图像中间的Qr码 -
+* @param[in] *pHead 数据头
+* @param[in] &nWidth 宽度
+* @param[in] &nHeight 高度
+* @param[in] &nRowlen 每行个数
+* @param[in] &cutAero 裁剪比例
+* @note 当图像宽高比大于等于1.5时，提取QR码
+* @warning 输入图像需为字节类型，宽度、高度、每行字节数会被修改
+*/
+template <typename Type> void GetQrRect(const Type* pHead, int nWidth, int nHeight, int nChannel, int nRowlen, RoiRect &cutAero)
+{
+	if (nWidth > 2048 || nHeight > 2048)
+	{
+		cutAero = RoiRect(0, 0, nWidth, nHeight);
+		return;
+	}
+	int nHalfW = nWidth/2, nHalfH = nHeight/2;
+	int difRow[2048] = {0};
+	int difCol[2048] = {0};
+	double avgRow = RowProject(pHead, nWidth, nHeight, nChannel, nRowlen, difRow);
+	double avgCol = ColProject(pHead, nWidth, nHeight, nChannel, nRowlen, difCol);
+	int Start = 0, End = 0;
+	for (int i = 0; i < nHalfH; ++i)// 计算top
+	{
+		if (difRow[nHalfH - i] < avgRow)
+		{
+			Start = nHalfH - 1 - i;
+			break;
+		}
+	}
+	for (int i = 0; i < nHalfH; ++i)// 计算bottom
+	{
+		if (difRow[nHalfH + i] < avgRow)
+		{
+			End = nHalfH + 1 + i;
+			break;
+		}
+	}
+	for (int i = 0; i < nHalfW; ++i)// 计算left
+	{
+		if (difCol[nHalfW - i] < avgCol)
+		{
+			cutAero.left = nHalfW - 1 - i;
+			break;
+		}
+	}
+	for (int i = 0; i < nHalfW; ++i)// 计算right
+	{
+		if (difCol[nHalfW + i] < avgCol)
+		{
+			cutAero.right = nHalfW + 1 + i;
+			break;
+		}
+	}
+	cutAero.top = nHeight - End;
+	cutAero.bottom = nHeight - Start;
+	cutAero.left -= QR_MARGIN;
+	cutAero.right += QR_MARGIN;
+	cutAero.top -= QR_MARGIN;
+	cutAero.bottom += QR_MARGIN;
+	cutAero.left = max(0, cutAero.left);
+	cutAero.right = min(cutAero.right, nWidth - 1);
+	cutAero.top = max(0, cutAero.top);
+	cutAero.bottom = min(cutAero.bottom, nHeight - 1);
+	int rW = 4, rH = 6;
+	if (nWidth > nHeight)
+		swap(rW, rH);
+	if (cutAero.Width() < nWidth/rW || cutAero.Height() < nHeight/rH)
+	{
+		const int N = 5;
+		cutAero = nHeight > nWidth ? RoiRect(QR_MARGIN, nHeight/N, nWidth-1 - QR_MARGIN, nHeight * (N-1)/N):
+			RoiRect(nWidth/N, QR_MARGIN, nWidth * (N-1)/N, nHeight-1 - QR_MARGIN);
+	}
+}
+
 
 /** 
 * @brief 彩色转黑白.

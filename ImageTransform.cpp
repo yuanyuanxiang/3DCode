@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ImageTransform.h"
 
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -12,11 +11,10 @@ static char THIS_FILE[] = __FILE__;
 /** 
 * @brief 旋转图像
 * @param[in] &pt 旋转变换
-* @param[out] &NewWidth 新宽度
-* @param[out] &NewHeight 新高度
 * @param[out] &dstArea 图像区域
+* @return 新的图像
 */
-float* ImageTransform::ImageRotate(const PositionTransform &pt, int &NewWidth, int &NewHeight, CLogoRect &dstArea) const 
+ImageTransform ImageTransform::ImageRotate(const PositionTransform &pt, CLogoRect &dstArea) const 
 {
 	// 原始图像四个顶点的坐标
 	float x1, x2, x3, x4, y1, y2, y3, y4;
@@ -35,8 +33,8 @@ float* ImageTransform::ImageRotate(const PositionTransform &pt, int &NewWidth, i
 	int Ymin = int(FindMinBetween4Numbers(y1, y2, y3, y4));
 	dstArea = CLogoRect(Xmin-1, Ymin-1, Xmax, Ymax);
 	// 新图像宽度、高度、每行字节数的变化
-	NewWidth = Xmax - Xmin + 1;
-	NewHeight = Ymax - Ymin + 1;
+	int NewWidth = Xmax - Xmin + 1;
+	int NewHeight = Ymax - Ymin + 1;
 	int NewRowlen = m_nChannel * NewWidth;
 	float *pDst = new float[NewRowlen * NewHeight];
 	float x0 = pt.x0, y0 = pt.y0, cos_theta = pt.cos_theta, sin_theta = -pt.sin_theta;
@@ -64,22 +62,23 @@ float* ImageTransform::ImageRotate(const PositionTransform &pt, int &NewWidth, i
 		}
 	}
 
-	return pDst;
+	return ImageTransform(pDst, NewWidth, NewHeight, m_nChannel, 0);
 }
 
 
 /** 
 * @brief 提取感兴趣区域
 * @param[in] &roi 感兴趣区域
+* @return 新的图像
 */
-float* ImageTransform::ImageRoi(const CLogoRect &roi) const 
+ImageTransform ImageTransform::ImageRoi(const CLogoRect &roi) const 
 {
 	ASSERT (0 <= roi.left && roi.left < m_nWidth && 0 <= roi.top && roi.top < m_nHeight);
 
 	int nNewWidth = roi.Width();
 	int nNewHeight = roi.Height();
 	if (nNewWidth <= 0 || nNewHeight <= 0)
-		return NULL;
+		return ImageTransform();
 	int nNewRowlen = nNewWidth * m_nChannel;
 	float* pDst = new float[nNewHeight * nNewRowlen];
 
@@ -92,7 +91,7 @@ float* ImageTransform::ImageRoi(const CLogoRect &roi) const
 		pDstLine += nNewRowlen;
 	}
 
-	return pDst;
+	return ImageTransform(pDst, nNewWidth, nNewHeight, m_nChannel, 0);
 }
 
 
@@ -100,8 +99,9 @@ float* ImageTransform::ImageRoi(const CLogoRect &roi) const
 * @brief 放大图像
 * @param[in] NewWidth 新的宽度
 * @param[in] NewHeight 新的高度
+* @return 新的图像
 */
-float* ImageTransform::ImageZoom(int NewWidth, int NewHeight) const 
+ImageTransform ImageTransform::ImageZoom(int NewWidth, int NewHeight) const 
 {
 	int NewRowlen = m_nChannel * NewWidth;
 	float* pDst = new float[NewRowlen * NewHeight];
@@ -121,5 +121,5 @@ float* ImageTransform::ImageZoom(int NewWidth, int NewHeight) const
 		}
 	}
 
-	return pDst;
+	return ImageTransform(pDst, NewWidth, NewHeight, m_nChannel, 0);
 }

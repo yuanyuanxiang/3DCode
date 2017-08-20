@@ -29,7 +29,7 @@ private:
 	int				m_nRowlen;		/**< 图像每行字节数 */
 	int				m_nChannel;		/**< 图像每像素字节 */
 	int				m_nModuleSize;	/**< 二维码模块大小 */
-	static char		m_pData[MAX_CODEUTF8NUM];/**< 解码结果 */
+	char			m_pData[MAX_CODEUTF8NUM];/**< 解码结果 */
 	// 编码颜色
 	pixel			m_Foreground;	/**< 彩色前景 */
 	pixel			m_Background;	/**< 彩色背景 */
@@ -83,7 +83,7 @@ public:
 		inner.m_nVersion = m_nVersion;
 		inner.m_nMaskingNo = m_nMaskingNo;
 		inner.m_nStrLen = m_strLen;
-		inner.m_pData = strlen(m_pData) ? m_pData : GetLastError();
+		strcpy(inner.m_pData, strlen(m_pData) ? m_pData : GetLastError());
 	}
 
 private:

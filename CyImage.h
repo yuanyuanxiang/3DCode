@@ -86,17 +86,18 @@ public:
 	/* 提取感兴趣区域，需要delete方法 */
 	CyImage* ROI(CLogoRect rect = CLogoRect(0, 0, 0, 0)) const;
 
-	/* 对图像旋转，返回新图像的数据，宽度、高度和每行浮点数，需要delete方法 */
-	float* Rotate(const PositionTransform &pt, int &NewWidth, int &NewHeight, CLogoRect &dstArea) const;
+	/* 对图像旋转，返回新图像的数据，宽度、高度和每行浮点数 */
+	ImageTransform Rotate(const PositionTransform &pt, CLogoRect &dstArea) const;
 
-	/* 根据参数放大图像，返回浮点数据，需要delete方法 */
-	float* Zoom(int NewWidth, int NewHeight, int bNeededReturn) const;
+	/* 根据参数放大图像，返回浮点数据 */
+	ImageTransform Zoom(int NewWidth, int NewHeight, int bNeededReturn) const;
 	//
 
 	// 创建图像
 	BOOL Create(const BYTE* pSrc, int nWidth, int nHeight, int nBPP) throw();
 	BOOL Create(const float* pSrc, int nWidth, int nHeight, int nRowlen) throw();
 	BOOL Create(const ImageSrc *pSrc) throw();
+	BOOL Create(const ImageTransform *pSrc) throw();
 	// 重载函数
 	BOOL Create(int nWidth, int nHeight, int nBPP, DWORD dwFlags = 0) throw();
 	HRESULT Load(LPCTSTR pszFileName) throw();

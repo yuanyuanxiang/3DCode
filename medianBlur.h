@@ -16,8 +16,10 @@
 #include <memory.h>
 //#include <intrin.h>
 
+#ifdef _MSC_VER
 /// 设置为1，来开启SSE2指令
 #define CV_SSE2 1
+#endif
 
 /*********************************** CPU capabilities ***********************************/
 

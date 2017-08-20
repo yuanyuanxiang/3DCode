@@ -3,9 +3,13 @@
 /** 
 * @file DataTypes.h
 * @brief 本文档定义了程序可能用到的数据类型
-* @note 如果需要在ANDROID使用，请#define ANDROID_CPP
 * @date 2016/8/24 注
 */
+
+#ifndef _MSC_VER
+#define ANDROID_CPP
+#define LINUX_CPP
+#endif
 
 #include <math.h>
 typedef int BOOL;
@@ -15,6 +19,10 @@ typedef BYTE *LPBYTE;
 typedef unsigned int uint;
 #define MAX_MODULESIZE		177		// QR码最大尺寸
 typedef BYTE qrMat[MAX_MODULESIZE];	// QR码比特矩阵
+
+#define COLORED_QR 1 // 是否彩色QR码
+
+#define TRY_HARD 0 // 某些很难解析的二维码需要开启此开关
 
 #if defined(ANDROID_CPP)
 
@@ -597,7 +605,7 @@ struct BarCodeInfo
 	int m_nMaskingNo;			/**< 掩码版本 */
 	int m_nStrLen;				/**< 字符长度 */
 	float m_fModuleSize;		/**< 每模块大小 */
-	const char* m_pData;		/**< 二维码数据 */
+	char m_pData[MAX_CODEUTF8NUM];/**< 二维码数据 */
 
 	BarCodeInfo()
 	{

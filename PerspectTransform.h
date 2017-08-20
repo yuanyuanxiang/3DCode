@@ -42,7 +42,7 @@ public:
 	void transformPoints(std::vector<float> &points);
 
 	// ‘¨„‰œÈ ‘ˆº”
-	inline void PerspectTransform::GetPptMatrix(float ppt[9]) const
+	inline void GetPptMatrix(float ppt[9]) const
 	{
 		ppt[0] = a11; ppt[1] = a12; ppt[2] = a13;
 		ppt[3] = a21; ppt[4] = a22; ppt[5] = a23;
@@ -50,7 +50,7 @@ public:
 	}
 
 
-	inline void PerspectTransform::GetPptMatrix(float &a11, float &a12, float &a13, 
+	inline void GetPptMatrix(float &a11, float &a12, float &a13, 
 		float &a21, float &a22, float &a23, 
 		float &a31, float &a32, float &a33) const 
 	{

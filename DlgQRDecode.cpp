@@ -89,37 +89,39 @@ BOOL CDlgQRDecode::Decode()
 	memset(&qr, 0, sizeof(BarCodeInfo));
 	memset(&inner, 0, sizeof(BarCodeInfo));
 	// 解码整幅图像
-	ImageInfo pImage(pHead, nWidth, nHeight, nChannel, m_roi);
+	BeginWaitCursor();
+	ImageInfo pImage(pHead, nWidth, nHeight, nChannel, m_roi, m_BackgroundColor);
 	BOOL success = DecodeWholeImage(DecodeSrcInfo(pImage, TRUE, TRUE), &qr, &inner);
-	if (qr.m_pData == NULL)
+	if (*qr.m_pData == NULL)
 	{
 		// 尝试进行DM、PDF417、Aztec二维码解码
 		DMDecoder dm;
-		dm.Init(pHead, nWidth, nHeight, nChannel, m_roi);
-		if (dm.Decode(m_BackgroundColor))
+		dm.SetImgSrc(pImage.GetDecBuffer(), nWidth, nHeight, pImage.GetDecChannel(), m_roi);
+		if (dm.DecodeHard(m_BackgroundColor))
 		{
-			qr.m_pData = dm.GetData();
+			strcpy(qr.m_pData, dm.GetData());
 		}
 		else
 		{
 			PDF417Decoder pdf417;
 			pdf417.CopyOf(dm);
-			if (pdf417.Decode(m_BackgroundColor))
+			if (pdf417.DecodeHard(m_BackgroundColor))
 			{
-				qr.m_pData = pdf417.GetData();
+				strcpy(qr.m_pData, pdf417.GetData());
 			}
 			else
 			{
 				AztecDecoder az;
 				az.CopyOf(dm);
-				if (az.Decode(m_BackgroundColor))
+				if (az.DecodeHard(m_BackgroundColor))
 				{
-					qr.m_pData = az.GetData();
+					strcpy(qr.m_pData, az.GetData());
 				}
 			}
 		}
 	}
-	if (qr.m_pData == NULL)
+	EndWaitCursor();
+	if (*qr.m_pData == NULL)
 	{
 		GetDlgItem(IDC_EDITSOURCEDATA_PUBLIC)->SetWindowText(_T("*** Decode failed ***"));
 		return FALSE;
@@ -127,7 +129,7 @@ BOOL CDlgQRDecode::Decode()
 	int m_ncLength = 0;
 	m_strPublicString = UTF8Convert2Unicode(qr.m_pData, m_ncLength);
 	UpdateDecodeInfo();
-	if (inner.m_pData != NULL)
+	if (*inner.m_pData != NULL)
 	{
 		m_strPrivateString = UTF8Convert2Unicode(inner.m_pData, m_ncLength);
 		GetDlgItem(IDC_EDITSOURCEDATA_PRIVATE)->SetWindowText(m_strPrivateString);

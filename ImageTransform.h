@@ -7,7 +7,6 @@
 */
 
 #include "DataTypes.h"
-#include <cmath>
 
 /**
 * @class PositionTransform
@@ -60,13 +59,14 @@ public:
 */
 class ImageTransform
 {
+private:
+	int m_nRefCount;
 protected:
 	const float *m_pSrc;/**< 图像数据 */
 	int m_nWidth;		/**< 图像宽度 */
 	int m_nHeight;		/**< 图像高度 */
 	int m_nRowlen;		/**< 图像每行字节数 */
 	int m_nChannel;		/**< 每像素元素数 */
-	float *data;
 
 	/** 
 	* @brief 双线性插值获取浮点 (x, y) 处的函数值
@@ -92,25 +92,72 @@ protected:
 	}
 
 public:
+	/// 置零
+	ImageTransform()
+	{
+		memset(this, 0, sizeof(ImageTransform));
+	}
+
 	/**
 	* @brief 图像变换类的构造函数
 	* @param[in] *pSrc 图像指针
 	* @param[in] nWidth 图像宽度
 	* @param[in] nHeight 图像高度
-	* @param[in] nRowlen 图像每行字节数
 	* @param[in] nChannel 图像通道
+	* @param[in] nRefCounr 引用计数
+	* @note 如果图像来源是外部已有图像，则引用计数默认为1即可；\n
+	*		如果是新建立的图像，表示未被其他指针引用，则引用计数填0。
 	*/
-	ImageTransform(const float* pSrc, int nWidth, int nHeight, int nRowlen, int nChannel) 
+	ImageTransform(const float* pSrc, int nWidth, int nHeight, int nChannel, int nRefCount = 1) 
 	{
 		m_pSrc = pSrc;
 		m_nWidth = nWidth;
 		m_nHeight = nHeight;
-		m_nRowlen = nRowlen;
+		m_nRowlen = nChannel * nWidth;
 		m_nChannel = nChannel;
-		data = NULL;
+		m_nRefCount = nRefCount + 1;
 	}
 
-	~ImageTransform() { if (data) delete [] data; }
+	/**
+	* @brief 拷贝构造函数
+	* @warning other引用赋值给当前对象，然后other引用自增
+	*/
+	ImageTransform(ImageTransform &other)
+	{
+		m_pSrc = other.m_pSrc;
+		m_nWidth = other.m_nWidth;
+		m_nHeight = other.m_nHeight;
+		m_nRowlen = other.m_nRowlen;
+		m_nChannel = other.m_nChannel;
+		m_nRefCount = other.GetRef();
+		other.AddRef();
+	}
+
+	/**
+	* @brief 析构函数
+	* @note 引用自减1，若等于0则删除内存
+	*/
+	~ImageTransform()
+	{
+		if (0 == --m_nRefCount)
+			SAFE_DELETE(m_pSrc);
+	}
+
+	inline void AddRef() { ++m_nRefCount; }
+
+	inline int GetRef() const { return m_nRefCount; }
+
+	inline operator const float*() const { return m_pSrc; }
+
+	inline const float* GetImage() const { return m_pSrc; }
+
+	inline int GetWidth() const { return m_nWidth; }
+
+	inline int GetHeight()const { return m_nHeight; }
+
+	inline int GetRowlen() const { return m_nRowlen; }
+
+	inline int GetChannel() const { return m_nChannel; }
 
 	/// 寻找四个数中最大者
 	inline float FindMaxBetween4Numbers(float x, float y, float z, float w) const 
@@ -132,11 +179,11 @@ public:
 	}
 
 	// 图像旋转
-	float* ImageRotate(const PositionTransform &pt, int &NewWidth, int &NewHeight, CLogoRect &dstArea) const ;
+	ImageTransform ImageRotate(const PositionTransform &pt, CLogoRect &dstArea) const ;
 
 	// 图像感兴趣区域
-	float* ImageRoi(const CLogoRect &roi) const ;
+	ImageTransform ImageRoi(const CLogoRect &roi) const ;
 
 	// 图像缩放
-	float* ImageZoom(int NewWidth, int NewHeight) const ;
+	ImageTransform ImageZoom(int NewWidth, int NewHeight) const ;
 };

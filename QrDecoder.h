@@ -85,6 +85,6 @@ public:
 		qr.m_nVersion = QRDecoder.GetQRCodeVersion();
 		qr.m_nMaskingNo = QRDecoder.GetMaskingNo();
 		qr.m_nStrLen = m_nStrlen;
-		qr.m_pData = m_pData;
+		strcpy(qr.m_pData, m_pData);
 	}
 };

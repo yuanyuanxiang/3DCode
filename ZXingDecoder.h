@@ -51,18 +51,21 @@ class ZXingDecoder
 {
 protected:
 	// param[in]
-	char *		m_pImage;				/**< 解码图像[4通道] */
+	BYTE *		m_pImage;				/**< 解码图像[4通道] */
 	char *		m_pBuffer;				/**< 解码缓存区 */
 	int			m_nWidth;				/**< 解码图像宽度 */
 	int			m_nHeight;				/**< 解码图像高度 */
 	BOOL		m_bUseHybrid;			/**< use hybrid */
+	BOOL		m_bFilter;				/**< 滤波 HINT */
+	BOOL		m_bScreenImage;			/**< 是否屏幕截图 */
 	DecodeHints m_hint;					/**< HINT */
 	// param[out]
 	float2		m_pos[4];				/**< 定位元坐标 */
 	// QR data
 	int			m_nStrlen;				/**< QR码编码数据长度 */
-	static char	m_pData[MAX_CODEUTF8NUM];/**< QR码编码字符串 */
+	char		m_pData[MAX_CODEUTF8NUM];/**< QR码编码字符串 */
 	int			m_nBackground;			/**< 原QR码背景色 */
+	char		m_sLastError[256];		/**< 解码错误信息 */
 
 	/// 二维码解析类的对象
 	Ref<Type> m_READER;
@@ -80,7 +83,8 @@ public:
 		m_hint = h;
 		m_hint.setTryHarder(TRUE == bTryHarder);
 		m_bUseHybrid = bUseHybrid;
-		*m_pData = 0;
+		m_bFilter = TRUE;
+		m_bScreenImage = FALSE;
 	}
 
 	~ZXingDecoder()
@@ -90,10 +94,17 @@ public:
 	}
 
 	// 初始化解码图像
-	void Init(const BYTE *pHead, int nWidth, int nHeight, int nChannel, const RoiRect & roi);
+	void SetImgSrc(const BYTE *pHead, int nWidth, int nHeight, int nChannel, const RoiRect & roi);
 
-	// 解码QR码
-	bool Decode(COLORREF Background);
+	// 强力解析QR码
+	inline bool DecodeHard(COLORREF Background)
+	{
+		return DecodeSrcImage() ? true : 
+			DecodeBackImage(Background, m_bFilter) ? true : DecodeBackImage(Background, !m_bFilter);
+	}
+
+	// 获取上一个错误
+	inline const char* GetLastError() const { return m_sLastError; }
 
 	/// 获取解码图像宽度
 	inline int GetWidth() const { return m_nWidth; }
@@ -108,7 +119,7 @@ public:
 	inline int GetBackground() const { return m_nBackground; }
 
 	/// 获得解码图像指针
-	inline char* GetImage() const { return m_pImage; }
+	inline BYTE* GetImage() const { return m_pImage; }
 
 	/// 获得解码字符串长度
 	inline int GetStrlen() const { return m_nStrlen; }
@@ -126,16 +137,25 @@ public:
 		m_nWidth = other.GetWidth();
 		m_nHeight = other.GetHeight();
 		m_bUseHybrid = other.UseHybrid();
-		m_pImage = new char[4 * m_nWidth * m_nHeight];
-		memcpy(m_pImage, other.GetImage(), 4 * m_nWidth * m_nHeight * sizeof(char));
+		m_pImage = new BYTE[4 * m_nWidth * m_nHeight];
+		memcpy(m_pImage, other.GetImage(), 4 * m_nWidth * m_nHeight * sizeof(BYTE));
 	}
+
+	/// 是否有可能是截屏图像
+	bool IsScreenImage() const { return m_bScreenImage; }
 
 private:
 	// 调用ZXing解码QR码图像明文
-	bool CallZXingDecode(bool bFlip);
+	bool CallZXingDecode(int nWidth, int nHeight, bool bFlip);
+
+	// 调用ZXing解码原始图像
+	bool DecodeSrcImage();
+
+	// 提取背景图像进行解码
+	bool DecodeBackImage(COLORREF Background, bool bBlur = true);
 
 	/// 设置当前解码的缓存
-	inline void SetImage(const char* pSrc)
+	inline void SetDecBuffer(const BYTE* pSrc)
 	{
 		SAFE_DELETE(m_pBuffer);
 		m_pBuffer = new char[4 * m_nWidth * m_nHeight];
@@ -154,12 +174,9 @@ private:
 };
 
 
-template <class Type>
-char ZXingDecoder<Type>::m_pData[MAX_CODEUTF8NUM] = { 0 };
-
 /**
 * @brief 初始化解码图像
-* @details 主要进行提取感兴趣区域、缩放、滤波等预处理
+* @details 主要进行提取感兴趣区域、缩放等预处理
 * @param[in] *pHead 原始图像
 * @param[in] nWidth 图像宽度
 * @param[in] nHeight 图像高度
@@ -167,35 +184,42 @@ char ZXingDecoder<Type>::m_pData[MAX_CODEUTF8NUM] = { 0 };
 * @param[in] roi 感兴趣区域
 */
 template <class Type>
-void ZXingDecoder<Type>::Init(const BYTE *pHead, int nWidth, int nHeight, int nChannel, const RoiRect & roi)
+void ZXingDecoder<Type>::SetImgSrc(const BYTE *pHead, int nWidth, int nHeight, int nChannel, const RoiRect & roi)
 {
 	//////////////////////////////////////////////////////////////////////////
 	/// Step1 图像预处理
 	ASSERT(nChannel >= 3);
+	m_bFilter = TRUE;
 	int nRowlen = WIDTHBYTES(nWidth * 8 * nChannel);// 计算图像每行字节数
-	char *pRoi = ImageROI((char*)pHead, nWidth, nHeight, nRowlen, roi);// 提取感兴趣区域
+	BYTE *pRoi = ImageROI(pHead, nWidth, nHeight, nRowlen, roi);// 提取感兴趣区域
+#ifdef _DEBUG
+	ImageWrite(".\\ImageROI.txt", pRoi, nWidth, nHeight, nRowlen);
+#endif
+	double fRate = max((double)nWidth / nHeight, (double)nHeight / nWidth);// 宽高比
+	if(fRate >= 1.5)// 提取截屏图像
+	{
+		m_bScreenImage = TRUE;
+		m_bFilter = FALSE;// 假定截图不滤波
+		RoiRect cutAero;
+		GetQrRect(pRoi, nWidth, nHeight, nChannel, nRowlen, cutAero);
+		BYTE *pBackup = pRoi;
+		pRoi = ImageROI(pRoi, nWidth, nHeight, nRowlen, cutAero);
+		SAFE_DELETE(pBackup);
+#ifdef _DEBUG
+		ImageWrite(".\\CutImage.txt", pRoi, nWidth, nHeight, nRowlen);
+#endif
+	}
 	LimitImage(&pRoi, nWidth, nHeight, nRowlen, nChannel, IMAGE_ZOOM_TO);// 缩放
 	m_nWidth = nWidth;  // 图像宽度
 	m_nHeight = nHeight; // 图像高度
 
-#ifdef _DEBUG
-	ImageWrite(".\\ImageROI.txt", pRoi, m_nWidth, m_nHeight, nRowlen);
-#endif
-
 	/// Step2 获取解码字符串
+	SAFE_DELETE(m_pImage);
 	m_pImage = GetDecodeString(pRoi, m_nWidth, m_nHeight, nRowlen);
 	// 清理缓存
 	SAFE_DELETE(pRoi);
 
 	//////////////////////////////////////////////////////////////////////////
-	/// Step3 图像滤波(滤波核边长为3，不宜过大)
-	// 针对4通道图像采用快速中值滤波，否则调用MedianFilter
-	FastMedianFilter(m_pImage, m_nWidth, m_nHeight, 4 * m_nWidth);
-	//medianBlur_SortNet<MinMax8u, MinMaxVec8u>((BYTE*)m_pImage, m_nWidth, m_nHeight, 4 * m_nWidth, 4);
-
-#ifdef _DEBUG
-	ImageWrite(".\\MedianFilter.txt", m_pImage, m_nWidth, m_nHeight, 4 * m_nWidth);
-#endif
 }
 
 
@@ -268,7 +292,8 @@ void ZXingDecoder<Type>::K_means(BYTE* pHead, int nRowBytes, RoiRect roi, int nM
 	}
 
 	// 寻找背景值对应的类号
-	int backValIdx = CLUSTER(m_nBackground, Center[0], Center[1], Center[2]);
+	int backIdx = CLUSTER(m_nBackground, Center[0], Center[1], Center[2]);
+	int backVal = Center[backIdx] < 128 ? 0 : 255, foreVal = 255 - backVal;// 背景、前景
 
 	// 对原始图像进行分割
 	BYTE *pSrc0 = Cluster;
@@ -279,7 +304,7 @@ void ZXingDecoder<Type>::K_means(BYTE* pHead, int nRowBytes, RoiRect roi, int nM
 		BYTE *pDst = pDst0;
 		for (int i = 0; i < nWidth; ++i)
 		{
-			*pDst ++ = (*pSrc++ == backValIdx) ? 0 : 255;
+			*pDst ++ = (*pSrc++ == backIdx) ? backVal : foreVal;
 		}
 		pSrc0 += nRowlen;
 		pDst0 += nRowBytes;
@@ -288,15 +313,57 @@ void ZXingDecoder<Type>::K_means(BYTE* pHead, int nRowBytes, RoiRect roi, int nM
 }
 
 
-/**
-* @brief 解码彩色二维码中的QR码
-* @param[in] Background QR码的背景色
+/** 
+* @brief 解码未经滤波和K分割的原始图像
 */
 template <class Type>
-bool ZXingDecoder<Type>::Decode(COLORREF Background)
+bool ZXingDecoder<Type>::DecodeSrcImage()
 {
 	int W = m_nWidth, H = m_nHeight;
-	char* gray = Rgb2Gray(m_pImage, W, H, 4 * W);// 灰度图像
+
+	// 2017-7-27 提高解码效率, 以下语句不可少
+	SetDecBuffer(m_pImage);
+	if (!CallZXingDecode(W, H, false))
+		if (CallZXingDecode(W, H, true))
+			ImageFlipV(m_pImage, W, H, 4 * W);
+	if (m_nStrlen) return true;
+
+#if TRY_HARD
+	// 某些很难解析的二维码在此进行解析
+	ImageTranspose(&m_pBuffer, W, H, 4 * W);
+	if (!CallZXingDecode(H, W, false))
+		if (CallZXingDecode(H, W, true))
+			ImageFlipV(m_pImage, W, H, 4 * W);
+	if (m_nStrlen) return true;
+#endif
+
+	return false;
+}
+
+
+/**
+* @brief 提取图像的背景图像(QR码)进行解码
+* @param[in] Background QR码的背景色
+* @param[in] bBlur 是否进行滤波
+*/
+template <class Type>
+bool ZXingDecoder<Type>::DecodeBackImage(COLORREF Background, bool bBlur)
+{
+	int W = m_nWidth, H = m_nHeight;
+
+	//////////////////////////////////////////////////////////////////////////
+	// 某些图像需要滤波(滤波核边长为3，不宜过大)
+	// 针对4通道图像采用快速中值滤波，否则调用MedianFilter
+	if (bBlur)
+	{
+		FastMedianFilter(m_pImage, W, H, 4 * W);
+		//medianBlur_SortNet<MinMax8u, MinMaxVec8u>(m_pImage, W, H, 4 * W, 4);
+#ifdef _DEBUG
+		ImageWrite(".\\MedianFilter.txt", m_pImage, W, H, 4 * W);
+#endif
+	}
+
+	BYTE* gray = Rgb2Gray(m_pImage, W, H, 4 * W);// 灰度图像
 	m_nBackground = RgbColorRef2Gray(Background);// 背景颜色
 	int nRowlenNew = WIDTHBYTES(W * 8);// 灰度图像每行字节数
 	BYTE *p = (BYTE*)gray;
@@ -323,10 +390,10 @@ bool ZXingDecoder<Type>::Decode(COLORREF Background)
 #ifdef _DEBUG
 	ImageWrite(".\\K_means.txt", gray, W, H, nRowlenNew);
 #endif
-	char* gray_decstring = GetDecodeString(gray, W, H, nRowlenNew);
-	SetImage(gray_decstring);
-	if (!CallZXingDecode(false))
-		if (CallZXingDecode(true))
+	BYTE* gray_decstring = GetDecodeString(gray, W, H, nRowlenNew);
+	SetDecBuffer(gray_decstring);
+	if (!CallZXingDecode(W, H, false))
+		if (CallZXingDecode(W, H, true))
 			ImageFlipV(m_pImage, W, H, 4 * W);
 	SAFE_DELETE(gray_decstring);
 	SAFE_DELETE(gray);
@@ -336,25 +403,28 @@ bool ZXingDecoder<Type>::Decode(COLORREF Background)
 
 /** 
 * @brief 解码图像明文
+* @param[in] nWidth 解码缓存图像宽度
+* @param[in] nHeight 解码缓存图像高度
 * @param[in] bFlip 是否翻转图像进行解码
 */
 template <class Type>
-bool ZXingDecoder<Type>::CallZXingDecode(bool bFlip)
+bool ZXingDecoder<Type>::CallZXingDecode(int nWidth, int nHeight, bool bFlip)
 {
 	if (bFlip)
 	{
-		ImageFlipV(m_pBuffer, m_nWidth, m_nHeight, 4 * m_nWidth);
+		ImageFlipV(m_pBuffer, nWidth, nHeight, 4 * nWidth);
 	}
 
 	// 尝试创建LuminanceSource
 	Ref<LuminanceSource> source;
 	try
 	{
-		source = ImageReaderSource::create(m_pBuffer, m_nWidth, m_nHeight, 3);
+		source = ImageReaderSource::create(m_pBuffer, nWidth, nHeight, 3);
 	}
 	catch (const zxing::IllegalArgumentException &e)
 	{
 		TRACE(" * zxing::IllegalArgumentException: %s\n", e.what());
+		strcpy(m_sLastError, e.what());
 		return false;
 	}
 	catch (...)
@@ -380,30 +450,26 @@ bool ZXingDecoder<Type>::CallZXingDecode(bool bFlip)
 	}
 	catch (const zxing::ReaderException& e)
 	{
-#ifdef _DEBUG
 		TRACE(" * zxing::ReaderException: %s\n", e.what());
-#endif
+		strcpy(m_sLastError, e.what());
 		return false;
 	}
 	catch (const zxing::IllegalArgumentException& e)
 	{
-#ifdef _DEBUG
 		TRACE(" * zxing::IllegalArgumentException: %s\n", e.what());
-#endif
+		strcpy(m_sLastError, e.what());
 		return false;
 	}
 	catch (const zxing::Exception& e)
 	{
-#ifdef _DEBUG
 		TRACE(" * zxing::Exception: %s\n", e.what());
-#endif
+		strcpy(m_sLastError, e.what());
 		return false;
 	}
 	catch (const std::exception& e)
 	{
-#ifdef _DEBUG
 		TRACE(" * std::exception: %s\n", e.what());
-#endif
+		strcpy(m_sLastError, e.what());
 		return false;
 	}
 	catch (...)
@@ -420,6 +486,7 @@ bool ZXingDecoder<Type>::CallZXingDecode(bool bFlip)
 			return false;
 		strcpy(m_pData, chr);
 #ifdef _DEBUG
+		TRACE(" * Data[%d]: %s \n", m_nStrlen, chr);
 		TRACE(" * Format: %s \n", BarcodeFormat::barcodeFormatNames[results[0]->getBarcodeFormat()]);
 #endif // _DEBUG
 		for (int j = 0; j < results[0]->getResultPoints()->size(); j++)

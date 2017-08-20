@@ -115,10 +115,16 @@ public:
 		return m_vColorsModuleIndex.size();
 	}
 
-	// 获取编码模块的索引
+	/// 获取编码模块的索引
 	const vector<CPixelPoint>& GetColorsModuleIndex() const 
 	{
 		return m_vColorsModuleIndex;
+	}
+
+	/// 获取彩色编码起始位置
+	int GetColorsStartIndex() const
+	{
+		return m_EncodeModule ? 0 : 90;
 	}
 
 	//  初始化编码模块的索引

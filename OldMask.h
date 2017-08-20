@@ -59,7 +59,7 @@ private:
 	* @see http://blog.csdn.net/zhch152/article/details/47862853
 	* @date 2015-08-22 20:08
 	*/
-	inline int COldMask::my_rand()
+	inline int my_rand()
 	{
 		___next = ___next * 0x343fd + 0x269EC3;
 		return (___next >> 0x10) & 0x7FFF;
@@ -69,7 +69,7 @@ private:
 	/** 
 	* @brief 设置随机数发生器的种子
 	*/
-	inline void COldMask::my_srand(unsigned int ___seed)
+	inline void my_srand(unsigned int ___seed)
 	{
 		___next = ___seed;
 	}

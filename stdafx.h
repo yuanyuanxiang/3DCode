@@ -8,8 +8,10 @@
 // 非MFC程序请添加此项到预处理器
 #ifndef NO_STDAFX_H
 
+#ifdef USING_VLD
 #include "vld/include/vld.h" // should appear before '#include <afxwin.h>'
 #pragma comment(lib, "vld/lib/Win32/vld.lib")
+#endif
 
 #ifndef VC_EXTRALEAN
 #define VC_EXTRALEAN            // 从 Windows 头中排除极少使用的资料
@@ -66,8 +68,10 @@
 #include <assert.h>
 #define ASSERT assert
 
+#ifdef USING_VLD
 #include "vld/include/vld.h"
 #pragma comment(lib, "vld/lib/Win32/vld.lib")
+#endif
 
 // DataTypes
 #include "DataTypes.h"

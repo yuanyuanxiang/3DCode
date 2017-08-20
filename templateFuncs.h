@@ -102,19 +102,15 @@ template <typename Type> Type* GetDecodeString(const Type* pHead, const int nWid
 		{
 			const Type* pSrc0 = pHead;
 			Type* pCur0 = pDst;
-			for (int i = 0; i < nHeight; i++)
+			for (int i = 0; i < nHeight; i++, pSrc0 += nRowlen, pCur0 += NewRowlen)
 			{
 				const Type* pSrc = pSrc0;
 				Type* pCur = pCur0;
-				for (int j = 0; j < nWidth; j++)
+				for (int j = 0; j < nWidth; j++, pSrc ++ , pCur += 4)
 				{
-					* pCur = *(pCur+1) = *(pCur+2) = *pSrc;
+					memset(pCur, *pSrc, 3 * sizeof(Type));
 					*(pCur+3) = 0;// Alpha
-					pSrc ++;
-					pCur += 4;
 				}
-				pSrc0 += nRowlen;
-				pCur0 += NewRowlen;
 			}
 		}
 		break;
@@ -122,21 +118,15 @@ template <typename Type> Type* GetDecodeString(const Type* pHead, const int nWid
 		{
 			const Type* pSrc0 = pHead;
 			Type* pCur0 = pDst;
-			for (int i = 0; i < nHeight; i++)
+			for (int i = 0; i < nHeight; i++, pSrc0 += nRowlen, pCur0 += NewRowlen)
 			{
 				const Type* pSrc = pSrc0;
 				Type* pCur = pCur0;
-				for (int j = 0; j < nWidth; j++)
+				for (int j = 0; j < nWidth; j++, pSrc += 3, pCur += 4)
 				{
-					* pCur = *pSrc;
-					*(pCur+1) = *(pSrc+1);
-					*(pCur+2) = *(pSrc+2);
+					memcpy(pCur, pSrc, 3 * sizeof(Type));
 					*(pCur+3) = 0;// Alpha
-					pSrc += 3;
-					pCur += 4;
 				}
-				pSrc0 += nRowlen;
-				pCur0 += NewRowlen;
 			}
 		}
 		break;
