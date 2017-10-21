@@ -57,6 +57,8 @@ BEGIN_MESSAGE_MAP(C3DCodeView, CScrollView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
+	ON_COMMAND(ID_VIEW_TRANSPOSE_R, &C3DCodeView::OnViewTransposeR)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_TRANSPOSE_R, &C3DCodeView::OnUpdateViewTransposeR)
 END_MESSAGE_MAP()
 
 /// C3DCodeView ¹¹Ôì
@@ -570,4 +572,19 @@ void C3DCodeView::OnMouseMove(UINT nFlags, CPoint point)
 	pMainFrm->GetStatusBar().SetWindowText(str);
 
 	CScrollView::OnMouseMove(nFlags, point);
+}
+
+void C3DCodeView::OnViewTransposeR()
+{
+	C3DCodeDoc* pDoc = GetDocument();
+	pDoc->GetImage()->TransposeR();
+	CSize sz = pDoc->GetImageSize();
+	SetPaintRect(int(m_fZoomRate * sz.cx), int(m_fZoomRate * sz.cy));
+}
+
+
+void C3DCodeView::OnUpdateViewTransposeR(CCmdUI *pCmdUI)
+{
+	C3DCodeDoc* pDoc = GetDocument();
+	pCmdUI->Enable(!pDoc->ImageIsNull());
 }

@@ -125,6 +125,7 @@ BEGIN
     BUTTON      ID_VIEW_FLIP_V
     BUTTON      ID_VIEW_FLIP_H
     BUTTON      ID_VIEW_TRANSPOSE
+    BUTTON      ID_VIEW_TRANSPOSE_R
     SEPARATOR
     BUTTON      ID_FILE_PRINT
     BUTTON      ID_APP_ABOUT
@@ -696,6 +697,7 @@ STRINGTABLE
 BEGIN
     ID_EDIT_BPP             "修改图像位深度\n位深"
     ID_EDIT_ROTATE          "旋转图像\n旋转"
+    ID_VIEW_TRANSPOSE_R     "向右转置图像\n右转置"
 END
 
 #endif    // 中文(简体，中国) resources

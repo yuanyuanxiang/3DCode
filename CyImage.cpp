@@ -817,6 +817,48 @@ void CyImage::Transpose()
 		int y = i * nNewRowlen, z = i * nNewFloatRowlen;
 		for (int j = 0; j < nNewWidth; ++j)
 		{
+			int x = (nNewWidth - 1 - j) * nChannel, x0 = i * nChannel;
+			int y0 = j * nRowlen, z0 = j * nFloatRowlen;
+			for (int k = 0; k < nChannel; ++k)
+			{
+				m_pFloatData[k + x + z] = temp[k + x0 + z0];
+				pHead[k + x + y] = temp2[k + x0 + y0];
+			}
+		}
+	}
+	SAFE_DELETE(temp);
+	SAFE_DELETE(temp2);
+}
+
+
+/** - ÏòÓÒ×ªÖÃÍ¼Ïñ - */
+void CyImage::TransposeR()
+{
+	int nWidth = GetWidth();
+	int nHeight = GetHeight();
+	int nRowlen = GetRowlen();
+	int nChannel = GetChannel();
+	InitFloatData();
+	MemcpyByteToFloat();
+	int nFloatRowlen = GetFloatDataRowlen();
+
+	float* temp = new float[nHeight * nFloatRowlen];
+	memcpy(temp, m_pFloatData, nHeight * nFloatRowlen * sizeof(float));
+	BYTE* temp2 = new BYTE[nHeight * nRowlen];
+	memcpy(temp2, GetHeadAddress(), nHeight * nRowlen * sizeof(BYTE));
+	Create(nHeight, nWidth, nChannel * 8, 0UL);
+
+	int nNewWidth = GetWidth();
+	int nNewHeight = GetHeight();
+	int nNewFloatRowlen = GetFloatDataRowlen();
+	BYTE *pHead = GetHeadAddress();
+	int nNewRowlen = GetRowlen();
+	for (int i = 0; i < nNewHeight; ++i)
+	{
+		int y = (nNewHeight - 1 - i) * nNewRowlen;
+		int z = (nNewHeight - 1 - i) * nNewFloatRowlen;
+		for (int j = 0; j < nNewWidth; ++j)
+		{
 			int x = j * nChannel, x0 = i * nChannel;
 			int y0 = j * nRowlen, z0 = j * nFloatRowlen;
 			for (int k = 0; k < nChannel; ++k)

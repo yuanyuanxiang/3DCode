@@ -326,18 +326,8 @@ bool ZXingDecoder<Type>::DecodeSrcImage()
 	if (!CallZXingDecode(W, H, false))
 		if (CallZXingDecode(W, H, true))
 			ImageFlipV(m_pImage, W, H, 4 * W);
-	if (m_nStrlen) return true;
 
-#if TRY_HARD
-	// 某些很难解析的二维码在此进行解析
-	ImageTranspose(&m_pBuffer, W, H, 4 * W);
-	if (!CallZXingDecode(H, W, false))
-		if (CallZXingDecode(H, W, true))
-			ImageFlipV(m_pImage, W, H, 4 * W);
-	if (m_nStrlen) return true;
-#endif
-
-	return false;
+	return m_nStrlen;
 }
 
 
@@ -397,7 +387,7 @@ bool ZXingDecoder<Type>::DecodeBackImage(COLORREF Background, bool bBlur)
 			ImageFlipV(m_pImage, W, H, 4 * W);
 	SAFE_DELETE(gray_decstring);
 	SAFE_DELETE(gray);
-	return m_nStrlen ? true : false;
+	return m_nStrlen;
 }
 
 

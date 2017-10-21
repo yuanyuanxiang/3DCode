@@ -41,10 +41,10 @@ public:
 	static const char *m_sTag;
 	/// 初始化
 	static void Init(const char *tag) { m_sTag = tag; }
-	/// 获取用于解码的图像数据源[如果图像为1通道将转换为3]
+	/// 获取用于解码的图像数据源[如果图像为1通道将转换为4]
 	const BYTE* GetDecBuffer();
-	/// 获取解码图像通道[如果图像为1通道将返回buffer的通道3]
-	int GetDecChannel() const { return max(3, m_nChannel); }
+	/// 获取解码图像通道[如果图像为1通道将返回buffer的通道4]
+	int GetDecChannel() const { return 1 == m_nChannel ? 4 : m_nChannel; }
 
 public:
 	/// 图像数据源
@@ -62,7 +62,7 @@ public:
 	/// 背景颜色
 	COLORREF m_Background;
 private:
-	/// 3通道的解码缓存
+	/// 4通道的解码缓存
 	BYTE *m_pDecBuf;
 };
 

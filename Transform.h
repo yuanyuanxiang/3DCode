@@ -41,6 +41,9 @@ template <typename Type> void ImageFlipH(Type* pHead, const int nWidth, const in
 // 转置图像
 template <typename Type> void ImageTranspose(Type** pHead, const int nWidth, const int nHeight, const int nRowlen);
 
+// 向右转置图像
+template <typename Type> void ImageTransposeR(Type** pHead, const int nWidth, const int nHeight, const int nRowlen);
+
 // 提取图像感兴趣区域
 template <typename Type> Type* ImageROI(const Type* pHead, int &nWidth, int &nHeight, int &nRowlen, const RoiRect &roi = 0);
 
@@ -118,7 +121,7 @@ template <typename Type> void ImageFlipH(Type* pHead, const int nWidth, const in
 
 
 /** 
-* @brief 左右翻转图像
+* @brief 转置图像
 * @param[in] **pHead 数据头
 * @param[in] nWidth 宽度
 * @param[in] nHeight 高度
@@ -145,6 +148,51 @@ template <typename Type> void ImageTranspose(Type** pHead, const int nWidth, con
 		int x = 0, y1 = 0;
 		for (int i = 0; i < nWidth; ++i)
 		{
+			int y = 0, x1 = (nHeight - 1) * nChannel;
+			for (int j = 0; j < nHeight; ++j)
+			{
+				temp[k + x1 + y1] = pSrc[k + x + y];
+				y += nRowlen;
+				x1 -= nChannel;
+			}
+			x += nChannel;
+			y1 += nNewRowlen;
+		}
+	}
+	delete[] * pHead;
+	*pHead = temp;
+	temp = NULL;
+}
+
+
+/** 
+* @brief 向右转置图像(右转90度)
+* @param[in] **pHead 数据头
+* @param[in] nWidth 宽度
+* @param[in] nHeight 高度
+* @param[in] nRowlen 每行个数
+* @note 函数将修改图像指针
+*/
+template <typename Type> void ImageTransposeR(Type** pHead, const int nWidth, const int nHeight, const int nRowlen)
+{
+	// 图像每像素元素个数
+	const int nChannel = nRowlen / nWidth;
+	// 每行元素个数
+	int nNewRowlen = nHeight * nChannel;
+	// 是否需要进行对齐处理
+	if (1 == sizeof(Type))
+	{
+		nNewRowlen = WIDTHBYTES(nNewRowlen * 8);
+	}
+
+	Type *pSrc = *pHead;
+	Type *temp = new Type[nWidth * nNewRowlen];
+	memset(temp, 0, nWidth * nNewRowlen * sizeof(Type));
+	for (int k = 0; k < nChannel; ++k)
+	{
+		int x = 0, y1 = (nWidth - 1) * nNewRowlen;
+		for (int i = 0; i < nWidth; ++i)
+		{
 			int y = 0, x1 = 0;
 			for (int j = 0; j < nHeight; ++j)
 			{
@@ -153,7 +201,7 @@ template <typename Type> void ImageTranspose(Type** pHead, const int nWidth, con
 				x1 += nChannel;
 			}
 			x += nChannel;
-			y1 += nNewRowlen;
+			y1 -= nNewRowlen;
 		}
 	}
 	delete[] * pHead;

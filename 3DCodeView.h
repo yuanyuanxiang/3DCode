@@ -83,6 +83,8 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnViewTransposeR();
+	afx_msg void OnUpdateViewTransposeR(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // 3DCodeView.cpp 中的调试版本
