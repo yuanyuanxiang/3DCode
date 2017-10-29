@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef DATATYPES_H
+	#define DATATYPES_H		// 包含了基本数据结构
+#endif
+
 /** 
 * @file DataTypes.h
 * @brief 本文档定义了程序可能用到的数据类型
@@ -22,7 +26,7 @@ typedef BYTE qrMat[MAX_MODULESIZE];	// QR码比特矩阵
 
 #define COLORED_QR 1 // 是否彩色QR码
 
-#define TRY_HARD 1 // 某些很难解析的二维码需要开启此开关
+#define TRY_HARD 0 // 某些很难解析的二维码需要开启此开关
 
 #if defined(ANDROID_CPP)
 

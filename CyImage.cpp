@@ -65,6 +65,7 @@ CString Num2String(int nNum)
 }
 
 
+#ifdef ENABLE_IMAGE_TRANSFORM
 /** 在目标图像挖出一块矩形用源图像替换，LOGO必须大于3通道 */
 void ReplacedLogo(CyImage* pDstImage, CyImage* pSrcImage, CLogoRect LogoRect)
 {
@@ -106,6 +107,7 @@ void MixedLogo(CyImage* pDstImage, CyImage* pSrcImage, CLogoRect LogoRect, float
 
 	pDstImage->MemcpyFloatToByte();
 }
+#endif
 
 
 /** - 默认的构造函数 - */
@@ -384,6 +386,7 @@ BOOL CyImage::Create(const float* pSrc, int nWidth, int nHeight, int nRowlen) th
 }
 
 
+#ifdef IMAGE_SRC_H
 /** - 从ImageSrc创建图像 - */
 BOOL CyImage::Create(const ImageSrc *pSrc) throw()
 {
@@ -397,24 +400,7 @@ BOOL CyImage::Create(const ImageSrc *pSrc) throw()
 	MemcpyByteToFloat();
 	return TRUE;
 }
-
-
-/** - 从ImageTransform创建图像 - */
-BOOL CyImage::Create(const ImageTransform *pSrc) throw()
-{
-	if(NULL == pSrc)
-		return FALSE;
-	Destroy();
-	int nBPP = 8 * pSrc->GetRowlen() / pSrc->GetWidth();
-	if (FALSE == CImage::Create(pSrc->GetWidth(), pSrc->GetHeight(), nBPP))
-		return FALSE;
-	if (nBPP == 8)
-		SetColorTabFor8BitImage(this);
-	InitFloatData();
-	memcpy(m_pFloatData, pSrc, pSrc->GetHeight() * pSrc->GetRowlen() * sizeof(float));
-	MemcpyFloatToByte();
-	return TRUE;
-}
+#endif
 
 
 /** - 加载图像 - */
@@ -424,6 +410,7 @@ HRESULT CyImage::Load(LPCTSTR pszFileName) throw()
 	CString strPathName(pszFileName);
 	CString strExt = GetFileExt(strPathName);
 	strExt.MakeUpper();
+#ifdef ENABLE_READ_WRITE_TXT
 	if (strExt == _T("TXT"))
 	{
 		int nWidth = 0, nHeight = 0, nRowlen = 0, nChannel = 0;
@@ -437,6 +424,7 @@ HRESULT CyImage::Load(LPCTSTR pszFileName) throw()
 		SAFE_DELETE(pSrc);
 		return S_OK;
 	}
+#endif
 	// 摧毁当前图像
 	Destroy();
 	// 加载进图像
@@ -555,39 +543,58 @@ void CyImage::MemcpyFloatToByteBounded(float lower, float upper)
 }
 
 
-/** - 对图像旋转一个角度 - */
-void CyImage::Rotate(float degree)
+#ifdef ENABLE_IMAGE_TRANSFORM
+/** - 从ImageTransform创建图像 - */
+BOOL CyImage::Create(const ImageTransform *pSrc) throw()
 {
-	float angle = RAD(degree);
+	if(NULL == pSrc)
+		return FALSE;
+	Destroy();
+	int nBPP = 8 * pSrc->GetRowlen() / pSrc->GetWidth();
+	if (FALSE == CImage::Create(pSrc->GetWidth(), pSrc->GetHeight(), nBPP))
+		return FALSE;
+	if (nBPP == 8)
+		SetColorTabFor8BitImage(this);
 	InitFloatData();
-	MemcpyByteToFloat();
-	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
-	ImageTransform pDst = it.ImageRotate(PositionTransform(angle, 0, 0), CLogoRect());
-	Create(pDst, pDst.GetWidth(), pDst.GetHeight(), pDst.GetRowlen());
+	memcpy(m_pFloatData, pSrc, pSrc->GetHeight() * pSrc->GetRowlen() * sizeof(float));
+	MemcpyFloatToByte();
+	return TRUE;
 }
 
 
-/** - 旋转图像，并返回旋转得到的图像数据 - 
-* @param[in] angle 旋转角度
-* @return 新图像数据块
-*/
-ImageTransform CyImage::Rotate(const PositionTransform &pt, CLogoRect &dstArea) const
+/** - 根据矩形区域提取感兴趣区域的图像 - */
+CyImage* CyImage::ROI(CLogoRect rect) const
 {
+	if (rect == CLogoRect(0, 0, 0, 0))
+		return MakeCopy();
 	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
-	return it.ImageRotate(pt, dstArea);
+	ImageTransform pDst = it.ImageRoi(rect);
+	CyImage *pImage = NULL;
+	try
+	{
+		pImage = new CyImage;
+	}
+	catch (const std::bad_alloc)
+	{
+		return pImage;
+	}
+	pImage->Create(pDst, rect.Width(), rect.Height(), rect.Width() * GetChannel());
+	return pImage;
 }
 
 
-/** - 缩放图像 -
-* @param[in] NewWidth 新图像宽度
-* @param[in] NewHeight 新图像高度
-* @param[in] bNeededReturn 需要返回新图像数据块头指针
-* @return 新图像数据块
-*/
-ImageTransform CyImage::Zoom(int NewWidth, int NewHeight, int bNeededReturn) const
+/** - 裁剪图像 - */
+void CyImage::Cut(CLogoRect rect)
 {
+	/// 下述两种情况不需要裁剪
+	if (rect == CLogoRect(0, 0, 0, 0))
+		return;
+	if (rect.left == 0 && rect.top == 0 && rect.right == GetWidth() && rect.bottom == GetHeight())
+		return;
+	/// 其他情况，获得感兴趣区域，并赋值给当前图像
 	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
-	return it.ImageZoom(NewWidth, NewHeight);
+	ImageTransform pDst = it.ImageRoi(rect);
+	Create(pDst, rect.Width(), rect.Height(), rect.Width() * GetChannel());
 }
 
 
@@ -618,6 +625,43 @@ void CyImage::Zoom(int nNewWidth, int nNewHeight)
 }
 
 
+/** - 缩放图像 -
+* @param[in] NewWidth 新图像宽度
+* @param[in] NewHeight 新图像高度
+* @param[in] bNeededReturn 需要返回新图像数据块头指针
+* @return 新图像数据块
+*/
+ImageTransform CyImage::Zoom(int NewWidth, int NewHeight, int bNeededReturn) const
+{
+	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
+	return it.ImageZoom(NewWidth, NewHeight);
+}
+
+
+/** - 对图像旋转一个角度 - */
+void CyImage::Rotate(float degree)
+{
+	float angle = RAD(degree);
+	InitFloatData();
+	MemcpyByteToFloat();
+	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
+	ImageTransform pDst = it.ImageRotate(PositionTransform(angle, 0, 0), CLogoRect());
+	Create(pDst, pDst.GetWidth(), pDst.GetHeight(), pDst.GetRowlen());
+}
+
+
+/** - 旋转图像，并返回旋转得到的图像数据 - 
+* @param[in] angle 旋转角度
+* @return 新图像数据块
+*/
+ImageTransform CyImage::Rotate(const PositionTransform &pt, CLogoRect &dstArea) const
+{
+	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
+	return it.ImageRotate(pt, dstArea);
+}
+#endif
+
+
 /** - 图像将转换为8位灰度图 - */
 void CyImage::ToGray()
 {
@@ -628,6 +672,7 @@ void CyImage::ToGray()
 /** - 保存图像 - */
 HRESULT CyImage::Save(LPCTSTR pszFileName, REFGUID guidFileType) const throw()
 {
+#ifdef ENABLE_READ_WRITE_TXT
 	// 尝试保存为txt文件
 	if (GetFileExt(pszFileName).CompareNoCase(_T("txt")) == 0)
 	{
@@ -635,6 +680,7 @@ HRESULT CyImage::Save(LPCTSTR pszFileName, REFGUID guidFileType) const throw()
 		if (WriteTxt(W2A(pszFileName), GetHeadAddress(), GetWidth(), GetHeight(), GetChannel()))
 			return S_OK;
 	}
+#endif
 	HRESULT hr = CImage::Save(pszFileName, guidFileType);
 	return hr;
 }
@@ -1368,40 +1414,4 @@ CyImage* CyImage::GetBackground(float threahold, float3 background) const
 	}
 	pBackground->MemcpyFloatToByte();
 	return pBackground;
-}
-
-
-/** - 根据矩形区域提取感兴趣区域的图像 - */
-CyImage* CyImage::ROI(CLogoRect rect) const
-{
-	if (rect == CLogoRect(0, 0, 0, 0))
-		return MakeCopy();
-	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
-	ImageTransform pDst = it.ImageRoi(rect);
-	CyImage *pImage = NULL;
-	try
-	{
-		pImage = new CyImage;
-	}
-	catch (const std::bad_alloc)
-	{
-		return pImage;
-	}
-	pImage->Create(pDst, rect.Width(), rect.Height(), rect.Width() * GetChannel());
-	return pImage;
-}
-
-
-/** - 裁剪图像 - */
-void CyImage::Cut(CLogoRect rect)
-{
-	/// 下述两种情况不需要裁剪
-	if (rect == CLogoRect(0, 0, 0, 0))
-		return;
-	if (rect.left == 0 && rect.top == 0 && rect.right == GetWidth() && rect.bottom == GetHeight())
-		return;
-	/// 其他情况，获得感兴趣区域，并赋值给当前图像
-	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
-	ImageTransform pDst = it.ImageRoi(rect);
-	Create(pDst, rect.Width(), rect.Height(), rect.Width() * GetChannel());
 }

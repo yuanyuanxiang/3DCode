@@ -1,6 +1,10 @@
 #pragma once
 #include "DataTypes.h"
 
+#ifndef IMAGE_SRC_H
+	#define IMAGE_SRC_H		// 定义了ImageSrc的结构
+#endif
+
 /** 
 * @class ImageInfo
 * @brief 图像数据源信息

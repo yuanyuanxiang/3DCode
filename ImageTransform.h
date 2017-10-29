@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef ENABLE_IMAGE_TRANSFORM
+	#define ENABLE_IMAGE_TRANSFORM		//启用图像变换功能
+#endif
+
 /** 
 * @file ImageTransform.h
 * @brief 图像几何变换函数，可以跨平台

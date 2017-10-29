@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef ENABLE_READ_WRITE_TXT
+	#define ENABLE_READ_WRITE_TXT /// 支持读写TXT文本图像
+#endif
+
 /** 
 * @file FileIO.h
 * @brief 文件读写函数，可以跨平台

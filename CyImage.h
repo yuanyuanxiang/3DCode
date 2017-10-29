@@ -6,6 +6,10 @@
 #include "ImageSrc.h"
 #include "ImageTransform.h"
 
+#ifndef DATATYPES_H
+#include "DataTypes.h"
+#endif
+
 /** 
 * @file CyImage.h
 * @brief 图像读取/写入/处理类
@@ -50,10 +54,6 @@ public:
 	void FlipV();															//垂直翻转图像
 	void Transpose();														//转置图像
 	void TransposeR();														//向右转置图像
-	void Rotate(float degree = 90);											//图像按角度旋转
-	void Zoom(float rate = 2.f);											//图像按倍数缩放
-	void Zoom(int nNewWidth, int nNewHeight);								//图像按像素缩放
-	void Cut(CLogoRect rect = CLogoRect(0, 0, 0, 0));						//图像裁剪
 	void ToGray();															//转换为灰度图
 	BOOL ChangeBPP(UINT bpp);												//修改图像位深度
 
@@ -76,7 +76,6 @@ public:
 	BOOL GetHistogram(int hist[4][256]) const;						/* 获取图像R、G、B通道直方图*/
 	BOOL GetGrayHist(int hist[256]) const;									/* 获取灰度直方图 */
 	void GetCluster(int cluster[256]) const;								/* 像素按个数排序 */
-	// 
 
 	/* 制作备份图像，需要delete方法 */
 	CyImage* MakeCopy() const;
@@ -84,21 +83,32 @@ public:
 	/* 获取背景图像，需要delete方法 */
 	CyImage* GetBackground(float threahold, float3 background) const;
 
+#ifdef ENABLE_IMAGE_TRANSFORM
+	BOOL Create(const ImageTransform *pSrc) throw();
 	/* 提取感兴趣区域，需要delete方法 */
 	CyImage* ROI(CLogoRect rect = CLogoRect(0, 0, 0, 0)) const;
-
-	/* 对图像旋转，返回新图像的数据，宽度、高度和每行浮点数 */
-	ImageTransform Rotate(const PositionTransform &pt, CLogoRect &dstArea) const;
-
+	/* 图像裁剪 */
+	void Cut(CLogoRect rect = CLogoRect(0, 0, 0, 0));
+	/* 图像按倍数缩放 */
+	void Zoom(float rate = 2.f);
+	/* 图像按像素缩放 */
+	void Zoom(int nNewWidth, int nNewHeight);
 	/* 根据参数放大图像，返回浮点数据 */
 	ImageTransform Zoom(int NewWidth, int NewHeight, int bNeededReturn) const;
-	//
+	/* 图像按角度旋转 */
+	void Rotate(float degree = 90);
+	/* 对图像旋转，返回新图像的数据，宽度、高度和每行浮点数 */
+	ImageTransform Rotate(const PositionTransform &pt, CLogoRect &dstArea) const;
+#endif
 
 	// 创建图像
 	BOOL Create(const BYTE* pSrc, int nWidth, int nHeight, int nBPP) throw();
 	BOOL Create(const float* pSrc, int nWidth, int nHeight, int nRowlen) throw();
+	
+#ifdef IMAGE_SRC_H
 	BOOL Create(const ImageSrc *pSrc) throw();
-	BOOL Create(const ImageTransform *pSrc) throw();
+#endif
+
 	// 重载函数
 	BOOL Create(int nWidth, int nHeight, int nBPP, DWORD dwFlags = 0) throw();
 	HRESULT Load(LPCTSTR pszFileName) throw();
@@ -141,10 +151,12 @@ CString GetFileExt(CString strFilePath);
 // 数字转为CString
 CString Num2String(int nNum);
 
+#ifdef ENABLE_IMAGE_TRANSFORM
 // 在目标图像挖出一块矩形用源图像替换
 void ReplacedLogo(CyImage* pDstImage, CyImage* pSrcImage, CLogoRect LogoRect);
 
 // 在目标图像挖出一块矩形与源图像混合
 void MixedLogo(CyImage* pDstImage, CyImage* pSrcImage, CLogoRect LogoRect, float dst_rate);
+#endif
 
 #endif // WIN32
