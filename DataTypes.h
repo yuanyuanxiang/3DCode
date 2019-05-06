@@ -15,7 +15,7 @@
 #define LINUX_CPP
 #endif
 
-#include <math.h>
+#include <cmath>
 typedef int BOOL;
 typedef unsigned char BYTE;
 typedef unsigned char uchar;
