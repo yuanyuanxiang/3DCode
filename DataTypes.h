@@ -24,9 +24,11 @@ typedef unsigned int uint;
 #define MAX_MODULESIZE		177		// QR码最大尺寸
 typedef BYTE qrMat[MAX_MODULESIZE];	// QR码比特矩阵
 
-#define COLORED_QR 1 // 是否彩色QR码
+// 针对QR二维码时此开关应关闭
+#define COLORED_QR 0 // 是否彩色QR码
 
-#define TRY_HARD 0 // 某些很难解析的二维码需要开启此开关
+// 针对一些个性化二维码需打开此开关
+#define TRY_HARD 1 // 某些很难解析的二维码需要开启此开关
 
 #if defined(ANDROID_CPP)
 
