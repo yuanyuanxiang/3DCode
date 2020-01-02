@@ -143,6 +143,7 @@ template <typename Type> void ImageTranspose(Type** pHead, const int nWidth, con
 	Type *pSrc = *pHead;
 	Type *temp = new Type[nWidth * nNewRowlen];
 	memset(temp, 0, nWidth * nNewRowlen * sizeof(Type));
+#pragma omp parallel for
 	for (int k = 0; k < nChannel; ++k)
 	{
 		int x = 0, y1 = 0;
@@ -188,6 +189,7 @@ template <typename Type> void ImageTransposeR(Type** pHead, const int nWidth, co
 	Type *pSrc = *pHead;
 	Type *temp = new Type[nWidth * nNewRowlen];
 	memset(temp, 0, nWidth * nNewRowlen * sizeof(Type));
+#pragma omp parallel for
 	for (int k = 0; k < nChannel; ++k)
 	{
 		int x = 0, y1 = (nWidth - 1) * nNewRowlen;
@@ -328,6 +330,7 @@ template <typename Type> void ZoomImage(Type** pfHead, int &nWidth, int &nHeight
 	float wRatio = 1.f * nWidth / NewWidth;
 	float hRatio = 1.f * nHeight / NewHeight;
 
+#pragma omp parallel for
 	for (int nCurChannel = 0; nCurChannel < nChannel; ++nCurChannel)
 	{
 		int x = 0;
