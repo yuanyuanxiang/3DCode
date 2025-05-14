@@ -1,25 +1,25 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #ifdef _AFX
 
 /****************************************************************
 * @file ImageViewerDllFuncs.h
-* @brief ¶¯Ì¬Á´½Ó¿â ImageViewer.dll ½Ó¿Úº¯ÊıÉùÃ÷
+* @brief åŠ¨æ€é“¾æ¥åº“ ImageViewer.dll æ¥å£å‡½æ•°å£°æ˜
 * @details 
-	Ò»¡¢ÎÄµµËµÃ÷
-		¶¯Ì¬Á´½Ó¿â ImageViewer.dll ½Ó¿Úº¯ÊıÉùÃ÷
+	ä¸€ã€æ–‡æ¡£è¯´æ˜
+		åŠ¨æ€é“¾æ¥åº“ ImageViewer.dll æ¥å£å‡½æ•°å£°æ˜
 
-	¶ş¡¢ÖÆ ×÷ ÈË
-		Ê×¶¼Ê¦·¶´óÑ§ Ô¬ãäÏé 2015Äê4ÔÂ22ÈÕ
+	äºŒã€åˆ¶ ä½œ äºº
+		é¦–éƒ½å¸ˆèŒƒå¤§å­¦ è¢æ²…ç¥¥ 2015å¹´4æœˆ22æ—¥
 
-	Èı¡¢Ê¹ÓÃ·½·¨
+	ä¸‰ã€ä½¿ç”¨æ–¹æ³•
 
-		1¡¢¼ÓÔØÁ´½Ó¿â:	LoadImageViewerDll(HINSTANCE&);
-		2¡¢Ñ°ÕÒº¯Êı:	FindImageViewerFun(HINSTANCE&, TYPE*);
-		3¡¢µ÷ÓÃº¯Êı:	ImageViewerProc(TYPE*, int, int, int);
-		4¡¢ÊÍ·ÅÁ´½Ó¿â:	FreeLibrary(HINSTANCE).
-	ËÄ¡¢¼ò±ã·½·¨
-		Ö±½Óµ÷ÓÃ:		PopImageViewerDlg(T*, int, int, int);
+		1ã€åŠ è½½é“¾æ¥åº“:	LoadImageViewerDll(HINSTANCE&);
+		2ã€å¯»æ‰¾å‡½æ•°:	FindImageViewerFun(HINSTANCE&, TYPE*);
+		3ã€è°ƒç”¨å‡½æ•°:	ImageViewerProc(TYPE*, int, int, int);
+		4ã€é‡Šæ”¾é“¾æ¥åº“:	FreeLibrary(HINSTANCE).
+	å››ã€ç®€ä¾¿æ–¹æ³•
+		ç›´æ¥è°ƒç”¨:		PopImageViewerDlg(T*, int, int, int);
 *****************************************************************/
 
 bool LoadImageViewerDll(HINSTANCE &hDll)
@@ -107,7 +107,7 @@ bool FindImageViewerFun(HINSTANCE &hDll, CImage*)
 	return true;
 }
 
-// ÎªÁË·½±ãÊ¹ÓÃ¶ø½øĞĞÖØÔØ£ºptr - ±»ÏÔÊ¾µÄÊı¾İ, width - ¿í¶È, height - ¸ß¶È, rowlen - Ã¿ĞĞ×Ö½ÚÊı¡£
+// ä¸ºäº†æ–¹ä¾¿ä½¿ç”¨è€Œè¿›è¡Œé‡è½½ï¼šptr - è¢«æ˜¾ç¤ºçš„æ•°æ®, width - å®½åº¦, height - é«˜åº¦, rowlen - æ¯è¡Œå­—èŠ‚æ•°ã€‚
 void ImageViewerProc(BYTE* ptr, int width, int height, int rowlen)	{	BYTEViewer(ptr, width, height, rowlen);}
 void ImageViewerProc(char* ptr, int width, int height, int rowlen)	{	CharViewer(ptr, width, height, rowlen);}
 void ImageViewerProc(int* ptr, int width, int height, int rowlen)	{	IntViewer(ptr, width, height, rowlen);}
@@ -115,18 +115,18 @@ void ImageViewerProc(float* ptr, int width, int height, int rowlen)	{	FloatViewe
 void ImageViewerProc(double* ptr, int width, int height, int rowlen){	DoubleViewer(ptr, width, height, rowlen);}
 void ImageViewerProc(CImage* ptr, int width, int height, int rowlen){	CImageViewer(ptr, width, height, rowlen);}
 
-// µ¯³öÍ¼Ïñä¯ÀÀ¶Ô»°¿ò£ºptr - ±»ÏÔÊ¾µÄÊı¾İ, width - ¿í¶È, height - ¸ß¶È, rowlen - Ã¿ĞĞ×Ö½ÚÊı¡£
+// å¼¹å‡ºå›¾åƒæµè§ˆå¯¹è¯æ¡†ï¼šptr - è¢«æ˜¾ç¤ºçš„æ•°æ®, width - å®½åº¦, height - é«˜åº¦, rowlen - æ¯è¡Œå­—èŠ‚æ•°ã€‚
 template <typename Type> void PopImageViewerDlg(Type* ptr, int width, int height, int rowlen)
 {
 	HINSTANCE hDll = NULL;
 	if (LoadImageViewerDll(hDll) == false)
 	{
-		AfxMessageBox(_T("\"ImageViewer.dll\"¼ÓÔØÃ»ÓĞ³É¹¦£¡"));
+		AfxMessageBox(_T("\"ImageViewer.dll\"åŠ è½½æ²¡æœ‰æˆåŠŸï¼"));
 		return;
 	}
 	if (FindImageViewerFun(hDll, ptr) == false)
 	{
-		AfxMessageBox(_T("\"ImageViewer.dll\"º¯ÊıÑ°ÕÒÊ§°Ü£¡"));
+		AfxMessageBox(_T("\"ImageViewer.dll\"å‡½æ•°å¯»æ‰¾å¤±è´¥ï¼"));
 		FreeLibrary(hDll);
 		return;
 	}

@@ -1,4 +1,4 @@
-// DlgQRDecode.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// DlgQRDecode.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -21,7 +21,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-// CDlgQRDecode ¶Ô»°¿ò
+// CDlgQRDecode å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CDlgQRDecode, CDialogEx)
 
@@ -31,7 +31,7 @@ CDlgQRDecode::CDlgQRDecode(CWnd* pParent) : CDialogEx(CDlgQRDecode::IDD, pParent
 {
 	m_pImage = NULL;
 
-	// ±àÂëÑÕÉ«
+	// ç¼–ç é¢œè‰²
 	m_BackgroundColor = RGB(0, 0, 0);
 
 	ImageInfo::Init("yuanyuanxiang");
@@ -67,19 +67,19 @@ void CDlgQRDecode::SetImage()
 	}
 }
 
-/// ½âÂëµ±Ç°Í¼Ïñ
+/// è§£ç å½“å‰å›¾åƒ
 BOOL CDlgQRDecode::Decode()
 {
 	SetImage();
 	if (m_pImage == NULL || m_pImage->IsNull())
 		return FALSE;
 
-	// ¸üĞÂ»òÕß»ñÈ¡¿Ø¼ş¹ØÁª±äÁ¿
+	// æ›´æ–°æˆ–è€…è·å–æ§ä»¶å…³è”å˜é‡
 	m_strPublicString.Empty();
 	m_strPrivateString.Empty();
 	m_bUseHybrid = m_checkUseHybrid.GetCheck();
 	m_bTryHarder = m_checkTryHarder.GetCheck();	
-	// »ñÈ¡½âÂë²ÎÊı
+	// è·å–è§£ç å‚æ•°
 	int nWidth = 0, nHeight = 0, nRowlen = 0;
 	// m_pImage->ChangeBPP(32);
 	m_pImage->GetInfomation(nWidth, nHeight, nRowlen);
@@ -88,13 +88,13 @@ BOOL CDlgQRDecode::Decode()
 	BYTE *pHead = m_pImage->GetHeadAddress();
 	memset(&qr, 0, sizeof(BarCodeInfo));
 	memset(&inner, 0, sizeof(BarCodeInfo));
-	// ½âÂëÕû·ùÍ¼Ïñ
+	// è§£ç æ•´å¹…å›¾åƒ
 	BeginWaitCursor();
 	ImageInfo pImage(pHead, nWidth, nHeight, nChannel, m_roi, m_BackgroundColor);
 	BOOL success = DecodeWholeImage(DecodeSrcInfo(pImage, TRUE, TRUE), &qr, &inner);
 	if (*qr.m_pData == NULL)
 	{
-		// ³¢ÊÔ½øĞĞDM¡¢PDF417¡¢Aztec¶şÎ¬Âë½âÂë
+		// å°è¯•è¿›è¡ŒDMã€PDF417ã€AztecäºŒç»´ç è§£ç 
 		DMDecoder dm;
 		dm.SetImgSrc(pImage.GetDecBuffer(), nWidth, nHeight, pImage.GetDecChannel(), m_roi);
 		if (dm.DecodeHard(m_BackgroundColor))
@@ -148,7 +148,7 @@ BOOL CDlgQRDecode::Decode()
 
 void CDlgQRDecode::UpdateDecodeInfo()
 {
-	// ¸üĞÂ¿Ø¼ş×´Ì¬
+	// æ›´æ–°æ§ä»¶çŠ¶æ€
 	CString ecLevel;
 	switch (qr.m_nEcLevel)
 	{
@@ -176,38 +176,38 @@ BEGIN_MESSAGE_MAP(CDlgQRDecode, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CDlgQRDecode ÏûÏ¢´¦Àí³ÌĞò
+// CDlgQRDecode æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 
 void CDlgQRDecode::OnBnClickedButtonDecode()
 {
 	BOOL result = Decode();
-	TRACE(" * ½âÂë½á¹û: %d\n", result);
+	TRACE(" * è§£ç ç»“æœ: %d\n", result);
 }
 
 BOOL CDlgQRDecode::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// ¹¤¾ßÌáÊ¾
+	// å·¥å…·æç¤º
 	EnableToolTips(true);
 	m_ToolTip.Create(this);
 	m_ToolTip.Activate(true);
-	m_ToolTip.SetDelayTime(TTDT_INITIAL, 200); //ÑÓ³Ù200msºóÏÔÊ¾
-	m_ToolTip.SetDelayTime(TTDT_AUTOPOP, 3000);//ÏÔÊ¾³ÖĞø3000 ms
+	m_ToolTip.SetDelayTime(TTDT_INITIAL, 200); //å»¶è¿Ÿ200msåæ˜¾ç¤º
+	m_ToolTip.SetDelayTime(TTDT_AUTOPOP, 3000);//æ˜¾ç¤ºæŒç»­3000 ms
 
-	m_ToolTip.AddTool(GetDlgItem(IDC_CHECK_USE_HYBRID), _T("ÆôÓÃ»ìºÏ¶şÖµ»¯"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_CHECK_TRY_HARDER), _T("ÆôÓÃÇ¿Á¦ËÑË÷¹¦ÄÜ"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_EC_LEVEL), _T("QRÂë¾À´íÄÜÁ¦µÄ´óĞ¡"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_MODULESIZE), _T("Ä£¿é´óĞ¡Í¨³£´óÓÚ1"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_QR_VERSION), _T("QRÂë°æ±¾´Ó1µ½40"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_MASK_VERSION), _T("QRÂë¹²ÓĞ8ÖÖÑÚÂë"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_DECODE), _T("¶Ôµ±Ç°Í¼Ïñ½âÂë"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_SAVE_IMAGE), _T("±£´æÕâ¸ö¶şÎ¬Âë"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_CLEAR), _T("Çå³ı½âÂë½á¹û"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_INNER_ECLEVEL), _T("ÃÜÎÄµÄ¾À´íµÈ¼¶"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_INNER_MASK), _T("ÃÜÎÄµÄÑÚÂë°æ±¾"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BN_BACKGROUND), _T("ÉèÖÃ±³¾°É«(Ä¬ÈÏºÚÉ«)"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_CHECK_USE_HYBRID), _T("å¯ç”¨æ··åˆäºŒå€¼åŒ–"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_CHECK_TRY_HARDER), _T("å¯ç”¨å¼ºåŠ›æœç´¢åŠŸèƒ½"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_EC_LEVEL), _T("QRç çº é”™èƒ½åŠ›çš„å¤§å°"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_MODULESIZE), _T("æ¨¡å—å¤§å°é€šå¸¸å¤§äº1"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_QR_VERSION), _T("QRç ç‰ˆæœ¬ä»1åˆ°40"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_MASK_VERSION), _T("QRç å…±æœ‰8ç§æ©ç "));
+	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_DECODE), _T("å¯¹å½“å‰å›¾åƒè§£ç "));
+	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_SAVE_IMAGE), _T("ä¿å­˜è¿™ä¸ªäºŒç»´ç "));
+	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_CLEAR), _T("æ¸…é™¤è§£ç ç»“æœ"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_INNER_ECLEVEL), _T("å¯†æ–‡çš„çº é”™ç­‰çº§"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_EDIT_INNER_MASK), _T("å¯†æ–‡çš„æ©ç ç‰ˆæœ¬"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_BN_BACKGROUND), _T("è®¾ç½®èƒŒæ™¯è‰²(é»˜è®¤é»‘è‰²)"));
 
 	return TRUE;
 }
@@ -235,7 +235,7 @@ void CDlgQRDecode::OnPaint()
 }
 
 
-/// Ê¹µÃ»æÖÆÍ¼Ïñ²»ÉÁË¸
+/// ä½¿å¾—ç»˜åˆ¶å›¾åƒä¸é—ªçƒ
 BOOL CDlgQRDecode::OnEraseBkgnd(CDC* pDC)
 {
 	return CDialog::OnEraseBkgnd(pDC);

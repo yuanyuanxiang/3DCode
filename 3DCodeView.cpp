@@ -1,10 +1,10 @@
-
-// 3DCodeView.cpp : C3DCodeView ÀàµÄÊµÏÖ
+ï»¿
+// 3DCodeView.cpp : C3DCodeView ç±»çš„å®ç°
 //
 
 #include "stdafx.h"
-// SHARED_HANDLERS ¿ÉÒÔÔÚÊµÏÖÔ¤ÀÀ¡¢ËõÂÔÍ¼ºÍËÑË÷É¸Ñ¡Æ÷¾ä±úµÄ
-// ATL ÏîÄ¿ÖĞ½øĞĞ¶¨Òå£¬²¢ÔÊĞíÓë¸ÃÏîÄ¿¹²ÏíÎÄµµ´úÂë¡£
+// SHARED_HANDLERS å¯ä»¥åœ¨å®ç°é¢„è§ˆã€ç¼©ç•¥å›¾å’Œæœç´¢ç­›é€‰å™¨å¥æŸ„çš„
+// ATL é¡¹ç›®ä¸­è¿›è¡Œå®šä¹‰ï¼Œå¹¶å…è®¸ä¸è¯¥é¡¹ç›®å…±äº«æ–‡æ¡£ä»£ç ã€‚
 #ifndef SHARED_HANDLERS
 #include "3DCode.h"
 #endif
@@ -27,7 +27,7 @@ static char THIS_FILE[] = __FILE__;
 IMPLEMENT_DYNCREATE(C3DCodeView, CScrollView)
 
 BEGIN_MESSAGE_MAP(C3DCodeView, CScrollView)
-	// ±ê×¼´òÓ¡ÃüÁî
+	// æ ‡å‡†æ‰“å°å‘½ä»¤
 	ON_COMMAND(ID_FILE_PRINT, &CScrollView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CScrollView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CScrollView::OnFilePrintPreview)
@@ -61,7 +61,7 @@ BEGIN_MESSAGE_MAP(C3DCodeView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_TRANSPOSE_R, &C3DCodeView::OnUpdateViewTransposeR)
 END_MESSAGE_MAP()
 
-/// C3DCodeView ¹¹Ôì
+/// C3DCodeView æ„é€ 
 C3DCodeView::C3DCodeView()
 {
 	m_PaintRect = CRect(0, 0, 100, 100);
@@ -69,20 +69,20 @@ C3DCodeView::C3DCodeView()
 	m_bLeftButtonDown = FALSE;
 }
 
-/// C3DCodeView Îö¹¹
+/// C3DCodeView ææ„
 C3DCodeView::~C3DCodeView()
 {
 }
 
 BOOL C3DCodeView::PreCreateWindow(CREATESTRUCT& cs)
 {
-	// TODO:  ÔÚ´Ë´¦Í¨¹ıĞŞ¸Ä
-	//  CREATESTRUCT cs À´ĞŞ¸Ä´°¿ÚÀà»òÑùÊ½
+	// TODO:  åœ¨æ­¤å¤„é€šè¿‡ä¿®æ”¹
+	//  CREATESTRUCT cs æ¥ä¿®æ”¹çª—å£ç±»æˆ–æ ·å¼
 
 	return CScrollView::PreCreateWindow(cs);
 }
 
-/// C3DCodeView »æÖÆ
+/// C3DCodeView ç»˜åˆ¶
 void C3DCodeView::OnDraw(CDC* pDC)
 {
 	C3DCodeDoc* pDoc = GetDocument();
@@ -123,25 +123,25 @@ void C3DCodeView::OnInitialUpdate()
 }
 
 
-/// C3DCodeView ´òÓ¡
+/// C3DCodeView æ‰“å°
 BOOL C3DCodeView::OnPreparePrinting(CPrintInfo* pInfo)
 {
-	// Ä¬ÈÏ×¼±¸
+	// é»˜è®¤å‡†å¤‡
 	return DoPreparePrinting(pInfo);
 }
 
 void C3DCodeView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
-	// TODO:  Ìí¼Ó¶îÍâµÄ´òÓ¡Ç°½øĞĞµÄ³õÊ¼»¯¹ı³Ì
+	// TODO:  æ·»åŠ é¢å¤–çš„æ‰“å°å‰è¿›è¡Œçš„åˆå§‹åŒ–è¿‡ç¨‹
 }
 
 void C3DCodeView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
-	// TODO:  Ìí¼Ó´òÓ¡ºó½øĞĞµÄÇåÀí¹ı³Ì
+	// TODO:  æ·»åŠ æ‰“å°åè¿›è¡Œçš„æ¸…ç†è¿‡ç¨‹
 }
 
 
-// C3DCodeView Õï¶Ï
+// C3DCodeView è¯Šæ–­
 
 #ifdef _DEBUG
 void C3DCodeView::AssertValid() const
@@ -154,7 +154,7 @@ void C3DCodeView::Dump(CDumpContext& dc) const
 	CScrollView::Dump(dc);
 }
 
-C3DCodeDoc* C3DCodeView::GetDocument() const // ·Çµ÷ÊÔ°æ±¾ÊÇÄÚÁªµÄ
+C3DCodeDoc* C3DCodeView::GetDocument() const // éè°ƒè¯•ç‰ˆæœ¬æ˜¯å†…è”çš„
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(C3DCodeDoc)));
 	return (C3DCodeDoc*)m_pDocument;
@@ -162,7 +162,7 @@ C3DCodeDoc* C3DCodeView::GetDocument() const // ·Çµ÷ÊÔ°æ±¾ÊÇÄÚÁªµÄ
 #endif //_DEBUG
 
 
-// C3DCodeView ÏûÏ¢´¦Àí³ÌĞò
+// C3DCodeView æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 
 BOOL C3DCodeView::OnEraseBkgnd(CDC* pDC)
@@ -173,11 +173,11 @@ BOOL C3DCodeView::OnEraseBkgnd(CDC* pDC)
 		// 1	2	3
 		// 4	5	6
 		// 7	8	9
-		// ÆäÖĞ5´ú±í»æÍ¼ÇøÓò
+		// å…¶ä¸­5ä»£è¡¨ç»˜å›¾åŒºåŸŸ
 		CRect rect;
 		GetClientRect(&rect);
 		CyImage *pImage = pDoc->GetImage();
-		// SetPaintRect(pImage->GetWidth(), pImage->GetHeight());		//×¢ÊÍµôÕâ¾ä»°·Å´óËõĞ¡²ÅÓĞ·´Ó¦(2016.3.8)
+		// SetPaintRect(pImage->GetWidth(), pImage->GetHeight());		//æ³¨é‡Šæ‰è¿™å¥è¯æ”¾å¤§ç¼©å°æ‰æœ‰ååº”(2016.3.8)
 		pDC->PatBlt(0, 0, m_PaintRect.left, rect.bottom, PATCOPY);		// 1 4 7
 		pDC->PatBlt(0, 0, rect.right, m_PaintRect.top, PATCOPY);		// 1 2 3
 		pDC->PatBlt(m_PaintRect.right, 0, rect.right - m_PaintRect.right, rect.bottom, PATCOPY);	// 3 6 9	
@@ -192,7 +192,7 @@ void C3DCodeView::SetPaintRect(const CSize sz)
 	SetPaintRect(sz.cx, sz.cy);
 }
 
-// ÉèÖÃ»æÍ¼¾ØĞÎ¿í¶ÈÓë¸ß¶È
+// è®¾ç½®ç»˜å›¾çŸ©å½¢å®½åº¦ä¸é«˜åº¦
 void C3DCodeView::SetPaintRect(int nWidth, int nHeight)
 {
 	m_PaintRect.right = m_PaintRect.left + nWidth;
@@ -237,7 +237,7 @@ void C3DCodeView::PasteImage()
 {
 	if (OpenClipboard())
 	{
-		// »ñÈ¡¼ôÇĞ°åÊı¾İÀàĞÍ
+		// è·å–å‰ªåˆ‡æ¿æ•°æ®ç±»å‹
 		int data_type = 0;
 		HANDLE handle = NULL;
 		for (int i = 1; i < CF_MAX; ++i)
@@ -245,13 +245,13 @@ void C3DCodeView::PasteImage()
 			handle = GetClipboardData(i);
 			if (handle != NULL)
 			{
-				TRACE(" * ÌáÊ¾: ¼ôÇĞ°åµÄÊı¾İÀàĞÍÊÇ%d.\n", i);
+				TRACE(_T(" * æç¤º: å‰ªåˆ‡æ¿çš„æ•°æ®ç±»å‹æ˜¯%d.\n"), i);
 				data_type = i;
 				break;
 			}
 		}
 
-		// »ñÈ¡ÎÄµµ
+		// è·å–æ–‡æ¡£
 		C3DCodeDoc* pDoc = GetDocument();
 
 		switch (data_type)
@@ -264,17 +264,17 @@ void C3DCodeView::PasteImage()
 							  CloseClipboard();
 							  return;
 						  }
-						  // µ±Ç°ÎÄµµÒÑ¾­ÓĞÍ¼Ïñ
+						  // å½“å‰æ–‡æ¡£å·²ç»æœ‰å›¾åƒ
 						  if (!pDoc->ImageIsNull())
 							  pDoc = AfxOpenDocument(NULL);
 						  CBitmap* pBitmap = CBitmap::FromHandle(hBitmap);
-						  // È¡µÃÔ´Êı¾İ
+						  // å–å¾—æºæ•°æ®
 						  BITMAP bmp = { 0 };
 						  pBitmap->GetBitmap(&bmp);
 						  long Length = bmp.bmHeight * bmp.bmWidthBytes;
 						  BYTE* pSrc = new BYTE[Length];
 						  pBitmap->GetBitmapBits(Length, pSrc);
-						  // ¸øÄ¿±êµØÖ·¿½±´Êı¾İ
+						  // ç»™ç›®æ ‡åœ°å€æ‹·è´æ•°æ®
 						  pDoc->GetImage()->Create(bmp.bmWidth, bmp.bmHeight, bmp.bmBitsPixel);
 						  BYTE* pDst = pDoc->GetImage()->GetHeadAddress();
 						  memcpy(pDst, pSrc, Length);
@@ -286,7 +286,7 @@ void C3DCodeView::PasteImage()
 		case CF_HDROP:
 		{
 						 HDROP hDrop = (HDROP)handle;
-						 // »ñÈ¡ÍÏ¶¯µÄÎÄ¼ş¸öÊı
+						 // è·å–æ‹–åŠ¨çš„æ–‡ä»¶ä¸ªæ•°
 						 const int fileCount = DragQueryFile(hDrop, (UINT)-1, NULL, 0);
 						 ASSERT(fileCount >= 1);
 						 for (int i = 0; i < fileCount; i++)
@@ -295,14 +295,14 @@ void C3DCodeView::PasteImage()
 							 DragQueryFile(hDrop, i, fileName, MAX_PATH);
 							 CString str;
 							 str.Format(_T("%s"), fileName);
-							 // ĞÂ½¨Ò»¸öÎÄµµ£¬ÔÙ¸´ÖÆ¼ôÇĞ°åÍ¼Ïñµ½ĞÂ½¨µÄ¿Õ°×ÎÄµµ
+							 // æ–°å»ºä¸€ä¸ªæ–‡æ¡£ï¼Œå†å¤åˆ¶å‰ªåˆ‡æ¿å›¾åƒåˆ°æ–°å»ºçš„ç©ºç™½æ–‡æ¡£
 							 if (!pDoc->ImageIsNull())
 							 {
 								 pDoc = AfxOpenDocument(str);
 							 }
 							 else
 							 {
-								 // WindowsµÄ¼ôÇĞ°å²Ù×÷Êµ¼ÊÉÏÊÇ¸´ÖÆÁËÒ»¸öÎÄ¼şÁĞ±í
+								 // Windowsçš„å‰ªåˆ‡æ¿æ“ä½œå®é™…ä¸Šæ˜¯å¤åˆ¶äº†ä¸€ä¸ªæ–‡ä»¶åˆ—è¡¨
 								 if (pDoc->OnOpenDocument(str))
 								 {
 									 C3DCodeView* pView = pDoc->GetView();
@@ -438,7 +438,7 @@ void C3DCodeView::OnUpdateViewTranspose(CCmdUI *pCmdUI)
 
 void C3DCodeView::OnEditCut()
 {
-	// TODO:  ÔÚ´ËÌí¼ÓÃüÁî´¦Àí³ÌĞò´úÂë
+	// TODO:  åœ¨æ­¤æ·»åŠ å‘½ä»¤å¤„ç†ç¨‹åºä»£ç 
 }
 
 
@@ -481,7 +481,7 @@ void C3DCodeView::OnUpdateEditPaste(CCmdUI *pCmdUI)
 void C3DCodeView::OnEditBpp()
 {
 	CDlgMessage dlg;
-	dlg.m_strInputName = _T("Î»Éî¶È:");
+	dlg.m_strInputName = _T("ä½æ·±åº¦:");
 	dlg.m_fInput = 24;
 	if (dlg.DoModal() == IDOK)
 	{
@@ -505,7 +505,7 @@ void C3DCodeView::OnUpdateEditBpp(CCmdUI *pCmdUI)
 void C3DCodeView::OnEditRotate()
 {
 	CDlgMessage dlg;
-	dlg.m_strInputName = _T("Ğı×ª½Ç¶È:");
+	dlg.m_strInputName = _T("æ—‹è½¬è§’åº¦:");
 	dlg.m_fInput = 30;
 	if (dlg.DoModal() == IDOK)
 	{
@@ -527,10 +527,10 @@ void C3DCodeView::OnUpdateEditRotate(CCmdUI *pCmdUI)
 void C3DCodeView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	m_bLeftButtonDown = TRUE;
-	// Êó±ê»ñÈ¡µÄÊÇÉè±¸×ø±ê£¬ĞèÒª×ª»»ÎªÂß¼­×ø±ê
-	CClientDC dc(this); // »ñÈ¡¿Í»§´°¿ÚDC
-	OnPrepareDC(&dc); // ½øĞĞÔ­µãÆ¥Åä
-	dc.DPtoLP(&point); // ×ø±ê×ª»»
+	// é¼ æ ‡è·å–çš„æ˜¯è®¾å¤‡åæ ‡ï¼Œéœ€è¦è½¬æ¢ä¸ºé€»è¾‘åæ ‡
+	CClientDC dc(this); // è·å–å®¢æˆ·çª—å£DC
+	OnPrepareDC(&dc); // è¿›è¡ŒåŸç‚¹åŒ¹é…
+	dc.DPtoLP(&point); // åæ ‡è½¬æ¢
 	m_RoiRect.left = point.x;
 	m_RoiRect.top = point.y;
 	CScrollView::OnLButtonDown(nFlags, point);

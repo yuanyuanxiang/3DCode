@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "CyImage.h"
 #include <new>
 
@@ -14,7 +14,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-/** - Îª8Î»É«Í¼ÏñÉèÖÃÑÕÉ«±í - */
+/** - ä¸º8ä½è‰²å›¾åƒè®¾ç½®é¢œè‰²è¡¨ - */
 void SetColorTabFor8BitImage(CImage *pImage)
 {
 	ASSERT(pImage && !pImage->IsNull() && 8 == pImage->GetBPP());
@@ -30,13 +30,13 @@ void SetColorTabFor8BitImage(CImage *pImage)
 }
 
 
-// ´Ófile path»ñÈ¡file name(Ä¬ÈÏ´øºó×º)
+// ä»file pathè·å–file name(é»˜è®¤å¸¦åç¼€)
 CString GetFileName(CString strFilePath, BOOL bHasPostfix)
 {
 	int nLength = strFilePath.GetLength();
 	int nPos = strFilePath.ReverseFind('\\');
 	CString name = strFilePath.Right(nLength - nPos - 1);
-	// »ñÈ¡Ã»ÓĞºó×ºµÄÎÄ¼şÃû
+	// è·å–æ²¡æœ‰åç¼€çš„æ–‡ä»¶å
 	if (bHasPostfix == FALSE)
 	{
 		int nDotPos = name.ReverseFind('.');
@@ -46,7 +46,7 @@ CString GetFileName(CString strFilePath, BOOL bHasPostfix)
 }
 
 
-// ´Ófile path»ñÈ¡file ext
+// ä»file pathè·å–file ext
 CString GetFileExt(CString strFilePath)
 {
 	int nLength = strFilePath.GetLength();
@@ -56,7 +56,7 @@ CString GetFileExt(CString strFilePath)
 }
 
 
-// Êı×Ö×ªÎªCString
+// æ•°å­—è½¬ä¸ºCString
 CString Num2String(int nNum)
 {
 	CString str;
@@ -66,20 +66,20 @@ CString Num2String(int nNum)
 
 
 #ifdef ENABLE_IMAGE_TRANSFORM
-/** ÔÚÄ¿±êÍ¼ÏñÍÚ³öÒ»¿é¾ØĞÎÓÃÔ´Í¼ÏñÌæ»»£¬LOGO±ØĞë´óÓÚ3Í¨µÀ */
+/** åœ¨ç›®æ ‡å›¾åƒæŒ–å‡ºä¸€å—çŸ©å½¢ç”¨æºå›¾åƒæ›¿æ¢ï¼ŒLOGOå¿…é¡»å¤§äº3é€šé“ */
 void ReplacedLogo(CyImage* pDstImage, CyImage* pSrcImage, CLogoRect LogoRect)
 {
 	return MixedLogo(pDstImage, pSrcImage, LogoRect, 0);
 }
 
 
-/** ÔÚÄ¿±êÍ¼ÏñÍÚ³öÒ»¿é¾ØĞÎÓëÔ´Í¼Ïñ»ìºÏ£¬dst_rateÖ¸Ã÷DstImageËùÕ¼±ÈÀı */
+/** åœ¨ç›®æ ‡å›¾åƒæŒ–å‡ºä¸€å—çŸ©å½¢ä¸æºå›¾åƒæ··åˆï¼Œdst_rateæŒ‡æ˜DstImageæ‰€å æ¯”ä¾‹ */
 void MixedLogo(CyImage* pDstImage, CyImage* pSrcImage, CLogoRect LogoRect, float dst_rate)
 {
-	// µ±ÖĞÒ»¸öÎª¿Õ¾Í·µ»Ø
+	// å½“ä¸­ä¸€ä¸ªä¸ºç©ºå°±è¿”å›
 	if (pSrcImage->IsNull() || pSrcImage->GetWidth() < 23 || pDstImage->IsNull())
 		return;
-	// µ±LogoÌ«´óÊ±·µ»Ø
+	// å½“Logoå¤ªå¤§æ—¶è¿”å›
 	if (LogoRect.Width() > pDstImage->GetWidth() || LogoRect.Height() > pDstImage->GetHeight())
 		return;
 	ASSERT(pSrcImage->GetChannel() >= 3);
@@ -110,7 +110,7 @@ void MixedLogo(CyImage* pDstImage, CyImage* pSrcImage, CLogoRect LogoRect, float
 #endif
 
 
-/** - Ä¬ÈÏµÄ¹¹Ôìº¯Êı - */
+/** - é»˜è®¤çš„æ„é€ å‡½æ•° - */
 CyImage::CyImage()
 {
 	CImage::CImage();
@@ -120,7 +120,7 @@ CyImage::CyImage()
 }
 
 
-/** - Îö¹¹º¯Êı - */
+/** - ææ„å‡½æ•° - */
 CyImage::~CyImage()
 {
 	SAFE_DELETE(m_pFloatData);
@@ -128,7 +128,7 @@ CyImage::~CyImage()
 }
 
 
-/** - ¿½±´¹¹Ôìº¯Êı - */
+/** - æ‹·è´æ„é€ å‡½æ•° - */
 CyImage::CyImage(const CyImage &pImage)
 {
 	m_pFloatData = NULL;
@@ -143,10 +143,10 @@ CyImage::CyImage(const CyImage &pImage)
 }
 
 
-/** - ¸³Öµ²Ù×÷ÔËËã - */
+/** - èµ‹å€¼æ“ä½œè¿ç®— - */
 CyImage CyImage::operator = (const CyImage &pImage)
 {
-	// ×Ô¼º¸ø×Ô¼º¸³Öµ
+	// è‡ªå·±ç»™è‡ªå·±èµ‹å€¼
 	if (&pImage == this)
 		return *this;
 	Destroy();
@@ -163,25 +163,25 @@ CyImage CyImage::operator = (const CyImage &pImage)
 }
 
 
-/** - »ñÈ¡¸¡µãÊı¾İµÄÍ·Ö¸Õë - */
+/** - è·å–æµ®ç‚¹æ•°æ®çš„å¤´æŒ‡é’ˆ - */
 float* CyImage::GetFloatDataHead() const
 {
 	return m_pFloatData;
 }
 
 
-/** - »ñÈ¡Í¼ÏñÃ¿ĞĞ¸¡µãÊı¾İ¸öÊı - */
+/** - è·å–å›¾åƒæ¯è¡Œæµ®ç‚¹æ•°æ®ä¸ªæ•° - */
 int CyImage::GetFloatDataRowlen() const
 {
 	return GetWidth() * GetChannel();
 }
 
 
-/** - ÎªÍ¼Ïñ¿½±´¸¡µãÊı¾İ - 
-* @param[in] *pSrc Êı¾İÔ´
-* @param[in] nRowlen Êı¾İÔ´Ã¿ĞĞ¸¡µã¸öÊı
-* @param[in] nHeight Êı¾İÔ´µÄ¸ß¶È
-* @return Õæ»ò¼Ù
+/** - ä¸ºå›¾åƒæ‹·è´æµ®ç‚¹æ•°æ® - 
+* @param[in] *pSrc æ•°æ®æº
+* @param[in] nRowlen æ•°æ®æºæ¯è¡Œæµ®ç‚¹ä¸ªæ•°
+* @param[in] nHeight æ•°æ®æºçš„é«˜åº¦
+* @return çœŸæˆ–å‡
 */
 BOOL CyImage::SetFloatData(float* pSrc, int nRowlen, int nHeight)
 {
@@ -194,24 +194,24 @@ BOOL CyImage::SetFloatData(float* pSrc, int nRowlen, int nHeight)
 }
 
 
-/** - »ñÈ¡¸¡µãÊı¾İµÄ×î´óÖµ - */
+/** - è·å–æµ®ç‚¹æ•°æ®çš„æœ€å¤§å€¼ - */
 float CyImage::GetMaximum() const
 {
 	return m_fMaximum;
 }
 
 
-/** - »ñÈ¡¸¡µãÊı¾İµÄ×îĞ¡Öµ - */
+/** - è·å–æµ®ç‚¹æ•°æ®çš„æœ€å°å€¼ - */
 float CyImage::GetMinimum() const
 {
 	return m_fMinimum;
 }
 
 
-/** - ¼ÆËã¸¡µãÊı¾İµÄ×î´ó¡¢×îĞ¡Öµ - */
+/** - è®¡ç®—æµ®ç‚¹æ•°æ®çš„æœ€å¤§ã€æœ€å°å€¼ - */
 void CyImage::ComputeMinMax()
 {
-	// Ñ°ÕÒ×î´ó×îĞ¡Öµ
+	// å¯»æ‰¾æœ€å¤§æœ€å°å€¼
 	pair<float*, float*> minmax_pair = minmax_element(m_pFloatData, 
 		m_pFloatData + GetHeight() * GetFloatDataRowlen());
 
@@ -220,49 +220,49 @@ void CyImage::ComputeMinMax()
 }
 
 
-/** - »ñµÃÍ¼ÏñÊı¾İ¿éµÄÊ×µØÖ· - */
+/** - è·å¾—å›¾åƒæ•°æ®å—çš„é¦–åœ°å€ - */
 BYTE* CyImage::GetHeadAddress() const
 {
 	return (BYTE*) GetBits() + GetPitch() * (GetHeight() - 1);
 }
 
 
-/** - »ñµÃÍ¼ÏñÄ³Ò»ĞĞµÄÊ×µØÖ· - */
+/** - è·å¾—å›¾åƒæŸä¸€è¡Œçš„é¦–åœ°å€ - */
 BYTE* CyImage::GetLineAddress(int nLineID) const
 {
 	return GetHeadAddress() + nLineID * abs(GetPitch());
 }
 
 
-/** - »ñµÃÍ¼ÏñµÄÍ¨µÀ¸öÊı - */
+/** - è·å¾—å›¾åƒçš„é€šé“ä¸ªæ•° - */
 int CyImage::GetChannel() const
 {
 	return GetBPP() / 8;
 }
 
 
-/** - »ñµÃÍ¼ÏñÊı¾İÃ¿ĞĞµÄ×Ö½ÚÊı - */
+/** - è·å¾—å›¾åƒæ•°æ®æ¯è¡Œçš„å­—èŠ‚æ•° - */
 int CyImage::GetRowlen() const
 {
 	return abs(GetPitch());
 }
 
 
-/** - »ñµÃÍ¼ÏñÊı¾İ×ÜµÄ×Ö½ÚÊı - */
+/** - è·å¾—å›¾åƒæ•°æ®æ€»çš„å­—èŠ‚æ•° - */
 int CyImage::GetLength() const
 {
 	return GetHeight() * abs(GetPitch());
 }
 
 
-/** - »ñµÃÍ¼ÏñµÄ¶Ô½ÇÏßµÄ³¤¶È - */
+/** - è·å¾—å›¾åƒçš„å¯¹è§’çº¿çš„é•¿åº¦ - */
 int CyImage::GetDiagLength() const
 {
 	return (int)ceil(sqrt(1.0f * GetWidth() * GetWidth() + GetHeight() * GetHeight()));
 }
 
 
-/** - »ñµÃÍ¼ÏñµÄ¿í¶È¡¢¸ß¶È - */
+/** - è·å¾—å›¾åƒçš„å®½åº¦ã€é«˜åº¦ - */
 void CyImage::GetInfomation(int &nWidth, int &nHeight) const
 {
 	nWidth = GetWidth();
@@ -270,7 +270,7 @@ void CyImage::GetInfomation(int &nWidth, int &nHeight) const
 }
 
 
-/** - »ñµÃÍ¼ÏñµÄ¿í¶È¡¢¸ß¶È¡¢Ã¿ĞĞ×Ö½ÚÊı - */
+/** - è·å¾—å›¾åƒçš„å®½åº¦ã€é«˜åº¦ã€æ¯è¡Œå­—èŠ‚æ•° - */
 void CyImage::GetInfomation(int &nWidth, int &nHeight, int &nRowlen) const
 {
 	nWidth = GetWidth();
@@ -279,7 +279,7 @@ void CyImage::GetInfomation(int &nWidth, int &nHeight, int &nRowlen) const
 }
 
 
-/** - »ñµÃÍ¼ÏñµÄ¿í¶È¡¢¸ß¶È¡¢Ã¿ĞĞ×Ö½ÚÊı¡¢Ã¿ÏñËØ×Ö½ÚÊı - */
+/** - è·å¾—å›¾åƒçš„å®½åº¦ã€é«˜åº¦ã€æ¯è¡Œå­—èŠ‚æ•°ã€æ¯åƒç´ å­—èŠ‚æ•° - */
 void CyImage::GetInfomation(int &nWidth, int &nHeight, int &nRowlen, int &nBPP) const
 {
 	nWidth = GetWidth();
@@ -289,7 +289,7 @@ void CyImage::GetInfomation(int &nWidth, int &nHeight, int &nRowlen, int &nBPP) 
 }
 
 
-/** - »ñµÃÍ¼ÏñµÄ¿í¶È¡¢¸ß¶È¡¢Ã¿ĞĞ×Ö½ÚÊı¡¢Ã¿ÏñËØ×Ö½ÚÊı¡¢Í¨µÀ¸öÊı - */
+/** - è·å¾—å›¾åƒçš„å®½åº¦ã€é«˜åº¦ã€æ¯è¡Œå­—èŠ‚æ•°ã€æ¯åƒç´ å­—èŠ‚æ•°ã€é€šé“ä¸ªæ•° - */
 void CyImage::GetInfomation(int &nWidth, int &nHeight, int &nRowlen, int &nBPP, int &nChannel) const
 {
 	nWidth = GetWidth();
@@ -300,7 +300,7 @@ void CyImage::GetInfomation(int &nWidth, int &nHeight, int &nRowlen, int &nBPP, 
 }
 
 
-/** - ³õÊ¼»¯¸¡µãÊı¾İ - */
+/** - åˆå§‹åŒ–æµ®ç‚¹æ•°æ® - */
 BOOL CyImage::InitFloatData()
 {
 	SAFE_DELETE(m_pFloatData);
@@ -319,18 +319,18 @@ BOOL CyImage::InitFloatData()
 }
 
 
-/** - ¿½±´Êı¾İÔ´´´½¨Í¼Ïñ - 
-* @param[in] *pSrc Ô´Êı¾İ
-* @param[in] nWidth Í¼Ïñ¿í¶È
-* @param[in] nHeight Í¼Ïñ¸ß¶È
-* @param[in] nBPP Î»Éî¶È
-* @return ³É¹¦»òÊ§°Ü
-* @note pSrcµÄÊı¾İ³¤¶ÈÎñ±ØÓëËù´´½¨Í¼Ïñ×Ö½ÚÊıÒ»ÖÂ£¬¼´:
-		length(pSrc) = Ëù´´½¨µÄÍ¼Ïñ×ÜµÄ×Ö½ÚÊı
+/** - æ‹·è´æ•°æ®æºåˆ›å»ºå›¾åƒ - 
+* @param[in] *pSrc æºæ•°æ®
+* @param[in] nWidth å›¾åƒå®½åº¦
+* @param[in] nHeight å›¾åƒé«˜åº¦
+* @param[in] nBPP ä½æ·±åº¦
+* @return æˆåŠŸæˆ–å¤±è´¥
+* @note pSrcçš„æ•°æ®é•¿åº¦åŠ¡å¿…ä¸æ‰€åˆ›å»ºå›¾åƒå­—èŠ‚æ•°ä¸€è‡´ï¼Œå³:
+		length(pSrc) = æ‰€åˆ›å»ºçš„å›¾åƒæ€»çš„å­—èŠ‚æ•°
 */
 BOOL CyImage::Create(const BYTE* pSrc, int nWidth, int nHeight, int nBPP) throw()
 {
-	Destroy();// ÏÈÏú»ÙÍ¼ÏñÊı¾İ
+	Destroy();// å…ˆé”€æ¯å›¾åƒæ•°æ®
 	if (FALSE == CImage::Create(nWidth, nHeight, nBPP, 0UL))
 		return FALSE;
 	if (nBPP == 8)
@@ -342,12 +342,12 @@ BOOL CyImage::Create(const BYTE* pSrc, int nWidth, int nHeight, int nBPP) throw(
 }
 
 
-/** - ´´½¨Í¼Ïñ - 
-* @param[in] nWidth Í¼Ïñ¿í¶È
-* @param[in] nHeight Í¼Ïñ¸ß¶È
-* @param[in] nBPP Í¼ÏñÎ»Éî¶È
-* @param[in] dwFlags Í¼Ïñ³õÖµ
-* @return ³É¹¦»òÊ§°Ü
+/** - åˆ›å»ºå›¾åƒ - 
+* @param[in] nWidth å›¾åƒå®½åº¦
+* @param[in] nHeight å›¾åƒé«˜åº¦
+* @param[in] nBPP å›¾åƒä½æ·±åº¦
+* @param[in] dwFlags å›¾åƒåˆå€¼
+* @return æˆåŠŸæˆ–å¤±è´¥
 */
 BOOL CyImage::Create(int nWidth, int nHeight, int nBPP, DWORD dwFlags) throw()
 {
@@ -362,12 +362,12 @@ BOOL CyImage::Create(int nWidth, int nHeight, int nBPP, DWORD dwFlags) throw()
 }
 
 
-/** - ´ÓÊı¾İÔ´´´½¨Í¼Ïñ - 
-* @param[in] *pSrc Êı¾İÔ´
-* @param[in] nWidth Í¼Ïñ¿í¶È
-* @param[in] nHeight Í¼Ïñ¸ß¶È
-* @param[in] nRowlen Êı¾İÔ´Ã¿ĞĞÊı¾İ¸öÊı
-* @return ³É¹¦»òÊ§°Ü
+/** - ä»æ•°æ®æºåˆ›å»ºå›¾åƒ - 
+* @param[in] *pSrc æ•°æ®æº
+* @param[in] nWidth å›¾åƒå®½åº¦
+* @param[in] nHeight å›¾åƒé«˜åº¦
+* @param[in] nRowlen æ•°æ®æºæ¯è¡Œæ•°æ®ä¸ªæ•°
+* @return æˆåŠŸæˆ–å¤±è´¥
 */
 BOOL CyImage::Create(const float* pSrc, int nWidth, int nHeight, int nRowlen) throw()
 {
@@ -387,10 +387,10 @@ BOOL CyImage::Create(const float* pSrc, int nWidth, int nHeight, int nRowlen) th
 
 
 #ifdef IMAGE_SRC_H
-/** - ´ÓImageSrc´´½¨Í¼Ïñ - */
+/** - ä»ImageSrcåˆ›å»ºå›¾åƒ - */
 BOOL CyImage::Create(const ImageSrc *pSrc) throw()
 {
-	Destroy();// ÏÈÏú»ÙÍ¼ÏñÊı¾İ
+	Destroy();// å…ˆé”€æ¯å›¾åƒæ•°æ®
 	if (FALSE == CImage::Create(pSrc->GetWidth(), pSrc->GetHeight(), pSrc->GetBPP(), 0UL))
 		return FALSE;
 	if (GetBPP() == 8)
@@ -403,10 +403,10 @@ BOOL CyImage::Create(const ImageSrc *pSrc) throw()
 #endif
 
 
-/** - ¼ÓÔØÍ¼Ïñ - */
+/** - åŠ è½½å›¾åƒ - */
 HRESULT CyImage::Load(LPCTSTR pszFileName) throw()
 {
-	// Èç¹ûÎÄ¼şÎªTXT
+	// å¦‚æœæ–‡ä»¶ä¸ºTXT
 	CString strPathName(pszFileName);
 	CString strExt = GetFileExt(strPathName);
 	strExt.MakeUpper();
@@ -425,9 +425,9 @@ HRESULT CyImage::Load(LPCTSTR pszFileName) throw()
 		return S_OK;
 	}
 #endif
-	// ´İ»Ùµ±Ç°Í¼Ïñ
+	// æ‘§æ¯å½“å‰å›¾åƒ
 	Destroy();
-	// ¼ÓÔØ½øÍ¼Ïñ
+	// åŠ è½½è¿›å›¾åƒ
 	HRESULT hr = CImage::Load(pszFileName);
 	if (hr != S_OK)
 		return hr;
@@ -437,7 +437,7 @@ HRESULT CyImage::Load(LPCTSTR pszFileName) throw()
 }
 
 
-/** - Í¬²½Êı¾İ - */
+/** - åŒæ­¥æ•°æ® - */
 void CyImage::MemcpyByteToFloat()
 {
 	BYTE* pHead = GetHeadAddress();
@@ -472,15 +472,15 @@ void CyImage::MemcpyByteToFloat()
 }
 
 
-/** - Í¬²½Êı¾İ - */
+/** - åŒæ­¥æ•°æ® - */
 void CyImage::MemcpyFloatToByte()
 {
 	ComputeMinMax();
 	BYTE* pHead = GetHeadAddress();
-	// Èç¹û¸¡µãÊı¾İÊÇ³£Á¿
+	// å¦‚æœæµ®ç‚¹æ•°æ®æ˜¯å¸¸é‡
 	if (m_fMaximum == m_fMinimum)
 	{
-		TRACE(" * ¾¯¸æ£º¸¡µãÊı¾İÈ«²¿ÊÇÒ»ÑùµÄ!\n");
+		TRACE(_T(" * è­¦å‘Šï¼šæµ®ç‚¹æ•°æ®å…¨éƒ¨æ˜¯ä¸€æ ·çš„!\n"));
 		BYTE val = (0 <= m_fMinimum && m_fMinimum < 256) ? (BYTE)m_fMinimum : 0;
 		memset(pHead, val, GetHeight() * GetRowlen() * sizeof(BYTE));
 		return;
@@ -507,11 +507,11 @@ void CyImage::MemcpyFloatToByte()
 }
 
 
-/** - Í¬²½Êı¾İ - 
-* @param[in] lower ÏÂÏŞ
-* @param[in] upper ÉÏÏŞ
-* @return ÎŞ
-* @note ¸Ãº¯Êı»á½«³¬½çµÄÔªËØÉèÎª±ß½çÖµ
+/** - åŒæ­¥æ•°æ® - 
+* @param[in] lower ä¸‹é™
+* @param[in] upper ä¸Šé™
+* @return æ— 
+* @note è¯¥å‡½æ•°ä¼šå°†è¶…ç•Œçš„å…ƒç´ è®¾ä¸ºè¾¹ç•Œå€¼
 */
 void CyImage::MemcpyFloatToByteBounded(float lower, float upper)
 {
@@ -544,7 +544,7 @@ void CyImage::MemcpyFloatToByteBounded(float lower, float upper)
 
 
 #ifdef ENABLE_IMAGE_TRANSFORM
-/** - ´ÓImageTransform´´½¨Í¼Ïñ - */
+/** - ä»ImageTransformåˆ›å»ºå›¾åƒ - */
 BOOL CyImage::Create(const ImageTransform *pSrc) throw()
 {
 	if(NULL == pSrc)
@@ -562,7 +562,7 @@ BOOL CyImage::Create(const ImageTransform *pSrc) throw()
 }
 
 
-/** - ¸ù¾İ¾ØĞÎÇøÓòÌáÈ¡¸ĞĞËÈ¤ÇøÓòµÄÍ¼Ïñ - */
+/** - æ ¹æ®çŸ©å½¢åŒºåŸŸæå–æ„Ÿå…´è¶£åŒºåŸŸçš„å›¾åƒ - */
 CyImage* CyImage::ROI(CLogoRect rect) const
 {
 	if (rect == CLogoRect(0, 0, 0, 0))
@@ -583,24 +583,24 @@ CyImage* CyImage::ROI(CLogoRect rect) const
 }
 
 
-/** - ²Ã¼ôÍ¼Ïñ - */
+/** - è£å‰ªå›¾åƒ - */
 void CyImage::Cut(CLogoRect rect)
 {
-	/// ÏÂÊöÁ½ÖÖÇé¿ö²»ĞèÒª²Ã¼ô
+	/// ä¸‹è¿°ä¸¤ç§æƒ…å†µä¸éœ€è¦è£å‰ª
 	if (rect == CLogoRect(0, 0, 0, 0))
 		return;
 	if (rect.left == 0 && rect.top == 0 && rect.right == GetWidth() && rect.bottom == GetHeight())
 		return;
-	/// ÆäËûÇé¿ö£¬»ñµÃ¸ĞĞËÈ¤ÇøÓò£¬²¢¸³Öµ¸øµ±Ç°Í¼Ïñ
+	/// å…¶ä»–æƒ…å†µï¼Œè·å¾—æ„Ÿå…´è¶£åŒºåŸŸï¼Œå¹¶èµ‹å€¼ç»™å½“å‰å›¾åƒ
 	ImageTransform it(m_pFloatData, GetWidth(), GetHeight(), GetChannel());
 	ImageTransform pDst = it.ImageRoi(rect);
 	Create(pDst, rect.Width(), rect.Height(), rect.Width() * GetChannel());
 }
 
 
-/** - Ëõ·ÅÍ¼Ïñ -
-* @param[in] rate Ëõ·Å±ÈÀı
-* @return ÎŞ
+/** - ç¼©æ”¾å›¾åƒ -
+* @param[in] rate ç¼©æ”¾æ¯”ä¾‹
+* @return æ— 
 */
 void CyImage::Zoom(float rate)
 {
@@ -610,10 +610,10 @@ void CyImage::Zoom(float rate)
 }
 
 
-/** - Ëõ·ÅÍ¼Ïñ -
-* @param[in] NewWidth ĞÂÍ¼Ïñ¿í¶È
-* @param[in] NewHeight ĞÂÍ¼Ïñ¸ß¶È
-* @return ÎŞ
+/** - ç¼©æ”¾å›¾åƒ -
+* @param[in] NewWidth æ–°å›¾åƒå®½åº¦
+* @param[in] NewHeight æ–°å›¾åƒé«˜åº¦
+* @return æ— 
 */
 void CyImage::Zoom(int nNewWidth, int nNewHeight)
 {
@@ -625,11 +625,11 @@ void CyImage::Zoom(int nNewWidth, int nNewHeight)
 }
 
 
-/** - Ëõ·ÅÍ¼Ïñ -
-* @param[in] NewWidth ĞÂÍ¼Ïñ¿í¶È
-* @param[in] NewHeight ĞÂÍ¼Ïñ¸ß¶È
-* @param[in] bNeededReturn ĞèÒª·µ»ØĞÂÍ¼ÏñÊı¾İ¿éÍ·Ö¸Õë
-* @return ĞÂÍ¼ÏñÊı¾İ¿é
+/** - ç¼©æ”¾å›¾åƒ -
+* @param[in] NewWidth æ–°å›¾åƒå®½åº¦
+* @param[in] NewHeight æ–°å›¾åƒé«˜åº¦
+* @param[in] bNeededReturn éœ€è¦è¿”å›æ–°å›¾åƒæ•°æ®å—å¤´æŒ‡é’ˆ
+* @return æ–°å›¾åƒæ•°æ®å—
 */
 ImageTransform CyImage::Zoom(int NewWidth, int NewHeight, int bNeededReturn) const
 {
@@ -638,7 +638,7 @@ ImageTransform CyImage::Zoom(int NewWidth, int NewHeight, int bNeededReturn) con
 }
 
 
-/** - ¶ÔÍ¼ÏñĞı×ªÒ»¸ö½Ç¶È - */
+/** - å¯¹å›¾åƒæ—‹è½¬ä¸€ä¸ªè§’åº¦ - */
 void CyImage::Rotate(float degree)
 {
 	float angle = RAD(degree);
@@ -650,9 +650,9 @@ void CyImage::Rotate(float degree)
 }
 
 
-/** - Ğı×ªÍ¼Ïñ£¬²¢·µ»ØĞı×ªµÃµ½µÄÍ¼ÏñÊı¾İ - 
-* @param[in] angle Ğı×ª½Ç¶È
-* @return ĞÂÍ¼ÏñÊı¾İ¿é
+/** - æ—‹è½¬å›¾åƒï¼Œå¹¶è¿”å›æ—‹è½¬å¾—åˆ°çš„å›¾åƒæ•°æ® - 
+* @param[in] angle æ—‹è½¬è§’åº¦
+* @return æ–°å›¾åƒæ•°æ®å—
 */
 ImageTransform CyImage::Rotate(const PositionTransform &pt, CLogoRect &dstArea) const
 {
@@ -662,18 +662,18 @@ ImageTransform CyImage::Rotate(const PositionTransform &pt, CLogoRect &dstArea) 
 #endif
 
 
-/** - Í¼Ïñ½«×ª»»Îª8Î»»Ò¶ÈÍ¼ - */
+/** - å›¾åƒå°†è½¬æ¢ä¸º8ä½ç°åº¦å›¾ - */
 void CyImage::ToGray()
 {
 	ChangeBPP(8);
 }
 
 
-/** - ±£´æÍ¼Ïñ - */
+/** - ä¿å­˜å›¾åƒ - */
 HRESULT CyImage::Save(LPCTSTR pszFileName, REFGUID guidFileType) const throw()
 {
 #ifdef ENABLE_READ_WRITE_TXT
-	// ³¢ÊÔ±£´æÎªtxtÎÄ¼ş
+	// å°è¯•ä¿å­˜ä¸ºtxtæ–‡ä»¶
 	if (GetFileExt(pszFileName).CompareNoCase(_T("txt")) == 0)
 	{
 		USES_CONVERSION;
@@ -686,40 +686,40 @@ HRESULT CyImage::Save(LPCTSTR pszFileName, REFGUID guidFileType) const throw()
 }
 
 
-#ifdef _AFX // MFC »·¾³ÏÂ±àÒë
+#ifdef _AFX // MFC ç¯å¢ƒä¸‹ç¼–è¯‘
 
 
-/** - ¼ÓÔØÍ¼Ïñ - µ¯³öÑ¡ÔñÎÄ¼ş¶Ô»°¿ò */
+/** - åŠ è½½å›¾åƒ - å¼¹å‡ºé€‰æ‹©æ–‡ä»¶å¯¹è¯æ¡† */
 HRESULT CyImage::Load(CWnd* pParentWnd) throw()
 {
-	// ¹ıÂËÆ÷
-	CString strFilter = L"ËùÓĞÍ¼Ïñ|*.BMP;*.DIB;*.RLE;*.JPG;*.JPEG;*.JPE;*.JFIF;*.GIF;*.TIF;"\
+	// è¿‡æ»¤å™¨
+	CString strFilter = L"æ‰€æœ‰å›¾åƒ|*.BMP;*.DIB;*.RLE;*.JPG;*.JPEG;*.JPE;*.JFIF;*.GIF;*.TIF;"\
 		L"*.TIFF;*.PNG;*.ICO|BMP (*.BMP;*.DIB;*.RLE)|*.BMP;*.DIB;*.RLE|JPEG (*.JPG;*.JPEG;"	\
-		L"*.JPE;*.JFIF)|*.JPG;*.JPEG;*.JPE;*.JFIF|GIF (*.GIF)|*.GIF|Í¼±ê (*.ICO)|*.ICO|ËùÓĞÎÄ¼ş|*.*||";
+		L"*.JPE;*.JFIF)|*.JPG;*.JPEG;*.JPE;*.JFIF|GIF (*.GIF)|*.GIF|å›¾æ ‡ (*.ICO)|*.ICO|æ‰€æœ‰æ–‡ä»¶|*.*||";
 
-	// ÎÄ¼ş¶Ô»°¿ò
+	// æ–‡ä»¶å¯¹è¯æ¡†
 	CFileDialog hFileDlg(TRUE, NULL, NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST, strFilter, pParentWnd);
 	hFileDlg.m_ofn.nFilterIndex = 1;
 	hFileDlg.m_ofn.lStructSize = sizeof(OPENFILENAME);
-	hFileDlg.m_ofn.lpstrTitle = TEXT("´ò¿ªÍ¼Ïñ\0");
+	hFileDlg.m_ofn.lpstrTitle = TEXT("æ‰“å¼€å›¾åƒ\0");
 	hFileDlg.m_ofn.nMaxFile = MAX_PATH;
 	if (hFileDlg.DoModal() != IDOK)
 		return E_FAIL;
 
-	// µ÷ÓÃÆäËûLoadº¯Êı
+	// è°ƒç”¨å…¶ä»–Loadå‡½æ•°
 	CString strFilePath = hFileDlg.GetPathName();
 	return Load(strFilePath);
 }
 
 
-/** - ±£´æÍ¼Ïñ - */
+/** - ä¿å­˜å›¾åƒ - */
 BOOL CyImage::Save(REFGUID guidFileType) const throw()
 {
 	return Save((CWnd*)NULL, guidFileType);
 }
 
 
-/** - ±£´æÍ¼Ïñ - 
+/** - ä¿å­˜å›¾åƒ - 
 * @details 
 guidFileType
 The file type to save the image as. Can be one of the following:
@@ -731,30 +731,30 @@ Note   For a complete list of constants, see Image File Format Constants in the 
 */
 BOOL CyImage::Save(CWnd* pParentWnd, REFGUID guidFileType) const throw()
 {
-	// ¹ıÂËÆ÷
-	CString strFilter = L"ËùÓĞÍ¼Ïñ|*.BMP;*.DIB;*.RLE;*.JPG;*.JPEG;*.JPE;*."	\
+	// è¿‡æ»¤å™¨
+	CString strFilter = L"æ‰€æœ‰å›¾åƒ|*.BMP;*.DIB;*.RLE;*.JPG;*.JPEG;*.JPE;*."	\
 		L"JFIF;*.GIF;*.TIF;*.TIFF;*.PNG;*.ICO|BMP (*.BMP;*.DIB;*.RLE)|*.BMP;"\
 		L"*.DIB;*.RLE|JPEG (*.JPG;*.JPEG;*.JPE;*.JFIF)|*.JPG;*.JPEG;*.JPE;"	\
-		L"*.JFIF|GIF (*.GIF)|*.GIF|Í¼±ê (*.ICO)|*.ICO|ËùÓĞÎÄ¼ş|*.*||";
+		L"*.JFIF|GIF (*.GIF)|*.GIF|å›¾æ ‡ (*.ICO)|*.ICO|æ‰€æœ‰æ–‡ä»¶|*.*||";
 
-	// »ñÈ¡ÏµÍ³Ê±¼ä
+	// è·å–ç³»ç»Ÿæ—¶é—´
 	SYSTEMTIME CurTime;
 	CString strDate, strTime;
 	GetLocalTime(&CurTime);
-	strDate.Format(_T("%4dÄê%2dÔÂ%2dÈÕ"), CurTime.wYear, CurTime.wMonth, CurTime.wDay);
-	strTime.Format(_T("%2dÊ±%2d·Ö%2dÃë"), CurTime.wHour, CurTime.wMinute, CurTime.wSecond);
+	strDate.Format(_T("%4då¹´%2dæœˆ%2dæ—¥"), CurTime.wYear, CurTime.wMonth, CurTime.wDay);
+	strTime.Format(_T("%2dæ—¶%2dåˆ†%2dç§’"), CurTime.wHour, CurTime.wMinute, CurTime.wSecond);
 
-	// ÎÄ¼ş¶Ô»°¿ò
+	// æ–‡ä»¶å¯¹è¯æ¡†
 	CFileDialog hFileDlg(FALSE, _T(".BMP"), strDate + strTime, OFN_FILEMUSTEXIST 
 		| OFN_PATHMUSTEXIST | OFN_READONLY, strFilter, pParentWnd);
 	hFileDlg.m_ofn.nFilterIndex = 1;
 	hFileDlg.m_ofn.lStructSize = sizeof(OPENFILENAME);
-	hFileDlg.m_ofn.lpstrTitle = TEXT("±£´æÍ¼Ïñ\0");
+	hFileDlg.m_ofn.lpstrTitle = TEXT("ä¿å­˜å›¾åƒ\0");
 	hFileDlg.m_ofn.nMaxFile = MAX_PATH;
 	if (hFileDlg.DoModal() != IDOK)
 		return TRUE;
 
-	// »ñÈ¡±£´æÂ·¾¶
+	// è·å–ä¿å­˜è·¯å¾„
 	CString strFile = hFileDlg.GetFileName();
 	CString strPath = hFileDlg.GetPathName();
 	CString strExt = hFileDlg.GetFileExt();
@@ -782,7 +782,7 @@ BOOL CyImage::Save(CWnd* pParentWnd, REFGUID guidFileType) const throw()
 #endif // _AFX
 
 
-/** - °²È«Ïú»ÙËù¹ØÁªµÄÎ»Í¼ - */
+/** - å®‰å…¨é”€æ¯æ‰€å…³è”çš„ä½å›¾ - */
 void CyImage::Destroy() throw()
 {
 	if (!IsNull())
@@ -793,7 +793,7 @@ void CyImage::Destroy() throw()
 }
 
 
-/** - Ë®Æ½·­×ªÍ¼Ïñ - */
+/** - æ°´å¹³ç¿»è½¬å›¾åƒ - */
 void CyImage::FlipH()
 {
 	int nWidth = GetWidth();
@@ -818,7 +818,7 @@ void CyImage::FlipH()
 }
 
 
-/** - ´¹Ö±·­×ªÍ¼Ïñ - */
+/** - å‚ç›´ç¿»è½¬å›¾åƒ - */
 void CyImage::FlipV()
 {
 	int nHeight = GetHeight();
@@ -836,7 +836,7 @@ void CyImage::FlipV()
 }
 
 
-/** - ×ªÖÃÍ¼Ïñ - */
+/** - è½¬ç½®å›¾åƒ - */
 void CyImage::Transpose()
 {
 	int nWidth = GetWidth();
@@ -877,7 +877,7 @@ void CyImage::Transpose()
 }
 
 
-/** - ÏòÓÒ×ªÖÃÍ¼Ïñ - */
+/** - å‘å³è½¬ç½®å›¾åƒ - */
 void CyImage::TransposeR()
 {
 	int nWidth = GetWidth();
@@ -919,7 +919,7 @@ void CyImage::TransposeR()
 }
 
 
-/** - ¶ÔÖ±·½Í¼½øĞĞÅÅĞò - */
+/** - å¯¹ç›´æ–¹å›¾è¿›è¡Œæ’åº - */
 void CyImage::GetCluster(int cluster[256]) const
 {
 	int hist[256];
@@ -936,7 +936,7 @@ void CyImage::GetCluster(int cluster[256]) const
 		{
 			if (hist[j] > hist[i])
 			{
-				// ½»»»´ÎĞò
+				// äº¤æ¢æ¬¡åº
 				SWAP(hist[j], hist[i]);
 				SWAP(cluster[j], cluster[i]);
 			}
@@ -945,7 +945,7 @@ void CyImage::GetCluster(int cluster[256]) const
 }
 
 
-/** - »ñÈ¡»Ò¶ÈÖ±·½Í¼ - */
+/** - è·å–ç°åº¦ç›´æ–¹å›¾ - */
 BOOL CyImage::GetGrayHist(int hist[256]) const
 {
 	ZeroMemory(hist, 256 * sizeof(int));
@@ -983,7 +983,7 @@ BOOL CyImage::GetGrayHist(int hist[256]) const
 }
 
 
-/** - »ñÈ¡Í¼ÏñÖ±·½Í¼ - */
+/** - è·å–å›¾åƒç›´æ–¹å›¾ - */
 BOOL CyImage::GetHistogram(int hist[4][256]) const
 {
 	ZeroMemory(hist, 4 * 256 * sizeof(int));
@@ -1027,8 +1027,8 @@ BOOL CyImage::GetHistogram(int hist[4][256]) const
 }
 
 
-/** - ¸Ä±äÍ¼ÏñÍ¨µÀÊı -  bpp£ºÄ¿±êÍ¼ÏñµÄÎ»É« - 
-ĞŞ¸Ä³É¹¦·µ»ØTRUE£¬Î´ĞŞ¸Ä·µ»ØFALSE¡£
+/** - æ”¹å˜å›¾åƒé€šé“æ•° -  bppï¼šç›®æ ‡å›¾åƒçš„ä½è‰² - 
+ä¿®æ”¹æˆåŠŸè¿”å›TRUEï¼Œæœªä¿®æ”¹è¿”å›FALSEã€‚
 */
 BOOL CyImage::ChangeBPP(UINT bpp)
 {
@@ -1067,7 +1067,7 @@ BOOL CyImage::ChangeBPP(UINT bpp)
 }
 
 
-/// 8Î»É«×ª24Î»É«
+/// 8ä½è‰²è½¬24ä½è‰²
 void CyImage::Bpp8To24()
 {
 	LONG lWidth = GetWidth();
@@ -1095,7 +1095,7 @@ void CyImage::Bpp8To24()
 	SAFE_DELETE(pSrc);
 }
 
-/// 8Î»É«×ª32Î»É«
+/// 8ä½è‰²è½¬32ä½è‰²
 void CyImage::Bpp8To32()
 {
 	LONG lWidth = GetWidth();
@@ -1123,7 +1123,7 @@ void CyImage::Bpp8To32()
 	SAFE_DELETE(pSrc);
 }
 
-/// 24Î»É«×ª8Î»É«
+/// 24ä½è‰²è½¬8ä½è‰²
 void CyImage::Bpp24To8()
 {
 	LONG lWidth = GetWidth();
@@ -1154,7 +1154,7 @@ void CyImage::Bpp24To8()
 	SAFE_DELETE(pSrc);
 }
 
-/// 24Î»É«×ª32Î»É«
+/// 24ä½è‰²è½¬32ä½è‰²
 void CyImage::Bpp24To32()
 {
 	LONG lWidth = GetWidth();
@@ -1184,7 +1184,7 @@ void CyImage::Bpp24To32()
 	SAFE_DELETE(pSrc);
 }
 
-/// 32Î»É«×ª8Î»É«
+/// 32ä½è‰²è½¬8ä½è‰²
 void CyImage::Bpp32To8()
 {
 	LONG lWidth = GetWidth();
@@ -1215,7 +1215,7 @@ void CyImage::Bpp32To8()
 	SAFE_DELETE(pSrc);
 }
 
-/// 32Î»É«×ª24Î»É«
+/// 32ä½è‰²è½¬24ä½è‰²
 void CyImage::Bpp32To24()
 {
 	LONG lWidth = GetWidth();
@@ -1245,7 +1245,7 @@ void CyImage::Bpp32To24()
 	SAFE_DELETE(pSrc);
 }
 
-/// ½«¶ş½øÖÆÍ¼Ïñ×ª»»Îª8Î»É«Í¼Ïñ
+/// å°†äºŒè¿›åˆ¶å›¾åƒè½¬æ¢ä¸º8ä½è‰²å›¾åƒ
 void CyImage::Bpp1To8()
 {
 	LONG lWidth = GetWidth();
@@ -1267,7 +1267,7 @@ void CyImage::Bpp1To8()
 		{
 			int mod = j % 8;
 			BYTE *pSrcTemp = pSrc + int(j / 8.f) + y1;
-			// *pSrcTempµÄµÚmod¶ş½øÖÆÎ»
+			// *pSrcTempçš„ç¬¬modäºŒè¿›åˆ¶ä½
 			BYTE temp = ( *pSrcTemp>>(7 - mod) ) & 1;
 			BYTE *pDstTemp = pDst + nChannelNew * j + y2;
 			*pDstTemp = 255 * temp;
@@ -1276,7 +1276,7 @@ void CyImage::Bpp1To8()
 	SAFE_DELETE(pSrc);
 }
 
-/// ½«¶ş½øÖÆÍ¼Ïñ×ª»»Îª24Î»É«Í¼Ïñ
+/// å°†äºŒè¿›åˆ¶å›¾åƒè½¬æ¢ä¸º24ä½è‰²å›¾åƒ
 void CyImage::Bpp1To24()
 {
 	LONG lWidth = GetWidth();
@@ -1298,7 +1298,7 @@ void CyImage::Bpp1To24()
 		{
 			int mod = j % 8;
 			BYTE *pSrcTemp = pSrc + int(j / 8.f) + y1;
-			// *pSrcTempµÄµÚmod¶ş½øÖÆÎ»
+			// *pSrcTempçš„ç¬¬modäºŒè¿›åˆ¶ä½
 			BYTE temp = ( *pSrcTemp>>(7 - mod) ) & 1;
 			BYTE *pDstTemp = pDst + nChannelNew * j + y2;
 			*pDstTemp = *(pDstTemp + 1) = *(pDstTemp + 2) = 255 * temp;
@@ -1307,7 +1307,7 @@ void CyImage::Bpp1To24()
 	SAFE_DELETE(pSrc);
 }
 
-/// ½«¶ş½øÖÆÍ¼Ïñ×ª»»Îª32Î»É«Í¼Ïñ
+/// å°†äºŒè¿›åˆ¶å›¾åƒè½¬æ¢ä¸º32ä½è‰²å›¾åƒ
 void CyImage::Bpp1To32()
 {
 	LONG lWidth = GetWidth();
@@ -1329,7 +1329,7 @@ void CyImage::Bpp1To32()
 		{
 			int mod = j % 8;
 			BYTE *pSrcTemp = pSrc + int(j / 8.f) + y1;
-			// *pSrcTempµÄµÚmod¶ş½øÖÆÎ»
+			// *pSrcTempçš„ç¬¬modäºŒè¿›åˆ¶ä½
 			BYTE temp = ( *pSrcTemp>>(7 - mod) ) & 1;
 			BYTE *pDstTemp = pDst + nChannelNew * j + y2;
 			*pDstTemp = *(pDstTemp + 1) = *(pDstTemp + 2) = 255 * temp;
@@ -1339,7 +1339,7 @@ void CyImage::Bpp1To32()
 }
 
 
-/** - ÖÆ×÷±¸·İÍ¼Ïñ - ĞèÒªdelete·½·¨ - */
+/** - åˆ¶ä½œå¤‡ä»½å›¾åƒ - éœ€è¦deleteæ–¹æ³• - */
 CyImage* CyImage::MakeCopy() const
 {
 	CyImage* pCopy = NULL;
@@ -1356,11 +1356,11 @@ CyImage* CyImage::MakeCopy() const
 }
 
 
-/** - ½«Í¼ÏñµÄ±³¾°·Ö¸î³öÀ´ - 
-* @param[in] threahold ãĞÖµ
-* @param[in] background ±³¾°ÏñËØ
-* @return ±³¾°Í¼Ïñ
-* @note ¸Ãº¯Êı·µ»ØÖµĞèÒªdelete·½·¨
+/** - å°†å›¾åƒçš„èƒŒæ™¯åˆ†å‰²å‡ºæ¥ - 
+* @param[in] threahold é˜ˆå€¼
+* @param[in] background èƒŒæ™¯åƒç´ 
+* @return èƒŒæ™¯å›¾åƒ
+* @note è¯¥å‡½æ•°è¿”å›å€¼éœ€è¦deleteæ–¹æ³•
 */
 CyImage* CyImage::GetBackground(float threahold, float3 background) const
 {
@@ -1375,14 +1375,14 @@ CyImage* CyImage::GetBackground(float threahold, float3 background) const
 	float fMAX = pBackground->GetMaximum();
 	switch (nChannel)
 	{
-	case 1:// 8Î»É«Í¼Ïñ
+	case 1:// 8ä½è‰²å›¾åƒ
 		{
 			for (int i = 0; i < nHeight; ++i)
 			{
 				int y = i * nRowlen;
 				for (int j = 0; j < nWidth; ++j)
 				{
-					// ½«Ç°¾°É«È«²¿ÖÃ³É°×É«
+					// å°†å‰æ™¯è‰²å…¨éƒ¨ç½®æˆç™½è‰²
 					if (fabsf(pHead[j + y] - fGray) > threahold)
 					{
 						pHead[j + i * nRowlen] = fMAX;
@@ -1391,7 +1391,7 @@ CyImage* CyImage::GetBackground(float threahold, float3 background) const
 			}
 			break;
 		}
-	case 3:// ²ÊÉ«Í¼Ïñ
+	case 3:// å½©è‰²å›¾åƒ
 	case 4:
 		{
 			for (int i = 0; i < nHeight; ++i)

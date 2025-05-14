@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3dcode", "3DCode_vs2022.vcxproj", "{AF939559-6D80-434F-B2BD-577CE4C950D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF939559-6D80-434F-B2BD-577CE4C950D7}.Debug|x86.ActiveCfg = Debug|Win32
+		{AF939559-6D80-434F-B2BD-577CE4C950D7}.Debug|x86.Build.0 = Debug|Win32
+		{AF939559-6D80-434F-B2BD-577CE4C950D7}.Release|x86.ActiveCfg = Release|Win32
+		{AF939559-6D80-434F-B2BD-577CE4C950D7}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F9AC286-9283-41AC-B53A-D34A4D7F3D3B}
+	EndGlobalSection
+EndGlobal

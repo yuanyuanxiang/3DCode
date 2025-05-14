@@ -1,4 +1,4 @@
-// DlgQREncode.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// DlgQREncode.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -17,26 +17,26 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-// CEncodeParent ¶Ô»°¿ò
+// CEncodeParent å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CEncodeParent, CDialogEx)
 
 CEncodeParent::CEncodeParent(CWnd* pParent) : CDialogEx(CEncodeParent::IDD, pParent)
 {
-	// Í¼Ïñ
+	// å›¾åƒ
 	m_pImage = NULL;
 	m_pLogo = new CyImage;
 	m_pLogo->Create(22, 22, 24, 0UL);
-	// ±àÂëÑÕÉ«
+	// ç¼–ç é¢œè‰²
 	m_BackgroundColor = RGB(0, 0, 0);
 	m_ForegroundColor = RGB(255, 255, 255);
 
-	// ·ûºÅ/ÏñËØ ´óĞ¡
-	m_nSymbleSize = 0;			//·ûºÅ³ß´ç
-	m_nPixelSize = 4;			//ÏñËØ´óĞ¡
-	m_nEnableMixed = 0;			//°ó¶¨Ä£Ê½
+	// ç¬¦å·/åƒç´  å¤§å°
+	m_nSymbleSize = 0;			//ç¬¦å·å°ºå¯¸
+	m_nPixelSize = 4;			//åƒç´ å¤§å°
+	m_nEnableMixed = 0;			//ç»‘å®šæ¨¡å¼
 
-	// ¿ØÖÆlogo´óĞ¡µÄ²ÎÊı
+	// æ§åˆ¶logoå¤§å°çš„å‚æ•°
 	m_bHasALogo = FALSE;
 	m_fBorder1 = 1/2.7f;
 	m_fBorder2 = 1/2.7f;
@@ -83,7 +83,7 @@ BEGIN_MESSAGE_MAP(CEncodeParent, CDialogEx)
 	ON_BN_CLICKED(IDC_IMPORT_LOGO, &CEncodeParent::OnBnClickedImportLogo)
 	ON_EN_CHANGE(IDC_EDITSOURCEDATA_PUBLIC, &CEncodeParent::OnEnChangeEditsourcedataPublic)
 	ON_EN_CHANGE(IDC_EDITSOURCEDATA_PRIVATE, &CEncodeParent::OnEnChangeEditsourcedataPrivate)
-	// ¸Ä±äÑÕÉ«ÏìÓ¦º¯Êı
+	// æ”¹å˜é¢œè‰²å“åº”å‡½æ•°
 	ON_EN_KILLFOCUS(IDC_FOREGROUND_R, &CEncodeParent::OnEnChangeForegroundR)
 	ON_EN_KILLFOCUS(IDC_FOREGROUND_G, &CEncodeParent::OnEnChangeForegroundG)
 	ON_EN_KILLFOCUS(IDC_FOREGROUND_B, &CEncodeParent::OnEnChangeForegroundB)
@@ -113,7 +113,7 @@ BEGIN_MESSAGE_MAP(CEncodeParent, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_COMBO_VERSION2, &CEncodeParent::OnCbnSelchangeComboVersion2)
 END_MESSAGE_MAP()
 
-/// »ñÈ¡»î¶¯ÎÄµµ£¬ÉèÖÃµ±Ç°µÄÍ¼Ïñ
+/// è·å–æ´»åŠ¨æ–‡æ¡£ï¼Œè®¾ç½®å½“å‰çš„å›¾åƒ
 BOOL CEncodeParent::SetImage()
 {
 	m_pImage = NULL;
@@ -121,9 +121,9 @@ BOOL CEncodeParent::SetImage()
 }
 
 /** 
-* @brief ±àÂë
-* @details Ê×ÏÈ£¬µ÷ÓÃSetImage£¬»ñµÃ»î¶¯ÎÄµµµÄÍ¼ÏñÖ¸Õë£»
-*		½Ó×Å£¬°´ÕÕ±àÂëÃ÷ÎÄ->±àÂëÃÜÎÄ->Ìí¼ÓLOGOµÄ²½ÖèÉú³É¶şÎ¬Âë¡£
+* @brief ç¼–ç 
+* @details é¦–å…ˆï¼Œè°ƒç”¨SetImageï¼Œè·å¾—æ´»åŠ¨æ–‡æ¡£çš„å›¾åƒæŒ‡é’ˆï¼›
+*		æ¥ç€ï¼ŒæŒ‰ç…§ç¼–ç æ˜æ–‡->ç¼–ç å¯†æ–‡->æ·»åŠ LOGOçš„æ­¥éª¤ç”ŸæˆäºŒç»´ç ã€‚
 */
 BOOL CEncodeParent::Encode()
 {
@@ -145,13 +145,13 @@ BOOL CEncodeParent::Encode()
 	m_staticVersion.SetWindowText(_T(""));
 	m_staticMaskingNo.SetWindowText(_T(""));
 
-	/* ±àÂëÃ÷ÎÄ */
+	/* ç¼–ç æ˜æ–‡ */
 	CQR_Encode* pQR_Encode = new CQR_Encode;
 	BOOL bDataEncoded = EncodeData(strPublicEncodeData, pQR_Encode, nLevel, nVersion, bAutoExtent, nMaskingNo);
 
 	if (bDataEncoded)
 	{
-		// ¸üĞÂ°æ±¾ºÅ¡¢ÑÚÂëºÅ
+		// æ›´æ–°ç‰ˆæœ¬å·ã€æ©ç å·
 		CString strWork;
 		if (nVersion != pQR_Encode->m_nVersion)
 			strWork.Format(_T("(%d)"), pQR_Encode->m_nVersion);
@@ -166,13 +166,13 @@ BOOL CEncodeParent::Encode()
 
 		m_ToolTip.UpdateTipText(_T(""), &m_editSourceDataPublic);
 
-		// ±àÂëÃÜÎÄ
+		// ç¼–ç å¯†æ–‡
 		EncodePrivateData(pQR_Encode);
 
-		// Ìí¼ÓLOGO
+		// æ·»åŠ LOGO
 		Addlogo();
 
-		// ÖØ»æ
+		// é‡ç»˜
 		Repaint();
 	}
 
@@ -181,13 +181,13 @@ BOOL CEncodeParent::Encode()
 }
 
 
-/// ¸Ãº¯Êı±Ø²»¿ÉÉÙ£¨±»ÆäËûÏîÄ¿¼Ì³Ğ²¢¶àÌ¬»¯£©
+/// è¯¥å‡½æ•°å¿…ä¸å¯å°‘ï¼ˆè¢«å…¶ä»–é¡¹ç›®ç»§æ‰¿å¹¶å¤šæ€åŒ–ï¼‰
 BOOL CEncodeParent::EncodePrivateData(CQR_Encode* pQR_Encode)
 {
-	// ³õÊ¼»¯logo¾ØĞÎ
+	// åˆå§‹åŒ–logoçŸ©å½¢
 	InitLogoRect(m_fBorder1, m_fBorder2);
 
-	// ±àÂëÃÜÎÄ
+	// ç¼–ç å¯†æ–‡
 	CString strPrivateEncodeData;
 	m_editSourceDataPrivate.GetWindowText(strPrivateEncodeData);
 	int strLen = 0;
@@ -195,7 +195,7 @@ BOOL CEncodeParent::EncodePrivateData(CQR_Encode* pQR_Encode)
 	ColorsEncode ce(pQR_Encode->m_byModuleData, pQR_Encode->m_nSymbleSize, m_LogoRect);
 	int bEncodeSucess = ce.EncodeColors(temp, strLen, m_nInnerEcLevel, m_nInnerMaskNo, m_nInnerVersion);
 	SAFE_DELETE(temp);
-	// ÅĞ¶Ï²ÊÉ«±àÂëÊÇ·ñ³É¹¦
+	// åˆ¤æ–­å½©è‰²ç¼–ç æ˜¯å¦æˆåŠŸ
 	if (bEncodeSucess)
 	{
 		CString err;
@@ -207,7 +207,7 @@ BOOL CEncodeParent::EncodePrivateData(CQR_Encode* pQR_Encode)
 		m_ToolTip.UpdateTipText(_T(""), &m_editSourceDataPrivate);
 	}
 
-	// »ñÈ¡·ûºÅ´óĞ¡È»ºó½«·ûºÅ×ª»»ÎªÍ¼Ïñ
+	// è·å–ç¬¦å·å¤§å°ç„¶åå°†ç¬¦å·è½¬æ¢ä¸ºå›¾åƒ
 	m_nSymbleSize = pQR_Encode->m_nSymbleSize;
 	CMatrix2Image m2i(pQR_Encode->m_byModuleData, m_nSymbleSize, m_nPixelSize);
 	m2i.CreateColorImage(m_ForegroundColor, m_BackgroundColor, m_QREncodeColor1, m_QREncodeColor2);
@@ -216,7 +216,7 @@ BOOL CEncodeParent::EncodePrivateData(CQR_Encode* pQR_Encode)
 	return SUCCESS == bEncodeSucess;
 }
 
-/// Ìí¼Ó±êÊ¶
+/// æ·»åŠ æ ‡è¯†
 void CEncodeParent::Addlogo()
 {
 	if (m_nEnableMixed == BOUNDING_MODE_REPLACED)
@@ -230,10 +230,10 @@ void CEncodeParent::Addlogo()
 }
 
 
-/// ²ÊÉ«ÊÇ·ñ¿ÉÒÔ±àÂë
+/// å½©è‰²æ˜¯å¦å¯ä»¥ç¼–ç 
 BOOL CEncodeParent::IsColorsEncodeAble()
 {
-	// ×îĞ¡µÄQRÂë³ß´çÎª21
+	// æœ€å°çš„QRç å°ºå¯¸ä¸º21
 	return (m_ForegroundElemsIndex.size() >= 21 * 21);
 }
 
@@ -255,7 +255,7 @@ void CEncodeParent::UpdateecLevelTipText()
 
 
 /** 
-* @note border1,border2(½éÓÚ0µ½0.5)ÓÃÀ´¿ØÖÆlogoÀë¶şÎ¬Âë±ß½çµÄ¾àÀë
+* @note border1,border2(ä»‹äº0åˆ°0.5)ç”¨æ¥æ§åˆ¶logoç¦»äºŒç»´ç è¾¹ç•Œçš„è·ç¦»
 */
 void CEncodeParent::InitLogoRect(float border1, float border2)
 {
@@ -263,7 +263,7 @@ void CEncodeParent::InitLogoRect(float border1, float border2)
 		return;
 	int nWidth = m_nSymbleSize;
 	int nHeight = m_nSymbleSize;
-	// ÉèÖÃlogoµ½¶şÎ¬Âë±ß½çµÄ¾àÀë
+	// è®¾ç½®logoåˆ°äºŒç»´ç è¾¹ç•Œçš„è·ç¦»
 	m_LogoRect.left = int(border1 * nWidth);
 	m_LogoRect.top = int(border2 * nHeight);
 	m_LogoRect.right = nWidth - m_LogoRect.left;
@@ -274,7 +274,7 @@ void CEncodeParent::InitLogoRect(float border1, float border2)
 }
 
 
-// CEncodeParent ÏûÏ¢´¦Àí³ÌĞò
+// CEncodeParent æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 
 void CEncodeParent::OnCbnSelchangeCombolevel()
@@ -320,8 +320,8 @@ void CEncodeParent::ShowImageSize()
 		if (m_nPixelSize >= 1 && m_nPixelSize <= PIXEL_MAX_SIZE)
 		{
 			int nSize = m_nSymbleSize * m_nPixelSize + 2 * QR_MARGIN;
-			strImageSize.Format(_T("%d¡Á%d"), nSize, nSize);
-			strQRCodeSize.Format(_T("%d¡Á%d"), m_nSymbleSize, m_nSymbleSize);
+			strImageSize.Format(_T("%dÃ—%d"), nSize, nSize);
+			strQRCodeSize.Format(_T("%dÃ—%d"), m_nSymbleSize, m_nSymbleSize);
 		}
 	}
 	m_staticBmpSize.SetWindowText(strImageSize);
@@ -341,7 +341,7 @@ void CEncodeParent::OnBnClickedImportLogo()
 	if (FAILED(m_pLogo->Load(this)))
 		return;
 	if (m_pLogo->ChangeBPP(24))
-		TRACE(" * Info: Í¼ÏñÎ»Éî¶ÈÒÑ¾­±»ĞŞ¸ÄÎª24.\n");
+		TRACE(" * Info: å›¾åƒä½æ·±åº¦å·²ç»è¢«ä¿®æ”¹ä¸º24.\n");
 	m_bHasALogo = TRUE;
 	Encode();
 	ShowImageSize();
@@ -366,22 +366,22 @@ BOOL CEncodeParent::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// ¹¤¾ßÌáÊ¾
+	// å·¥å…·æç¤º
 	EnableToolTips(true);
 	m_ToolTip.Create(this);
 	m_ToolTip.Activate(true);
-	m_ToolTip.SetDelayTime(TTDT_INITIAL, 200); //ÑÓ³Ù200msºóÏÔÊ¾
-	m_ToolTip.SetDelayTime(TTDT_AUTOPOP, 3000);//ÏÔÊ¾³ÖĞøÊ±¼ä3000msÊ±¼ä
+	m_ToolTip.SetDelayTime(TTDT_INITIAL, 200); //å»¶è¿Ÿ200msåæ˜¾ç¤º
+	m_ToolTip.SetDelayTime(TTDT_AUTOPOP, 3000);//æ˜¾ç¤ºæŒç»­æ—¶é—´3000msæ—¶é—´
 
-	// ¾À´íÂÊ×éºÏ¿ò
+	// çº é”™ç‡ç»„åˆæ¡†
 	m_comboLevel.InsertString(0, _T("L( 7%)"));
 	m_comboLevel.InsertString(1, _T("M(15%)"));
 	m_comboLevel.InsertString(2, _T("Q(25%)"));
 	m_comboLevel.InsertString(3, _T("H(30%)"));
 	m_comboLevel.SetCurSel(1);
 
-	// °æ±¾ºÅ×éºÏ¿ò
-	m_comboVersion.InsertString(0, _T("×Ô¶¯"));
+	// ç‰ˆæœ¬å·ç»„åˆæ¡†
+	m_comboVersion.InsertString(0, _T("è‡ªåŠ¨"));
 	for (int i = 1; i <= 40; ++i)
 	{
 		CString text;
@@ -393,8 +393,8 @@ BOOL CEncodeParent::OnInitDialog()
 	m_checkAutoExtent.SetCheck(1);
 	m_checkAutoExtent.EnableWindow(FALSE);
 
-	// ÑÚÂëºÅ×éºÏ¿ò
-	m_comboMaskingNo.InsertString(0, _T("×Ô¶¯"));
+	// æ©ç å·ç»„åˆæ¡†
+	m_comboMaskingNo.InsertString(0, _T("è‡ªåŠ¨"));
 	for (int i = 0; i <= 7; ++i)
 	{
 		CString text;
@@ -404,19 +404,19 @@ BOOL CEncodeParent::OnInitDialog()
 	m_comboMaskingNo.SetCurSel(0);
 	m_staticMaskingNo.SetWindowText(_T(""));
 
-	// ÏñËØ´óĞ¡±à¼­¿ò
+	// åƒç´ å¤§å°ç¼–è¾‘æ¡†
 	m_editModuleSize.SetWindowText(_T("4"));
 	m_spinModuleSize.SetRange(1, PIXEL_MAX_SIZE);
 	m_staticBmpSize.SetWindowText(_T(""));
 	m_staticQRCodeSize.SetWindowText(_T(""));
 
-	// Êı¾İÇø
+	// æ•°æ®åŒº
 	m_editSourceDataPublic.SetWindowText(_T(""));
 
-	// ÄÚ²ã²ÎÊı
+	// å†…å±‚å‚æ•°
 	InitInnerEncodingParameters();
 
-	// ÑÕÉ«±à¼­¿ò
+	// é¢œè‰²ç¼–è¾‘æ¡†
 	SetWindowInt(GetDlgItem(IDC_FOREGROUND_R), GetRValue(m_ForegroundColor));
 	SetWindowInt(GetDlgItem(IDC_FOREGROUND_G), GetGValue(m_ForegroundColor));
 	SetWindowInt(GetDlgItem(IDC_FOREGROUND_B), GetBValue(m_ForegroundColor));
@@ -431,35 +431,35 @@ BOOL CEncodeParent::OnInitDialog()
 	SetWindowInt(GetDlgItem(IDC_QRCOLOR2_B), GetBValue(m_QREncodeColor2));
 
 	// ToolTip
-	m_ToolTip.AddTool(&m_comboLevel, _T("Ñ¡Ôñ´íÎó¾ÀÕıÂÊ"));
-	m_ToolTip.AddTool(&m_comboVersion, _T("Ñ¡ÔñQRÂë°æ±¾ºÅ"));
-	m_ToolTip.AddTool(&m_checkAutoExtent, _T("×Ô¶¯À©Õ¹¿ª¹Ø"));
-	m_ToolTip.AddTool(&m_comboMaskingNo, _T("Ñ¡ÔñÑÚÂë°æ±¾ºÅ"));
-	m_ToolTip.AddTool(&m_editModuleSize, _T("ÊäÈëÏñËØµÄ´óĞ¡"));
-	m_ToolTip.AddTool(&m_spinModuleSize, _T("µ÷ÕûÏñËØµÄ´óĞ¡"));
-	m_ToolTip.AddTool(&m_staticBmpSize, _T("¶şÎ¬ÂëÊµ¼Ê³ß´ç"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_IMPORT_LOGO), _T("µ¼Èë±êÊ¶Îï"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_RESET_LOGO_SIZE), _T("ÖØÉè±êÊ¶Îï"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_CLEAR_LOGO), _T("Çå³ı±êÊ¶Îï"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BN_FOREGROUND), _T("Ñ¡ÔñÇ°¾°É«"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BN_BACKGROUND), _T("Ñ¡Ôñ±³¾°É«"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BN_ENCODE_COLOR1), _T("ÉèÖÃ²ÊÉ«±àÂë1"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BN_ENCODE_COLOR2), _T("ÉèÖÃ²ÊÉ«±àÂë2"));
-	m_ToolTip.AddTool(&m_sliderWidth, _T("µ÷ÕûLOGOµÄ¿í¶È"));
-	m_ToolTip.AddTool(&m_sliderHeight, _T("µ÷ÕûLOGOµÄ¸ß¶È"));
-	m_ToolTip.AddTool(&m_buttonEnableMixed, _T("LOGOÓë¶şÎ¬Âë»ìºÏ"));
-	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_ENCODE), _T("¶ÔĞÅÏ¢½øĞĞ±àÂë"));
+	m_ToolTip.AddTool(&m_comboLevel, _T("é€‰æ‹©é”™è¯¯çº æ­£ç‡"));
+	m_ToolTip.AddTool(&m_comboVersion, _T("é€‰æ‹©QRç ç‰ˆæœ¬å·"));
+	m_ToolTip.AddTool(&m_checkAutoExtent, _T("è‡ªåŠ¨æ‰©å±•å¼€å…³"));
+	m_ToolTip.AddTool(&m_comboMaskingNo, _T("é€‰æ‹©æ©ç ç‰ˆæœ¬å·"));
+	m_ToolTip.AddTool(&m_editModuleSize, _T("è¾“å…¥åƒç´ çš„å¤§å°"));
+	m_ToolTip.AddTool(&m_spinModuleSize, _T("è°ƒæ•´åƒç´ çš„å¤§å°"));
+	m_ToolTip.AddTool(&m_staticBmpSize, _T("äºŒç»´ç å®é™…å°ºå¯¸"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_IMPORT_LOGO), _T("å¯¼å…¥æ ‡è¯†ç‰©"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_RESET_LOGO_SIZE), _T("é‡è®¾æ ‡è¯†ç‰©"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_CLEAR_LOGO), _T("æ¸…é™¤æ ‡è¯†ç‰©"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_BN_FOREGROUND), _T("é€‰æ‹©å‰æ™¯è‰²"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_BN_BACKGROUND), _T("é€‰æ‹©èƒŒæ™¯è‰²"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_BN_ENCODE_COLOR1), _T("è®¾ç½®å½©è‰²ç¼–ç 1"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_BN_ENCODE_COLOR2), _T("è®¾ç½®å½©è‰²ç¼–ç 2"));
+	m_ToolTip.AddTool(&m_sliderWidth, _T("è°ƒæ•´LOGOçš„å®½åº¦"));
+	m_ToolTip.AddTool(&m_sliderHeight, _T("è°ƒæ•´LOGOçš„é«˜åº¦"));
+	m_ToolTip.AddTool(&m_buttonEnableMixed, _T("LOGOä¸äºŒç»´ç æ··åˆ"));
+	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_ENCODE), _T("å¯¹ä¿¡æ¯è¿›è¡Œç¼–ç "));
 	m_ToolTip.AddTool(&m_editSourceDataPublic, _T(""));
 	m_ToolTip.AddTool(&m_editSourceDataPrivate, _T(""));
 
-	// »¬¶¯Ìõ
+	// æ»‘åŠ¨æ¡
 	m_sliderWidth.SetRange(0, 100);
 	m_sliderWidth.SetPos(74);
 	m_sliderHeight.SetRange(0, 100);
 	m_sliderHeight.SetPos(74);
 
-	// ±£´æÍ¼Ïñ
-	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_SAVE), _T("±£´æÕâ¸ö¶şÎ¬Âë"));
+	// ä¿å­˜å›¾åƒ
+	m_ToolTip.AddTool(GetDlgItem(IDC_BUTTON_SAVE), _T("ä¿å­˜è¿™ä¸ªäºŒç»´ç "));
 
 	CenterWindow();
 
@@ -467,20 +467,20 @@ BOOL CEncodeParent::OnInitDialog()
 }
 
 
-/// ³õÊ¼»¯ÄÚ²ã±àÂë²ÎÊı
+/// åˆå§‹åŒ–å†…å±‚ç¼–ç å‚æ•°
 void CEncodeParent::InitInnerEncodingParameters()
 {
-	// ¾À´íµÈ¼¶
+	// çº é”™ç­‰çº§
 	for (int i = 1; i < 8; ++i)
 	{
 		m_comboInnerEcLevel.InsertString(i - 1, Num2String(i));
 	}
-	// ÑÚÂëÄ£Ê½
+	// æ©ç æ¨¡å¼
 	for (int i = 0; i < 8; ++i)
 	{
 		m_comboInnerMaskNo.InsertString(i, Num2String(i));
 	}
-	// °æ±¾ºÅ
+	// ç‰ˆæœ¬å·
 	for (int i = 0; i < 32; ++i)
 	{
 		m_comboInnerVersion.InsertString(i, _T("Ver ") + Num2String(i));
@@ -492,9 +492,9 @@ void CEncodeParent::InitInnerEncodingParameters()
 	m_comboInnerEcLevel.SetCurSel(2);
 	m_comboInnerMaskNo.SetCurSel(1);
 	m_comboInnerVersion.SetCurSel(0);
-	m_ToolTip.AddTool(&m_comboInnerEcLevel, _T("Ñ¡Ôñ´íÎó¾ÀÕıÂÊ"));
-	m_ToolTip.AddTool(&m_comboInnerMaskNo, _T("Ñ¡ÔñÑÚÂë°æ±¾ºÅ"));
-	m_ToolTip.AddTool(&m_comboInnerVersion, _T("Ñ¡Ôñ°æ±¾ºÅ"));
+	m_ToolTip.AddTool(&m_comboInnerEcLevel, _T("é€‰æ‹©é”™è¯¯çº æ­£ç‡"));
+	m_ToolTip.AddTool(&m_comboInnerMaskNo, _T("é€‰æ‹©æ©ç ç‰ˆæœ¬å·"));
+	m_ToolTip.AddTool(&m_comboInnerVersion, _T("é€‰æ‹©ç‰ˆæœ¬å·"));
 }
 
 
@@ -505,7 +505,7 @@ void CEncodeParent::OnCancel()
 }
 
 
-/// ÖØÔØOnOK£¬ÒÔÆÁ±ÎENTER¼ü
+/// é‡è½½OnOKï¼Œä»¥å±è”½ENTERé”®
 void CEncodeParent::OnOK()
 {
 	TRACE(" * OnOK is called.\n");
@@ -671,14 +671,14 @@ void CEncodeParent::OnEnChangeEnCodeColor2B()
 void CEncodeParent::OnBnClickedBnForeground()
 {
 	CColorDialog m_setClrDlg;
-	// CC_RGBINIT¿ÉÒÔÈÃÉÏ´ÎÑ¡ÔñµÄÑÕÉ«×÷Îª³õÊ¼ÑÕÉ«ÏÔÊ¾³öÀ´
+	// CC_RGBINITå¯ä»¥è®©ä¸Šæ¬¡é€‰æ‹©çš„é¢œè‰²ä½œä¸ºåˆå§‹é¢œè‰²æ˜¾ç¤ºå‡ºæ¥
 	m_setClrDlg.m_cc.Flags |= CC_FULLOPEN | CC_RGBINIT;
 	m_setClrDlg.m_cc.rgbResult = m_ForegroundColor;
 	if (IDOK == m_setClrDlg.DoModal())
 	{
 		if (m_ForegroundColor == m_setClrDlg.m_cc.rgbResult)
 			return;
-		// ±£´æÓÃ»§Ñ¡ÔñµÄÑÕÉ«
+		// ä¿å­˜ç”¨æˆ·é€‰æ‹©çš„é¢œè‰²
 		m_ForegroundColor = m_setClrDlg.m_cc.rgbResult;
 		SetWindowInt(GetDlgItem(IDC_FOREGROUND_R), GetRValue(m_ForegroundColor));
 		SetWindowInt(GetDlgItem(IDC_FOREGROUND_G), GetGValue(m_ForegroundColor));
@@ -854,7 +854,7 @@ void CEncodeParent::OnCbnSelchangeCombomaskingno2()
 }
 
 
-// Í¨ÖªÖ÷´°¿ÚË¢ĞÂÍ¼Ïñ
+// é€šçŸ¥ä¸»çª—å£åˆ·æ–°å›¾åƒ
 void CEncodeParent::Repaint() 
 {
 }
